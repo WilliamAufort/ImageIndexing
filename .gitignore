@@ -32,3 +32,7 @@
 
 # Build repository
 /build/*
+
+
+CMakeCache.txt
+CMakeFiles/*
