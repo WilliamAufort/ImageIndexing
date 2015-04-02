@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# Removed files
+*~
+
+# Build repository
+/build/*
