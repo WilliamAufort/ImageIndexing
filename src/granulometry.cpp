@@ -78,6 +78,7 @@ int main(int argc, char* argv[])
 			maxGranulo = granuloImage(*it);
 	board.clear();	
 	Display2DFactory::drawImage<HueTwice>(board, granuloImage, 0.0, maxGranulo + 1);
+	board.saveSVG(argv[2]);
 
 	trace.endBlock();
 	return 0;
