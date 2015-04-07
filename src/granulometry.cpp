@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "DGtal/base/Common.h"
 #include "DGtal/io/readers/GenericReader.h"
 #include "DGtal/helpers/StdDefs.h"
@@ -22,6 +23,34 @@ typedef functors::SimpleThresholdForegroundPredicate<Image> PointPredicate;
 
 // Distance transformation
 typedef DistanceTransformation<Z2i::Space, PointPredicate, Z2i::L2Metric> DTL2; 
+
+void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
+{
+	vector<double> histo(pas+1,0.0);
+	double cast_max = static_cast<double>(maxGranulo);
+	double cast_pas = static_cast<double>(pas);
+	double cast_compteur = static_cast<double>(compteur);
+	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	{
+		if (granuloImage.domain().isInside(*it)) /// inside the image
+		{
+			unsigned int normalizedValue = static_cast<unsigned int>(static_cast<double>(granuloImage(*it)) / cast_max * cast_pas);
+			histo[normalizedValue]++;
+		}
+	}
+	ofstream file(fileName.c_str());
+    if (file.is_open())
+	{    
+		//for (unsigned int i = 0; i <= pas; ++i)
+		// it seems that the points that doesn't belong to the object are considering in 
+		// DT are in fact in the histogram... Just not consider them before close the problem
+		for (unsigned int = 1; i <= pas; ++i) 
+		{
+			histo[i] /= cast_compteur;
+			file << i << " " << histo[i] << endl;
+		}
+	}	
+}
 
 int main(int argc, char* argv[])
 {
@@ -76,9 +105,14 @@ int main(int argc, char* argv[])
 	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain	().end(); ++it)
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
+
 	board.clear();	
 	Display2DFactory::drawImage<HueTwice>(board, granuloImage, 0.0, maxGranulo + 1);
 	board.saveSVG(argv[2]);
+
+	unsigned int pas = 20;
+	string fileName = "histo.txt";
+	buildHistogram(granuloImage,maxGranulo,pas,compteur,fileName);
 
 	trace.endBlock();
 	return 0;
