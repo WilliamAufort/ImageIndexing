@@ -33,6 +33,13 @@
 # Build repository
 /build/*
 
+# CMake
 
 CMakeCache.txt
 CMakeFiles/*
+
+# LaTeX
+
+*.aux
+*.log
+*.pdf
