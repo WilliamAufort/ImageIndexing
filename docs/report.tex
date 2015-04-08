@@ -1,0 +1,47 @@
+\input{macros.tex}
+
+\title{A binary shape indexing/retrieval system}
+\author{
+    William \textsc{Aufort}\\
+    Marc \textsc{Chevalier}
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+
+The objective of this project is to design a binary shape indexing system. Given a database of binary shapes (PGM files) associated to different classes, and a binary image, the goal is to find the class whch correspond the most to the image. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
+
+\section{Granulometric analysis applied to shape indexing}
+
+\subsection{Basic ideas}
+
+When we are watching images, to associate them to concepts, we use our knowledge of these concepts. For example, an apple is a quite circular object with sometimes a stalk and leaves, a camel is a mammal with one or two humps, etc. Basically, for organic objects, we use a kind of segmentation caracterisation to identify the concepts: we recover it by identify its different parts.
+
+A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
+
+Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g$ on $\mathcal{X}$ by :
+
+$$ g(x) = \operatorname{max} \left\{ r | \exists c \in \mathcal{X}, x \in B(c,r) \wedge B(c,r) \subseteq \mathcal{X} \right\} $$ 
+
+In other words, we are looking for the radius of the greatest ball included in the shape $\mathcal{X}$ which contains our point $x$.
+
+If we plot the granulometry function on a 2D shape in the database, we can observe that the different values of the granulometric function correspond to the different "parts" of the object.
+
+% TODO Change svg to another fil format supported by LaTeX
+%
+%\begin{figure}[!ht]
+%	\centering
+%	\includegraphics{images/output-apple-1.svg}
+%	\caption{The granulometric function illustrated in this apple. We can easily distinguish the different natural parts of the apple using the granulometric function.}
+%\end{figure}
+
+\subsection{Advantages}
+
+\subsubsection{Invariant by translation}
+
+\subsection{Disadvantages}
+
+\end{document}
