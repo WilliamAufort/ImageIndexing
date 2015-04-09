@@ -28,15 +28,17 @@ $$ g(x) = \operatorname{max} \left\{ r | \exists c \in \mathcal{X}, x \in B(c,r)
 
 In other words, we are looking for the radius of the greatest ball included in the shape $\mathcal{X}$ which contains our point $x$.
 
-If we plot the granulometry function on a 2D shape in the database, we can observe that the different values of the granulometric function correspond to the different "parts" of the object.
+If we plot the granulometry function on a 2D shape in the database, we can observe that the different values of the granulometric function correspond to the different "parts" of the object. An example is given on figure \ref{apple-granulo}.
 
-% TODO Change svg to another fil format supported by LaTeX
-%
-%\begin{figure}[!ht]
-%	\centering
-%	\includegraphics{images/output-apple-1.svg}
-%	\caption{The granulometric function illustrated in this apple. We can easily distinguish the different natural parts of the apple using the granulometric function.}
-%\end{figure}
+% Note : use pnmtopng to convert.
+% TODO : no filling in red the outside of the apple anymore
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[scale=0.5]{images/test-apple-1.png}
+	\caption{The granulometric function illustrated in this apple. We can easily distinguish the different natural parts of the apple using the granulometric function.}
+	\label{apple-granulo}
+\end{figure}
 
 \subsection{Advantages}
 
