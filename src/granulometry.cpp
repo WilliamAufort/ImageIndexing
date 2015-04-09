@@ -4,6 +4,7 @@
 #include "DGtal/io/readers/GenericReader.h"
 #include "DGtal/helpers/StdDefs.h"
 #include "DGtal/io/colormaps/HueShadeColorMap.h"
+#include "DGtal/io/colormaps/GradientColorMap.h"
 #include "DGtal/images/ImageSelector.h"
 #include "DGtal/images/SimpleThresholdForegroundPredicate.h"
 #include "DGtal/geometry/volumes/distance/DistanceTransformation.h"
@@ -17,6 +18,7 @@ typedef ImageSelector<Z2i::Domain, unsigned int>::Type Image;
 
 // Colormap used for the SVG output
 typedef HueShadeColorMap<long int, 2> HueTwice;
+typedef GradientColorMap<int> 		  Gradient;
 
 // Point predicate
 typedef functors::SimpleThresholdForegroundPredicate<Image> PointPredicate;
@@ -111,6 +113,7 @@ int main(int argc, char* argv[])
 
 	// Save
 	PPMWriter<Image,HueTwice>::exportPPM(argv[2],granuloImage,HueTwice(0,maxGranulo+1));	
+//	PPMWriter<Image,Gradient>::exportPPM(argv[2],granuloImage,Gradient(1,maxGranulo+1));	
 
 	// Build the histogramm
 	unsigned int pas = 20;
