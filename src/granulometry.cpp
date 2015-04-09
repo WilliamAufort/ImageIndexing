@@ -4,11 +4,11 @@
 #include "DGtal/io/readers/GenericReader.h"
 #include "DGtal/helpers/StdDefs.h"
 #include "DGtal/io/colormaps/HueShadeColorMap.h"
-#include "DGtal/io/boards/Board2D.h"
 #include "DGtal/images/ImageSelector.h"
 #include "DGtal/images/SimpleThresholdForegroundPredicate.h"
 #include "DGtal/geometry/volumes/distance/DistanceTransformation.h"
 #include "DGtal/shapes/implicit/ImplicitBall.h"
+#include "DGtal/io/writers/PPMWriter.h"
 
 using namespace std;
 using namespace DGtal;
@@ -23,6 +23,8 @@ typedef functors::SimpleThresholdForegroundPredicate<Image> PointPredicate;
 
 // Distance transformation
 typedef DistanceTransformation<Z2i::Space, PointPredicate, Z2i::L2Metric> DTL2; 
+
+//////////////////////////////////////////////////////////////////////
 
 void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
 {
@@ -44,7 +46,9 @@ void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int p
 		//for (unsigned int i = 0; i <= pas; ++i)
 		// it seems that the points that doesn't belong to the object are considering in 
 		// DT are in fact in the histogram... Just not consider them before close the problem
-		for (unsigned int = 1; i <= pas; ++i) 
+		// Another advantage of this is that we use a kind a filters of "bad" balls which can 
+		// appear in the border
+		for (unsigned int i= 1; i <= pas; ++i) 
 		{
 			histo[i] /= cast_compteur;
 			file << i << " " << histo[i] << endl;
@@ -62,7 +66,6 @@ int main(int argc, char* argv[])
 	trace.beginBlock ("Granulometric computations");
 
 	Image image = GenericReader<Image>::import(argv[1]);
-	Board2D board;
 
 	PointPredicate predicate(image,0);
 
@@ -106,10 +109,10 @@ int main(int argc, char* argv[])
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
 
-	board.clear();	
-	Display2DFactory::drawImage<HueTwice>(board, granuloImage, 0.0, maxGranulo + 1);
-	board.saveSVG(argv[2]);
+	// Save
+	PPMWriter<Image,HueTwice>::exportPPM(argv[2],granuloImage,HueTwice(0,maxGranulo+1));	
 
+	// Build the histogramm
 	unsigned int pas = 20;
 	string fileName = "histo.txt";
 	buildHistogram(granuloImage,maxGranulo,pas,compteur,fileName);
