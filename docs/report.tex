@@ -31,13 +31,18 @@ In other words, we are looking for the radius of the greatest ball included in t
 If we plot the granulometry function on a 2D shape in the database, we can observe that the different values of the granulometric function correspond to the different "parts" of the object. An example is given on figure \ref{apple-granulo}.
 
 % Note : use pnmtopng to convert.
-% TODO TODO TODO: no filling in red the outside of the apple anymore
 
 \begin{figure}[!ht]
-	\centering
-	\includegraphics[scale=0.5]{images/test-apple-1.png}
-	\caption{The granulometric function illustrated in this apple. We can easily distinguish the different natural parts of the apple using the granulometric function.}
+	\begin{center}
+    	\begin{minipage}[c]{.46\linewidth}
+    		\includegraphics[scale=0.56]{images/apple-1.png}
+    	\end{minipage} \hfill
+    	\begin{minipage}[c]{.46\linewidth}
+    		\includegraphics[scale=0.02]{images/apple-1-granulo.pdf}
+    	\end{minipage}
+	\end{center}
 	\label{apple-granulo}
+	\caption{The granulometric function illustrated in this apple image. We can easily distinguish the different natural parts of the apple using the granulometric function.}
 \end{figure}
 
 We can use the granulometric function to compare two images. TO do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics. Compare two images remains to compare two histograms, and 
@@ -57,10 +62,10 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 \begin{figure}[!ht]
 	\begin{center}
     	\begin{minipage}[c]{.46\linewidth}
-    		\includegraphics[scale=0.2]{images/device9-6-object.png}
+    		\includegraphics[scale=0.28]{images/device9-6-object.png}
     	\end{minipage} \hfill
     	\begin{minipage}[c]{.46\linewidth}
-    		\includegraphics[scale=0.2]{images/device9-6-granulo.png}
+    		\includegraphics[scale=0.01]{images/device9-6-granulo.pdf}
     	\end{minipage}
 	\end{center}
 	\label{device9-6}
