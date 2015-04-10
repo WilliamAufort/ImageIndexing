@@ -36,7 +36,7 @@ void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int p
 	double cast_compteur = static_cast<double>(compteur);
 	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 	{
-		if (granuloImage.domain().isInside(*it)) /// inside the image
+		if (granuloImage.domain().isInside(*it)) // inside the image
 		{
 			unsigned int normalizedValue = static_cast<unsigned int>(static_cast<double>(granuloImage(*it)) / cast_max * cast_pas);
 			histo[normalizedValue]++;
@@ -62,11 +62,10 @@ void saveGranulo( Image& granuloImage, unsigned int maxGranulo, string fileName)
 {
 	Board2D board;
 	HueTwice colorMap(1,maxGranulo+1);
-	/// Some constants to do the drawing
+	// Some constants to do the drawing
 	Point O(0,0);
-	string specificStyle =  O.className() + "/Paving"; /// Point style
+	string specificStyle =  O.className() + "/Paving"; // Point style
 	Color white(255,255,255);
-	//Color transparent(0,0,0,0);
     board << SetMode(granuloImage.domain().className(), "Paving")
       	  << granuloImage.domain()
           << SetMode(O.className(), "Paving");
@@ -79,7 +78,6 @@ void saveGranulo( Image& granuloImage, unsigned int maxGranulo, string fileName)
        		board << CustomStyle(specificStyle, new CustomColors(c,c)) << *it;
 		}
 		else
-//			board << CustomStyle(specificStyle, new  CustomColors(transparent,white)) << *it;
 			board << CustomStyle(specificStyle, new  CustomColors(white,white)) << *it;
     }
     board.saveEPS(fileName.c_str());
@@ -97,7 +95,6 @@ int main(int argc, char* argv[])
 	Image image = GenericReader<Image>::import(argv[1]);
 
 	PointPredicate predicate(image,0);
-
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
 
 	// Granulometric function
@@ -106,10 +103,10 @@ int main(int argc, char* argv[])
 	for (Image::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
 		*it = 0;
 
-	unsigned int compteur = 0; /// number of points in the image
+	unsigned int compteur = 0; // number of points in the image
 	{
 	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
-		if (dtL2(*it) > 0) /// inside the image
+		if (dtL2(*it) > 0) // inside the image
 		{
 			compteur++;
 			// Build a sphere inside the object of radius dtL2(*it)
