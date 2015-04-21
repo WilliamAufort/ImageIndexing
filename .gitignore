@@ -42,3 +42,8 @@ CMakeFiles/*
 
 *.aux
 *.log
+*.ps
+*.dvi
+report.pdf
+project.pdf
+report-autopp.pdf
