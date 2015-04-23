@@ -78,4 +78,21 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 
 \subsection{Implementation}
 
+\section{How to deal with noise: choices and implementation}
+
+An important aspect of the project is to deal with image which can be potentially noised.
+
+We were interested in deleting specular noise. Our choice is to implement a binomial filter saw during the course. This filter, used essentially for smoothing grayscale images, erases the potential specular noise on the image. If the image is not noisy, the experiment show that the initial image is not modified. The initial filter (i.e. for a grayscale image) is :
+
+\setcounter{MaxMatrixCols}{3}
+\[ F = \quad \frac{1}{16} \begin{pmatrix}
+1 & 2 & 1 \\
+2 & 4 & 2 \\
+1 & 2 & 1
+\end{pmatrix}\]
+
+In the grayscale output image, we only keep the pixels with intensity greater than $8 \times 255$, where $8$ represents half of the sum of the weights in the filter ($16$ here) and $255$ the intensity for the white part of the image (i.e. the final object we keep). For more simplicity, we don't keep the $255$ factor, since the only possible intensity values in the input image are $0$ and $255$.
+
+We give the simplier implementation of the filter in the file \texttt{deleteNoise.cpp}. One could improve it, for example using the fact that this filter is separable.
+
 \end{document}
