@@ -8,7 +8,8 @@ LINK_DIRECTORIES(${DGTAL_LIBRARY_DIRS})
 
 SET(SRCs
   helloworld
-  granulometry)
+  granulometry
+  deleteNoise)
 
 FOREACH(FILE ${SRCs})
   add_executable(${FILE} src/${FILE})
