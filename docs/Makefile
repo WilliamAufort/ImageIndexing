@@ -10,7 +10,7 @@ report.pdf: report.ps
 report.ps: report.dvi
 	dvips $<
 
-report.dvi: report.tex
+report.dvi: report.tex macros.tex
 	$(TEX) $<
 
 clean:
