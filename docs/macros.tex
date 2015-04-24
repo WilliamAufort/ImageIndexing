@@ -45,6 +45,12 @@
 \usepackage{listings} %http://www.ctan.org/tex-archive/macros/latex/contrib/listings/
 \lstset{numbers=left,language=Caml}
 
+\usepackage{boiboites}
+\newboxedtheorem[boxcolor=orange, background=blue!5, titlebackground=blue!20,
+titleboxcolor = black]{theo}{Theorem}{compteurTh}
+\newboxedtheorem[boxcolor=orange, background=blue!5, titlebackground=blue!20,
+titleboxcolor = black]{defi}{Definition}{compteurDef}
+
 \newcounter{ThComp}
 \newcounter{DefComp}
 
@@ -62,7 +68,7 @@
 \newtheorem*{ex}{Example}
 \newtheorem*{exs}{Examples}
 \newtheorem{exo}{Exercise}
-\newtheorem{defi}[DefComp]{Definition}
+%\newtheorem{defi}[DefComp]{Definition}
 \newtheorem*{notation}{Notation}
 \newtheorem{definition}[DefComp]{Definition}
 \newtheorem{algo}{Algorithm}

@@ -12,7 +12,13 @@
 
 \section*{Introduction}
 
+\subsection*{General introduction}
+
 The objective of this project is to design a binary shape indexing system. Given a database of binary shapes (PGM files) associated to different classes, and a binary image, the goal is to find the class whch correspond the most to the image. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
+
+\subsection*{The database used}
+
+% TODO Quelques mots sur la base de données, le type d'images (noir & blanc, type d'objets --> difficulté, ...)
 
 \section{Granulometric analysis applied to shape indexing}
 
@@ -22,15 +28,15 @@ When we are watching images, to associate them to concepts, we use our knowledge
 
 A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
 
-Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g$ on $\mathcal{X}$ by :
+\begin{defi}[Granulometric function]
+Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by :
 
-$$ g(x) = \operatorname{max} \left\{ r | \exists c \in \mathcal{X}, x \in B(c,r) \wedge B(c,r) \subseteq \mathcal{X} \right\} $$ 
+$$ g_{\mathcal{X}}(x) = \operatorname{max} \left\{ r | \exists c \in \mathcal{X}, x \in B(c,r) \wedge B(c,r) \subseteq \mathcal{X} \right\} $$ 
+\end{defi}
 
 In other words, we are looking for the radius of the greatest ball included in the shape $\mathcal{X}$ which contains our point $x$.
 
 If we plot the granulometry function on a 2D shape in the database, we can observe that the different values of the granulometric function correspond to the different "parts" of the object. An example is given on figure \ref{apple-granulo}.
-
-% Note : use pnmtopng to convert.
 
 \begin{figure}[!ht]
     \centering
@@ -51,9 +57,23 @@ We can use the granulometric function to compare two images. To do this, we can 
 
 \subsection{Advantages}
 
-\subsubsection{Invariant by translation}
+\subsubsection{Invariant by translation, rotation and symmetry}
 
+The invariance with respect to translation, rotation and symmetry is an important property. But we have to be a little bit more precise:
 
+\begin{theo}[Invariance by translation]
+	Let $\mathcal{X}$ be a binary shape in $\Ztwo$. Let $\vec{t} \in \Ztwo$ be a vector of translation, and let $\mathcal{X}_{t} = \left\{ x + \vec{t}, x \in \mathcal{X} \right\}$. Then :
+	
+	$$ \forall x \in \mathcal{X}_{t}, g_{\mathcal{X}_{t}}(x) = g_{\mathcal{X}}(x-\vec{t}) $$
+\end{theo}
+
+In other words, there is a trivial isomorphism between the two images $\mathcal{X}$ and  $\mathcal{X}_t$ seen as unions of balls. With this remark, the proof of the theorem is completely trivial.
+
+But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center.
+
+Nonetheless, intuitively if there exists some modifications in the granulometric function, they are not going to be very large in some sense.
+
+% TODO : See if we can quantify the difference between the two.
 
 \subsection{Disadvantages}
 
@@ -75,6 +95,10 @@ Some of the classes are defined by the basic geometrical object they refers to. 
     \caption{The granulometric function is very perturbated on this geometrical object crossed by a curve.}
 	\label{device9-6}
 \end{figure}
+
+\subsubsection{Loss of spatial information}
+
+% TODO dire quelque chose ici, voir une ouverture sur d'autres methodes (notamment les papiers que l'on a regardé)
 
 \subsection{Implementation}
 
