@@ -17,8 +17,6 @@
 #include "DGtal/shapes/implicit/ImplicitBall.h"
 #include "DGtal/io/boards/Board2D.h"
 
-#define NB_CPU 8
-
 using namespace std;
 using namespace DGtal;
 using namespace Z2i;
@@ -163,11 +161,13 @@ vector<string> filename_done()
 
 void threadWork(size_t id)
 {
+    sleep(id);
     while(pos < liste.size())
     {
         cout << "id = " << id << "  pos = " << pos << "  filename = " << liste[pos] << endl;
         ++pos;
         calcul(liste[pos-1]);
+        sleep(30);
     }
 }
 
@@ -221,9 +221,9 @@ void calcul(string filename)
 
 int main(int argc, char* argv[])
 {
-	if (argc != 2)
+	if (argc != 3)
 	{
-		cerr << "Use: ./granulometry folder" << endl;
+		cerr << "Use: ./granulometry folder nb_thread" << endl;
 		exit (1);
 	}
 
@@ -245,6 +245,7 @@ int main(int argc, char* argv[])
     pos = 0;
     vector<thread*> th;
     size_t i;
+    size_t NB_CPU = atol(argv[2]);
 
     for(size_t i=0; i<NB_CPU; ++i)
         th.push_back(new thread(threadWork, i));
