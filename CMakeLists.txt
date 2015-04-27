@@ -24,3 +24,8 @@ target_link_libraries(indexing ${DGTAL_LIBRARIES})
 add_executable(retrieval src/retrieval src/distance)
 target_link_libraries(retrieval ${DGTAL_LIBRARIES})
 
+# genHistogram
+
+add_executable(genHistogram src/genHistogram)
+target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
+

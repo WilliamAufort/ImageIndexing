@@ -37,10 +37,10 @@ typedef DistanceTransformation<Space, PointPredicate, L2Metric> DTL2;
 //////////////////////////////////////////////////////////////////////
 /* Returns a list of files in a directory (except the ones that begin with a dot) */
 
-
+void calcul(string filename);
 vector<string> liste;
 
-size_t index;
+size_t pos;
 
 void GetFilesInDirectory(vector<string> &out, const string &directory)
 {
@@ -161,18 +161,18 @@ vector<string> filename_done()
     return out;
 }
 
-void threadWork()
+void threadWork(size_t id)
 {
-    while(index < liste.size())
+    while(pos < liste.size())
     {
-        ++index;
-        calcul(liste[index-1]);
+        cout << "id = " << id << "  pos = " << pos << "  filename = " << liste[pos] << endl;
+        ++pos;
+        calcul(liste[pos-1]);
     }
 }
 
 void calcul(string filename)
 {
-    cout<<filename<<endl;
     Image image = GenericReader<Image>::import(filename);
 
 	PointPredicate predicate(image,0);
@@ -242,12 +242,12 @@ int main(int argc, char* argv[])
         cout<<s<<" ";
     cout<<endl;
  **/
-    index = 0;
+    pos = 0;
     vector<thread*> th;
     size_t i;
 
     for(size_t i=0; i<NB_CPU; ++i)
-        th.push_back(new thread(threadWork));
+        th.push_back(new thread(threadWork, i));
     for(size_t i=0; i<NB_CPU; ++i)
             th[i]->join();
     for(size_t i=0; i<NB_CPU; ++i)
