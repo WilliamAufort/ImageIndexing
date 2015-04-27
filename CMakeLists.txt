@@ -11,6 +11,8 @@ SET(SRCs
   granulometry
   deleteNoise)
 
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+
 FOREACH(FILE ${SRCs})
   add_executable(${FILE} src/${FILE})
   target_link_libraries (${FILE} ${DGTAL_LIBRARIES})

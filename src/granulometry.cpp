@@ -45,7 +45,7 @@ void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int p
 	ofstream file(fileName.c_str());
     if (file.is_open())
 	{    
-		//for (unsigned int i = 0; i <= pas; ++i)
+		// for (unsigned int i = 0; i <= pas; ++i)
 		// it seems that the points that doesn't belong to the object are considering in 
 		// DT are in fact in the histogram... Just not consider them before close the problem
 		// Another advantage of this is that we use a kind a filter of "bad" balls which can 
@@ -83,11 +83,18 @@ void saveGranulo( Image& granuloImage, unsigned int maxGranulo, string fileName)
     board.saveEPS(fileName.c_str());
 }
 
+string changeExtension(string fileName)
+{
+	int lastIndex = fileName.find_last_of("."); 
+	string newFile = fileName.substr(0, lastIndex) + ".hist";
+	return newFile; 
+}
+
 int main(int argc, char* argv[])
 {
-	if (argc != 3)
+	if (argc != 2)
 	{
-		cerr << "Use: ./granulometry input.pgm output.eps" << endl;
+		cerr << "Use: ./granulometry input.pgm" << endl;
 		exit (1);
 	}
 	trace.beginBlock ("Granulometric computations");
@@ -128,6 +135,7 @@ int main(int argc, char* argv[])
 			}
 		}	
 	}
+
 	trace.info() << "Granulometric function computed with " << compteur << " balls" << endl;
 
 	unsigned int maxGranulo = 0;
@@ -136,11 +144,11 @@ int main(int argc, char* argv[])
 			maxGranulo = granuloImage(*it);
 
 	// Save	
-	saveGranulo(granuloImage, maxGranulo, argv[2]);
+	// saveGranulo(granuloImage, maxGranulo, argv[2]);
 	
 	// Build the histogramm
 	unsigned int pas = 20;
-	string fileName = "histo.txt";
+	string fileName = changeExtension(argv[1]);
 	buildHistogram(granuloImage,maxGranulo,pas,compteur,fileName);
 
 	trace.endBlock();
