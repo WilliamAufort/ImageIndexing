@@ -16,6 +16,6 @@ target_link_libraries(indexing ${DGTAL_LIBRARIES})
 
 # Retrieval
 
-add_executable(retrieval src/retrieval)
-target_link_libraries(indexing ${DGTAL_LIBRARIES})
+add_executable(retrieval src/retrieval src/distance)
+target_link_libraries(retrieval ${DGTAL_LIBRARIES})
 
