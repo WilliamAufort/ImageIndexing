@@ -1,5 +1,11 @@
 #include <iostream>
+#include <thread>
 #include <vector>
+#include<dirent.h>
+#include<sys/stat.h>
+#include<string.h>
+#include<unistd.h>
+#include<regex>
 #include "DGtal/base/Common.h"
 #include "DGtal/io/readers/GenericReader.h"
 #include "DGtal/helpers/StdDefs.h"
@@ -10,6 +16,8 @@
 #include "DGtal/geometry/volumes/distance/DistanceTransformation.h"
 #include "DGtal/shapes/implicit/ImplicitBall.h"
 #include "DGtal/io/boards/Board2D.h"
+
+#define NB_CPU 12
 
 using namespace std;
 using namespace DGtal;
@@ -27,6 +35,67 @@ typedef functors::SimpleThresholdForegroundPredicate<Image> PointPredicate;
 typedef DistanceTransformation<Space, PointPredicate, L2Metric> DTL2;
 
 //////////////////////////////////////////////////////////////////////
+/* Returns a list of files in a directory (except the ones that begin with a dot) */
+
+void GetFilesInDirectory(vector<string> &out, const string &directory)
+{
+    DIR *dir;
+    struct dirent *ent;
+    struct stat st;
+
+    dir = opendir(directory.c_str());
+    while ((ent = readdir(dir)) != NULL) {
+        const string file_name = ent->d_name;
+        const string full_file_name = directory + "/" + file_name;
+
+        if (file_name[0] == '.')
+            continue;
+
+        if (stat(full_file_name.c_str(), &st) == -1)
+            continue;
+
+        const bool is_directory = (st.st_mode & S_IFDIR) != 0;
+
+        if (is_directory)
+            continue;
+
+        out.push_back(full_file_name);
+    }
+    closedir(dir);
+} // GetFilesInDirectory
+
+vector<string> filtre(const vector<string>& liste, const string& regexpr)
+{
+    regex e(regexpr);
+    vector<string> out;
+
+    for(string s : liste)
+        if(regex_match(s, e))
+            out.push_back(s);
+
+    return out;
+}
+
+vector<string> difference(const vector<string>& liste, const vector<string>& done)
+{
+    vector<string> out;
+
+    for(string s : liste)
+    {
+        bool test = false;
+        for(string t : done)
+            if(t == s)
+            {
+                test = true;
+                break;
+            }
+        if(!test)
+            out.push_back(s);
+    }
+
+    return out;
+}
+
 
 void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
 {
@@ -58,31 +127,6 @@ void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int p
 	}
 }
 
-void saveGranulo( Image& granuloImage, unsigned int maxGranulo, string fileName)
-{
-	Board2D board;
-	HueTwice colorMap(1,maxGranulo+1);
-	// Some constants to do the drawing
-	Point O(0,0);
-	string specificStyle =  O.className() + "/Paving"; // Point style
-	Color white(255,255,255);
-    board << SetMode(granuloImage.domain().className(), "Paving")
-      	  << granuloImage.domain()
-          << SetMode(O.className(), "Paving");
-
-   	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
-    {
-    	if (granuloImage(*it) > 0)
-		{
-			Color c = colorMap(granuloImage(*it));
-       		board << CustomStyle(specificStyle, new CustomColors(c,c)) << *it;
-		}
-		else
-			board << CustomStyle(specificStyle, new  CustomColors(white,white)) << *it;
-    }
-    board.saveEPS(fileName.c_str());
-}
-
 string changeExtension(string fileName)
 {
 	int lastIndex = fileName.find_last_of(".");
@@ -90,21 +134,36 @@ string changeExtension(string fileName)
 	return newFile;
 }
 
-int main(int argc, char* argv[])
+void append(string& filename)
 {
-	if (argc != 2)
-	{
-		cerr << "Use: ./granulometry input.pgm" << endl;
-		exit (1);
-	}
-	trace.beginBlock ("Granulometric computations");
+    ofstream outfile;
+    outfile.open(".hist.done", ios_base::app);
+    outfile << filename << endl;
+    outfile.close();
+}
 
-	Image image = GenericReader<Image>::import(argv[1]);
+vector<string> filename_done()
+{
+    ifstream infile;
+    infile.open(".hist.done");
+    string line;
+    vector<string> out;
+
+    while (getline(infile, line))
+        out.push_back(line);
+    infile.close();
+
+    return out;
+}
+
+
+void calcul(string filename)
+{
+    cout<<filename<<endl;
+    Image image = GenericReader<Image>::import(filename);
 
 	PointPredicate predicate(image,0);
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
-
-	// Granulometric function
 
 	Image granuloImage (image.domain());
 	for (Image::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
@@ -136,21 +195,62 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	trace.info() << "Granulometric function computed with " << compteur << " balls" << endl;
-
 	unsigned int maxGranulo = 0;
 	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
 
-	// Save
-	// saveGranulo(granuloImage, maxGranulo, argv[2]);
-
-	// Build the histogramm
 	unsigned int pas = 20;
-	string fileName = changeExtension(argv[1]);
-	buildHistogram(granuloImage,maxGranulo,pas,compteur,fileName);
+	string fileName = "histograms/"+changeExtension(filename);
+	buildHistogram(granuloImage, maxGranulo, pas, compteur, fileName);
+	append(filename);
+}
 
-	trace.endBlock();
+int main(int argc, char* argv[])
+{
+	if (argc != 2)
+	{
+		cerr << "Use: ./granulometry folder" << endl;
+		exit (1);
+	}
+
+	vector<string> liste;
+
+	GetFilesInDirectory(liste, argv[1]);
+ /**
+    for(string s : liste)
+        cout<<s<<" ";
+    cout<<endl;
+ **/
+    cout<<liste.size()<<endl;
+    liste = filtre(liste, ".*pgm"); ///.*bird.*pgm
+    liste = difference(liste, filename_done());
+    cout<<liste.size()<<endl;
+ /**
+    for(string s : liste)
+        cout<<s<<" ";
+    cout<<endl;
+ **/
+
+    vector<thread*> th;
+    size_t i;
+    for(i = 0; i < liste.size()/NB_CPU; i+=NB_CPU)
+    {
+        th.clear();
+        for(int j=0;j<NB_CPU;++j)
+            th.push_back(new thread(calcul, liste[NB_CPU*i+j]));
+        for(int j=0;j<NB_CPU;++j)
+            th[j]->join();
+        for(int j=0;j<NB_CPU;++j)
+            delete th[j];
+    }
+    th.clear();
+    for(size_t j = i; j<liste.size();++j)
+        th.push_back(new thread(calcul, liste[j]));
+    for(size_t j = i; j<liste.size();++j)
+        th[j-i]->join();
+    for(size_t j = i; j<liste.size();++j)
+        delete th[j-i];
+
 	return 0;
 }

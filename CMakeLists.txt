@@ -9,7 +9,8 @@ LINK_DIRECTORIES(${DGTAL_LIBRARY_DIRS})
 SET(SRCs
   helloworld
   granulometry
-  deleteNoise)
+  deleteNoise
+  genHistogram)
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
