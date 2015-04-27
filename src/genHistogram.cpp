@@ -17,7 +17,7 @@
 #include "DGtal/shapes/implicit/ImplicitBall.h"
 #include "DGtal/io/boards/Board2D.h"
 
-#define NB_CPU 12
+#define NB_CPU 8
 
 using namespace std;
 using namespace DGtal;
@@ -36,6 +36,11 @@ typedef DistanceTransformation<Space, PointPredicate, L2Metric> DTL2;
 
 //////////////////////////////////////////////////////////////////////
 /* Returns a list of files in a directory (except the ones that begin with a dot) */
+
+
+vector<string> liste;
+
+size_t index;
 
 void GetFilesInDirectory(vector<string> &out, const string &directory)
 {
@@ -156,6 +161,14 @@ vector<string> filename_done()
     return out;
 }
 
+void threadWork()
+{
+    while(index < liste.size())
+    {
+        ++index;
+        calcul(liste[index-1]);
+    }
+}
 
 void calcul(string filename)
 {
@@ -214,8 +227,6 @@ int main(int argc, char* argv[])
 		exit (1);
 	}
 
-	vector<string> liste;
-
 	GetFilesInDirectory(liste, argv[1]);
  /**
     for(string s : liste)
@@ -231,9 +242,18 @@ int main(int argc, char* argv[])
         cout<<s<<" ";
     cout<<endl;
  **/
-
+    index = 0;
     vector<thread*> th;
     size_t i;
+
+    for(size_t i=0; i<NB_CPU; ++i)
+        th.push_back(new thread(threadWork));
+    for(size_t i=0; i<NB_CPU; ++i)
+            th[i]->join();
+    for(size_t i=0; i<NB_CPU; ++i)
+            delete th[i];
+
+/**
     for(i = 0; i < liste.size()/NB_CPU; i+=NB_CPU)
     {
         th.clear();
@@ -251,6 +271,6 @@ int main(int argc, char* argv[])
         th[j-i]->join();
     for(size_t j = i; j<liste.size();++j)
         delete th[j-i];
-
+**/
 	return 0;
 }
