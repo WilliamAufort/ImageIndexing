@@ -48,3 +48,9 @@ CMakeFiles/*
 report.pdf
 project.pdf
 report-autopp.pdf
+Makefile
+cmake_install.cmake
+deleteNoise
+granulometry
+helloworld
+

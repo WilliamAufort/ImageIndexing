@@ -24,7 +24,7 @@ typedef HueShadeColorMap<long int, 2> HueTwice;
 typedef functors::SimpleThresholdForegroundPredicate<Image> PointPredicate;
 
 // Distance transformation
-typedef DistanceTransformation<Space, PointPredicate, L2Metric> DTL2; 
+typedef DistanceTransformation<Space, PointPredicate, L2Metric> DTL2;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -48,14 +48,14 @@ void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int p
 		// for (unsigned int i = 0; i <= pas; ++i)
 		// it seems that the points that doesn't belong to the object are considering in 
 		// DT are in fact in the histogram... Just not consider them before close the problem
-		// Another advantage of this is that we use a kind a filter of "bad" balls which can 
+		// Another advantage of this is that we use a kind a filter of "bad" balls which can
 		// appear in the border
-		for (unsigned int i= 1; i <= pas; ++i) 
+		for (unsigned int i= 1; i <= pas; ++i)
 		{
 			histo[i] /= cast_compteur;
 			file << i << " " << histo[i] << endl;
 		}
-	}	
+	}
 }
 
 void saveGranulo( Image& granuloImage, unsigned int maxGranulo, string fileName)
@@ -128,12 +128,12 @@ int main(int argc, char* argv[])
 			{
 				if ((granuloImage.domain().isInside(*it)) // Point inside the image
 					&& (ball(*it) > 0)					  // Point inside the ball
-					&& (granuloImage(*it) < radius)) 	  // Granulometric value has to be updated			
+					&& (granuloImage(*it) < radius)) 	  // Granulometric value has to be updated
 				{
 					granuloImage.setValue(*it,radius);
 				}
 			}
-		}	
+		}
 	}
 
 	trace.info() << "Granulometric function computed with " << compteur << " balls" << endl;
