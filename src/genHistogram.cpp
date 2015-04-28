@@ -166,13 +166,17 @@ void threadWork(size_t id)
     while(pos < liste.size())
     {
         mtx.lock();
-        cout << "id = " << id << "  pos = " << pos << "  filename = " << liste[pos] << endl;
+        string filename = liste[pos];
+        cout << "id = " << id << "  pos = " << pos << "  filename = " << filename << endl;
         ++pos;
-        string filename = liste[pos-1];
         mtx.unlock();
         calcul(filename);
         sleep(2);
+        mtx.lock();
+        append(filename);
+        mtx.unlock();
     }
+    cout << "Ay sir! Thread " << id << " is finished."<<endl;
 }
 
 void calcul(string filename)
@@ -220,14 +224,13 @@ void calcul(string filename)
 	unsigned int pas = 20;
 	string fileName = "histograms/"+changeExtension(filename);
 	buildHistogram(granuloImage, maxGranulo, pas, compteur, fileName);
-	append(filename);
 }
 
 int main(int argc, char* argv[])
 {
-	if (argc != 3)
+	if (argc < 3 || argc > 4)
 	{
-		cerr << "Use: ./granulometry folder nb_thread" << endl;
+		cerr << "Use: ./granulometry folder nb_thread [regex]" << endl;
 		exit (1);
 	}
 
@@ -238,7 +241,10 @@ int main(int argc, char* argv[])
     cout<<endl;
  **/
     cout<<liste.size()<<endl;
-    liste = filtre(liste, ".*pgm"); ///.*bird.*pgm
+    if(argc == 4)
+        liste = filtre(liste, argv[3]); ///.*bird.*pgm
+    else
+        liste = filtre(liste, ".*pgm");
     liste = difference(liste, filename_done());
     cout<<liste.size()<<endl;
  /**
@@ -251,11 +257,13 @@ int main(int argc, char* argv[])
     size_t i;
     size_t NB_CPU = atol(argv[2]);
 
-    for(size_t i=0; i<NB_CPU; ++i)
+    size_t borne = (liste.size() < NB_CPU) ? liste.size() : NB_CPU;
+
+    for(size_t i=0; i<borne; ++i)
         th.push_back(new thread(threadWork, i));
-    for(size_t i=0; i<NB_CPU; ++i)
+    for(size_t i=0; i<borne; ++i)
             th[i]->join();
-    for(size_t i=0; i<NB_CPU; ++i)
+    for(size_t i=0; i<borne; ++i)
             delete th[i];
 
 /**
