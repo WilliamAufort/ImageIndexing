@@ -48,7 +48,8 @@ void GetFilesInDirectory(vector<string> &out, const string &directory)
     struct stat st;
 
     dir = opendir(directory.c_str());
-    while ((ent = readdir(dir)) != NULL) {
+    while ((ent = readdir(dir)) != NULL)
+    {
         const string file_name = ent->d_name;
         const string full_file_name = directory + "/" + file_name;
 
@@ -162,7 +163,6 @@ vector<string> filename_done()
 
 void threadWork(size_t id)
 {
-    sleep(id);
     while(pos < liste.size())
     {
         mtx.lock();
