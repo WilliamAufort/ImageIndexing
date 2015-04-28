@@ -2,11 +2,11 @@
 #include <mutex>
 #include <thread>
 #include <vector>
-#include<dirent.h>
-#include<sys/stat.h>
-#include<string.h>
-#include<unistd.h>
-#include<regex>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <unistd.h>
+#include <regex>
 #include "DGtal/base/Common.h"
 #include "DGtal/io/readers/GenericReader.h"
 #include "DGtal/helpers/StdDefs.h"
@@ -171,7 +171,7 @@ void threadWork(size_t id)
         string filename = liste[pos-1];
         mtx.unlock();
         calcul(filename);
-        sleep(30);
+        sleep(2);
     }
 }
 
