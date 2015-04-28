@@ -14,7 +14,7 @@
 
 \subsection*{General introduction}
 
-The objective of this project is to design a binary shape indexing system. Given a database of binary shapes (PGM files) associated to different classes, and a binary image, the goal is to find the class whch correspond the most to the image. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
+The objective of this project is to design a binary shape indexing system. Given a database of binary shapes (PGM files) associated to different classes, and a binary image, the goal is to find the class which correspond the most to the image. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
 
 \subsection*{The database used}
 
@@ -24,7 +24,7 @@ The objective of this project is to design a binary shape indexing system. Given
 
 \subsection{Basic ideas}
 
-When we are watching images, to associate them to concepts, we use our knowledge of these concepts. For example, an apple is a quite circular object with sometimes a stalk and leaves, a camel is a mammal with one or two humps, etc. Basically, for organic objects, we use a kind of segmentation caracterisation to identify the concepts: we recover it by identify its different parts.
+When we are watching images, to associate them to concepts, we use our knowledge of these concepts. For example, an apple is a quite circular object with sometimes a stalk and leaves, a camel is a mammal with one or two humps, etc.. Basically, for organic objects, we use a kind of segmentation characterisation to identify the concepts: we recover it by identify its different parts.
 
 A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
 
@@ -79,7 +79,7 @@ Nonetheless, intuitively if there exists some modifications in the granulometric
 
 \subsubsection{Geometrical objects with perturbations}
 
-Some of the classes are defined by the basic geometrical object they refers to. For example, the object presented in the figure \ref{device9-6}, as all the elements in the class \texttt{device9}, are very close to a ball, excepted that they are crossed by some perturbating element (in the figure it's a line). The problem on such images is that that king of noise perturbate a lot the output of the granulometric function, as we can see in the figure \ref{device9-6}.
+Some of the classes are defined by the basic geometrical object they refers to. For example, the object presented in the figure \ref{device9-6}, as all the elements in the class \texttt{device9}, are very close to a ball, excepted that they are crossed by some perturbing element (in the figure it's a line). The problem on such images is that that king of noise perturb a lot the output of the granulometric function, as we can see in the figure \ref{device9-6}.
 
 \begin{figure}[!ht]
     \centering
@@ -92,7 +92,7 @@ Some of the classes are defined by the basic geometrical object they refers to. 
         \label{device9-6:2}
         \includegraphics[height=175pt]{images/device9-6-granulo}
     }
-    \caption{The granulometric function is very perturbated on this geometrical object crossed by a curve.}
+    \caption{The granulometric function is very perturbed on this geometrical object crossed by a curve.}
 	\label{device9-6}
 \end{figure}
 
@@ -105,7 +105,7 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 
 The general idea of the algorithms that computes the granulometric function is to get a quite good set of candidate balls. A ball included in the image is a candidate ball if it must have a contribution on the granulometric function of a point of the image. Indeed, most of the complexity of the algorithm leads on the iterator over those balls in order to compute the maximal radius for each point. 
 
-We present two algorithms. The first one is quite naive and have been implemented first. It uses only the distance transformation (DT). The second one, clorer to the medial axis concept, is an optimization where we drastically reduce the number of candidate balls to scan.
+We present two algorithms. The first one is quite naive and have been implemented first. It uses only the distance transformation (DT). The second one, closer to the medial axis concept, is an optimization where we drastically reduce the number of candidate balls to scan.
 
 \subsubsection{Naive algorithm : Distance Transformation}
 
@@ -118,7 +118,7 @@ $$ DT(p) = \underset{q \in \widetilde{\mathcal{X}}}{min} \quad d(p,q) $$
 
 $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. We are interested in it because of this trivial result :
 
-\begin{theo}[]
+\begin{theo}
 	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have :
 		$$ B(p,r) \subset B(p,DT(p))$$
 \end{theo}
@@ -156,6 +156,6 @@ We were interested in deleting specular noise. Our choice is to implement a bino
 
 In the grayscale output image, we only keep the pixels with intensity greater than $8 \times 255$, where $8$ represents half of the sum of the weights in the filter ($16$ here) and $255$ the intensity for the white part of the image (i.e. the final object we keep). For more simplicity, we don't keep the $255$ factor, since the only possible intensity values in the input image are $0$ and $255$.
 
-We give the simplier implementation of the filter in the file \texttt{deleteNoise.cpp}. One could improve it, for example using the fact that this filter is separable.
+We give the simpler implementation of the filter in the file \texttt{deleteNoise.cpp}. One could improve it, for example using the fact that this filter is separable.
 
 \end{document}
