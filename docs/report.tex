@@ -125,7 +125,21 @@ $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\ma
 
 With this result, we can restrict the number of balls to scan to $\cplx{\left| \mathcal{X} \right|}$. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because of the other balls are included in some of those ones.
 
-Once we have computed the Distance Transformation, the algorithm to compute the granulometric function works as 
+Once we have computed the Distance Transformation, the algorithm to compute the granulometric function works as follows:
+
+\IncMargin{1em}
+\begin{algorithm}
+\ForEach{point $p \in \mathcal{X}$}{
+    Create a ball centered at $p$ with radius $DT(p)$\;
+    \ForEach{point $q$ in this ball}{
+        \If{$g(y) \leq DT(p)$}{
+			$g(y) \leftarrow DT(p)$\;
+		}
+	}
+}
+\caption{Naive algorithm to compute the granulometric function $g$}
+\label{algo-naive}
+\end{algorithm}
 
 \section{How to deal with noise: choices and implementation}
 
