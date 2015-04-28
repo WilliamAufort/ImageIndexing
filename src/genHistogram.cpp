@@ -1,4 +1,5 @@
 #include <iostream>
+#include <mutex>
 #include <thread>
 #include <vector>
 #include<dirent.h>
@@ -37,7 +38,7 @@ typedef DistanceTransformation<Space, PointPredicate, L2Metric> DTL2;
 
 void calcul(string filename);
 vector<string> liste;
-
+mutex mtx;
 size_t pos;
 
 void GetFilesInDirectory(vector<string> &out, const string &directory)
@@ -164,9 +165,12 @@ void threadWork(size_t id)
     sleep(id);
     while(pos < liste.size())
     {
+        mtx.lock();
         cout << "id = " << id << "  pos = " << pos << "  filename = " << liste[pos] << endl;
         ++pos;
-        calcul(liste[pos-1]);
+        string filename = liste[pos-1];
+        mtx.unlock();
+        calcul(filename);
         sleep(30);
     }
 }
