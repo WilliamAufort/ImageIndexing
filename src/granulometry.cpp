@@ -1,17 +1,13 @@
 #include <iostream>
 #include <vector>
 #include "DGtal/io/boards/Board2D.h"
-
-////
-
 #include "../include/granulometry.h"
 
 using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
-//////////////////////////////////////////////////////////////////////
-
+/// Naive algorithm
 
 unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage)
 {
@@ -43,19 +39,25 @@ unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage
 	return compteur;
 }
 
+/// Advanced granulometric algorithm
+
 unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloImage)
 {
 	PointPredicate predicate(image,0);
 	Z2i::L2PowerMetric l2power;
-	unsigned int compteur = 0;
+	unsigned int compteurBalls = 0;
+	unsigned int compteurPoints = 0;
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
     Map power(image.domain(), dtL2, l2power);
 	RMA::Type rma = RMA::getReducedMedialAxisFromPowerMap(power);
 	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 	{
+		if (dtL2(*it) > 0)
+			compteurPoints++;
+
 		if (rma(*it) > 0)
 		{
-			compteur++;
+			compteurBalls++;
 			unsigned int radius = static_cast<unsigned int>(dtL2(*it));
 			RealPoint center = *it;
 			ImplicitBall<Space> ball(center,radius);
@@ -74,7 +76,8 @@ unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloI
 			}
 		}
 	}
-	return compteur;
+	trace.info() << "Granulometric function computed with " << compteurBalls << " balls" << endl;
+	return compteurPoints;
 }
 
 /// A printer for granulometric images
@@ -104,6 +107,8 @@ void saveGranulo(myLittleImage& granuloImage, unsigned int maxGranulo, string fi
     board.saveEPS(fileName.c_str());
 }
 
+/// Build the histograms used in indexing
+
 void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
 {
 	vector<double> histo(pas+1,0.0);
@@ -131,20 +136,13 @@ void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsign
 	}
 }
 
-string changeExtension(string fileName)
-{
-	int lastIndex = fileName.find_last_of(".");
-	string newFile = fileName.substr(0, lastIndex) + ".hist";
-	return newFile;
-}
+/// To test the speed of the two algorithms (used in testEfficiency.cpp)
 
 void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image, const char* inputFile)
 {
 	trace.beginBlock ("Test");
 
 	myLittleImage granuloImage (image.domain());
-	for (myLittleImage::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
-		*it = 0;
 	unsigned int nbBalls = granulo(image,granuloImage);
 	trace.info() << "Granulometric function computed with " << nbBalls << " balls" << endl;
 	trace.endBlock();

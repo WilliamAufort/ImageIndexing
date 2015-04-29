@@ -10,35 +10,26 @@
 #include "DGtal/images/SimpleThresholdForegroundPredicate.h"
 #include "DGtal/geometry/volumes/distance/DistanceTransformation.h"
 #include "DGtal/shapes/implicit/ImplicitBall.h"
-// test medial axis extraction
 #include "DGtal/geometry/volumes/distance/PowerMap.h"
 #include "DGtal/geometry/volumes/distance/ReducedMedialAxis.h"
 #include "DGtal/geometry/volumes/distance/ExactPredicateLpPowerSeparableMetric.h"
 
 typedef DGtal::ImageSelector<DGtal::Z2i::Domain, unsigned int>::Type myLittleImage;
-
-// Colormap used for the output
 typedef DGtal::HueShadeColorMap<long int, 2> HueTwice;
-
-// Point predicate
 typedef DGtal::functors::SimpleThresholdForegroundPredicate<myLittleImage> PointPredicate;
-
-// Distance transformation
 typedef DGtal::DistanceTransformation<DGtal::Z2i::Space, PointPredicate, DGtal::Z2i::L2Metric> DTL2;
-
-// Power map
 typedef DGtal::PowerMap<DTL2, DGtal::Z2i::L2PowerMetric> Map;
-
-// Medial axis 
 typedef DGtal::ReducedMedialAxis<Map> RMA;
 
-void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, std::string fileName);
-void saveGranulo(myLittleImage& granuloImage, unsigned int maxGranulo, std::string fileName);
-std::string changeExtension(std::string fileName);
 unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage);
 unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloImage);
+void saveGranulo(myLittleImage& granuloImage, unsigned int maxGranulo, std::string fileName);
+void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, std::string fileName);
+
+/// Test efficiency of the two algorithms
 
 void testSpeed(std::function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image, const char* inputFile);
 void testSpeedNaive(myLittleImage& image, const char* inputFile);
 void testSpeedQuick(myLittleImage& image, const char* inputFile);
+
 #endif

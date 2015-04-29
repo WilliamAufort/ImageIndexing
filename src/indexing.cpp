@@ -5,6 +5,13 @@ using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
+string changeExtension(string fileName)
+{
+	int lastIndex = fileName.find_last_of(".");
+	string newFile = fileName.substr(0, lastIndex) + ".hist";
+	return newFile;
+}
+
 int main(int argc, char* argv[])
 {
 	if (argc != 2)
@@ -16,22 +23,12 @@ int main(int argc, char* argv[])
 
 	myLittleImage image = GenericReader<myLittleImage>::import(argv[1]);
 	myLittleImage granuloImage (image.domain());
-	for (myLittleImage::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
-		*it = 0;
-
-	unsigned int nbBalls = granuloWithMedialAxis(image,granuloImage);
-
-	trace.info() << "Granulometric function computed with " << nbBalls << " balls" << endl;
+	unsigned int nbPoints = granuloWithMedialAxis(image,granuloImage);
 
 	unsigned int maxGranulo = 0;
-	unsigned int nbPoints = 0;
 	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
-	{	
-		if (granuloImage(*it) > 0)
-			nbPoints++;
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
-	}
 
 	unsigned int pas = 20;
 	string fileName = changeExtension(argv[1]);
