@@ -27,7 +27,7 @@ target_link_libraries(retrieval ${DGTAL_LIBRARIES})
 
 # genHistogram
 
-add_executable(genHistogram src/genHistogram)
+add_executable(genHistogram src/genHistogram src/granulometry)
 target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
 
 # testEfficiency
