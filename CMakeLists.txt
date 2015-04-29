@@ -10,7 +10,8 @@ SET(SRCs
   helloworld
   granulometry
   deleteNoise
-  genHistogram)
+  genHistogram
+  testEfficency)
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
@@ -28,4 +29,10 @@ target_link_libraries(retrieval ${DGTAL_LIBRARIES})
 
 add_executable(genHistogram src/genHistogram)
 target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
+
+# testEfficiency
+
+add_executable(testEfficiency src/testEfficiency src/granulometry)
+target_link_libraries(testEfficiency ${DGTAL_LIBRARIES})
+
 

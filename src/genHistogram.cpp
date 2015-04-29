@@ -22,13 +22,13 @@ using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
-typedef ImageSelector<Domain, unsigned int>::Type Image;
+typedef ImageSelector<Domain, unsigned int>::Type myLittleImage;
 
 // Colormap used for the output
 typedef HueShadeColorMap<long int, 2> HueTwice;
 
 // Point predicate
-typedef functors::SimpleThresholdForegroundPredicate<Image> PointPredicate;
+typedef functors::SimpleThresholdForegroundPredicate<myLittleImage> PointPredicate;
 
 // Distance transformation
 typedef DistanceTransformation<Space, PointPredicate, L2Metric> DTL2;
@@ -102,13 +102,13 @@ vector<string> difference(const vector<string>& liste, const vector<string>& don
 }
 
 
-void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
+void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
 {
 	vector<double> histo(pas+1,0.0);
 	double cast_max = static_cast<double>(maxGranulo);
 	double cast_pas = static_cast<double>(pas);
 	double cast_compteur = static_cast<double>(compteur);
-	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 	{
 		if (granuloImage.domain().isInside(*it)) // inside the image
 		{
@@ -181,18 +181,17 @@ void threadWork(size_t id)
 
 void calcul(string filename)
 {
-    Image image = GenericReader<Image>::import(filename);
+    myLittleImage image = GenericReader<myLittleImage>::import(filename);
 
 	PointPredicate predicate(image,0);
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
 
-	Image granuloImage (image.domain());
-	for (Image::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
+	myLittleImage granuloImage (image.domain());
+	for (myLittleImage::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
 		*it = 0;
 
 	unsigned int compteur = 0; // number of points in the image
-	{
-	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 		if (dtL2(*it) > 0) // inside the image
 		{
 			compteur++;
@@ -214,10 +213,9 @@ void calcul(string filename)
 				}
 			}
 		}
-	}
 
 	unsigned int maxGranulo = 0;
-	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
 

@@ -2,6 +2,8 @@
 #include <vector>
 #include "DGtal/io/boards/Board2D.h"
 
+////
+
 #include "../include/granulometry.h"
 
 using namespace std;
@@ -11,13 +13,12 @@ using namespace Z2i;
 //////////////////////////////////////////////////////////////////////
 
 
-unsigned int buildGranulo(Image& image, Image& granuloImage)
+unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage)
 {
 	PointPredicate predicate(image,0);
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
 	unsigned int compteur = 0; // number of points in the image
-	{
-	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 		if (dtL2(*it) > 0) // inside the image
 		{
 			compteur++;
@@ -29,13 +30,46 @@ unsigned int buildGranulo(Image& image, Image& granuloImage)
 			Point top = center + Point::diagonal(radius +1);
 			Point bottom = center - Point::diagonal(radius +1);
 			Domain sphereDomain(bottom,top);
-			for (Domain::ConstIterator it = sphereDomain.begin(); it != sphereDomain.end(); ++it)
+			for (Domain::ConstIterator ite = sphereDomain.begin(); ite != sphereDomain.end(); ++ite)
 			{
-				if ((granuloImage.domain().isInside(*it)) // Point inside the image
-					&& (ball(*it) > 0)					  // Point inside the ball
-					&& (granuloImage(*it) < radius)) 	  // Granulometric value has to be updated
+				if ((granuloImage.domain().isInside(*ite)) // Point inside the image
+					&& (ball(*ite) > 0)					  // Point inside the ball
+					&& (granuloImage(*ite) < radius)) 	  // Granulometric value has to be updated
 				{
-					granuloImage.setValue(*it,radius);
+					granuloImage.setValue(*ite,radius);
+				}
+			}
+		}
+	return compteur;
+}
+
+unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloImage)
+{
+	PointPredicate predicate(image,0);
+	Z2i::L2PowerMetric l2power;
+	unsigned int compteur = 0;
+	DTL2 dtL2(image.domain(), predicate, l2Metric);
+    Map power(image.domain(), dtL2, l2power);
+	RMA::Type rma = RMA::getReducedMedialAxisFromPowerMap(power);
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	{
+		if (rma(*it) > 0)
+		{
+			compteur++;
+			unsigned int radius = static_cast<unsigned int>(dtL2(*it));
+			RealPoint center = *it;
+			ImplicitBall<Space> ball(center,radius);
+			// To iterate on the sphere, we build a tangent bounding box around it and iterate into the box
+			Point top = center + Point::diagonal(radius +1);
+			Point bottom = center - Point::diagonal(radius +1);
+			Domain sphereDomain(bottom,top);
+			for (Domain::ConstIterator ite = sphereDomain.begin(); ite != sphereDomain.end(); ++ite)
+			{	
+				if ((granuloImage.domain().isInside(*ite)) // Point inside the image
+					&& (ball(*ite) > 0)					  // Point inside the ball
+					&& (granuloImage(*ite) < radius)) 	  // Granulometric value has to be updated
+				{
+					granuloImage.setValue(*ite,radius);
 				}
 			}
 		}
@@ -45,7 +79,7 @@ unsigned int buildGranulo(Image& image, Image& granuloImage)
 
 /// A printer for granulometric images
 
-void saveGranulo(Image& granuloImage, unsigned int maxGranulo, string fileName)
+void saveGranulo(myLittleImage& granuloImage, unsigned int maxGranulo, string fileName)
 {
 	Board2D board;
 	HueTwice colorMap(1,maxGranulo+1);
@@ -57,7 +91,7 @@ void saveGranulo(Image& granuloImage, unsigned int maxGranulo, string fileName)
       	  << granuloImage.domain()
           << SetMode(O.className(), "Paving");
 
-   	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+   	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
     {
     	if (granuloImage(*it) > 0)
 		{
@@ -70,13 +104,13 @@ void saveGranulo(Image& granuloImage, unsigned int maxGranulo, string fileName)
     board.saveEPS(fileName.c_str());
 }
 
-void buildHistogram(Image& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
+void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
 {
 	vector<double> histo(pas+1,0.0);
 	double cast_max = static_cast<double>(maxGranulo);
 	double cast_pas = static_cast<double>(pas);
 	double cast_compteur = static_cast<double>(compteur);
-	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 	{
 		if (granuloImage.domain().isInside(*it)) // inside the image
 		{
@@ -105,5 +139,30 @@ string changeExtension(string fileName)
 	int lastIndex = fileName.find_last_of(".");
 	string newFile = fileName.substr(0, lastIndex) + ".hist";
 	return newFile;
+}
+
+void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image, const char* inputFile)
+{
+	trace.beginBlock ("Test");
+
+	myLittleImage granuloImage (image.domain());
+	for (myLittleImage::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
+		*it = 0;
+	unsigned int nbBalls = granulo(image,granuloImage);
+	trace.info() << "Granulometric function computed with " << nbBalls << " balls" << endl;
+	trace.endBlock();
+	return;
+}
+
+void testSpeedNaive(myLittleImage& image, const char* inputFile)
+{
+	function<unsigned int(myLittleImage&, myLittleImage&)> f = &buildNaiveGranulo;
+	testSpeed(f,image,inputFile);	
+}
+
+void testSpeedQuick(myLittleImage& image, const char* inputFile)
+{
+	function<unsigned int(myLittleImage&, myLittleImage&)> f = &granuloWithMedialAxis;
+	testSpeed(f,image,inputFile);	
 }
 

@@ -14,27 +14,20 @@ int main(int argc, char* argv[])
 	}
 	trace.beginBlock ("Granulometric computations");
 
-	Image image = GenericReader<Image>::import(argv[1]);
-
-	// Granulometric function
-
-	Image granuloImage (image.domain());
-	for (Image::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
+	myLittleImage image = GenericReader<myLittleImage>::import(argv[1]);
+	myLittleImage granuloImage (image.domain());
+	for (myLittleImage::Range::Iterator it = granuloImage.range().begin(); it != granuloImage.range().end(); ++it)
 		*it = 0;
 
-	unsigned int nbBalls = buildGranulo(image,granuloImage);
+	unsigned int nbBalls = granuloWithMedialAxis(image,granuloImage);
 
 	trace.info() << "Granulometric function computed with " << nbBalls << " balls" << endl;
 
 	unsigned int maxGranulo = 0;
-	for (Image::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
 
-	// Save	
-	// saveGranulo(granuloImage, maxGranulo, argv[2]);
-	
-	// Build the histogramm
 	unsigned int pas = 20;
 	string fileName = changeExtension(argv[1]);
 	buildHistogram(granuloImage,maxGranulo,pas,nbBalls,fileName);
