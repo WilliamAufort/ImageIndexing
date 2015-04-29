@@ -31,3 +31,22 @@ In the build folder, you will find the different executables. Run them with the 
 	./granulometry arguments
 
 To know how the executables work, just run them without arguments.
+
+More details about each of them.
+
+	./deleteNoise
+
+uses a linear filter to delete noise on the image. Particularly efficient against specular noise.
+
+	./genHistograms
+
+generated all the histograms needed to do the shape retrieval.
+Be careful ! This executable is too much long (more than a day with parallelization). That's why you can use directly the histograms in the directory: histograms/database
+
+	./indexing
+
+returns a vector of scalar quantities which describes the shape. Here, we just compute the distribution of the granulometric values on the shape.
+
+	./retrieval
+
+just says "Distance computations" for the moment.
