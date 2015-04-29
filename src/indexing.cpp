@@ -24,13 +24,18 @@ int main(int argc, char* argv[])
 	trace.info() << "Granulometric function computed with " << nbBalls << " balls" << endl;
 
 	unsigned int maxGranulo = 0;
+	unsigned int nbPoints = 0;
 	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	{	
+		if (granuloImage(*it) > 0)
+			nbPoints++;
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
+	}
 
 	unsigned int pas = 20;
 	string fileName = changeExtension(argv[1]);
-	buildHistogram(granuloImage,maxGranulo,pas,nbBalls,fileName);
+	buildHistogram(granuloImage,maxGranulo,pas,nbPoints,fileName);
 
 	trace.endBlock();
 	return 0;

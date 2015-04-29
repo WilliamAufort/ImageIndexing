@@ -127,10 +127,7 @@ void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsign
 		// Another advantage of this is that we use a kind a filter of "bad" balls which can
 		// appear in the border
 		for (unsigned int i= 1; i <= pas; ++i)
-		{
-			histo[i] /= cast_compteur;
-			file << i << " " << histo[i] << endl;
-		}
+			file << i << " " << histo[i] / cast_compteur << endl;
 	}
 }
 
