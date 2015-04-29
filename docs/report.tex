@@ -26,7 +26,7 @@ The objective of this project is to design a binary shape indexing system. Given
 
 When we are watching images, to associate them to concepts, we use our knowledge of these concepts. For example, an apple is a quite circular object with sometimes a stalk and leaves, a camel is a mammal with one or two humps, etc.. Basically, for organic objects, we use a kind of segmentation characterisation to identify the concepts: we recover it by identify its different parts.
 
-A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
+A famous tool used in volumetric analysis to detere segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
 
 \begin{defi}[Granulometric function]
 Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by :
@@ -125,7 +125,7 @@ $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\ma
 
 With this result, we can restrict the number of balls to scan to $\cplx{\left| \mathcal{X} \right|}$. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because of the other balls are included in some of those ones.
 
-Once we have computed the Distance Transformation, the algorithm to compute the granulometric function works as follows:
+We use the implementation of the Distance Transformation provided in \textsc{DGtal}. Once we have computed the Distance Transformation, the naive algorithm we can use to compute the granulometric function works as follows:
 
 \IncMargin{1em}
 \begin{algorithm}
@@ -140,6 +140,14 @@ Once we have computed the Distance Transformation, the algorithm to compute the 
 \caption{Naive algorithm to compute the granulometric function $g$}
 \label{algo-naive}
 \end{algorithm}
+
+\begin{theo}[Correctness of Algorithm \ref{algo-naive}]
+	At the end of the execution of the algorithm \ref{algo-naive}, $g$ is exactly the granulometry function on $\mathcal{X}$.
+\end{theo}
+
+\begin{proof}
+Let $p \in \mathcal{X}$. We can easily see that the value returned for $g(p)$ at the end of the algorithm is $ \operatorname{max} \set{DT(q) | q \in \mathcal{X} \and p \in B(q,DT(q)) \subset \mathcal{X}}$
+\end{proof}
 
 \section{How to deal with noise: choices and implementation}
 
