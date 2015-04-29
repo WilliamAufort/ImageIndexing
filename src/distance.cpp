@@ -11,6 +11,14 @@ vector<double> readHisto (std::string fileName)
 	ifstream file(fileName.c_str());
 	if (file.is_open())
 	{
+		bool isData = false;
+		string word;
+		while(file >> word)
+		{
+			if (isData)
+				histo.push_back(stod(word));
+			isData = not(isData);
+		}
 		return histo;
 	}
 }
