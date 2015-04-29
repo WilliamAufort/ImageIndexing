@@ -38,10 +38,19 @@ More details about each of them.
 
 uses a linear filter to delete noise on the image. Particularly efficient against specular noise.
 
-	./genHistograms
+	./genHistograms <folder> <nb_thread> [<regex>]
+	
+generated all the histograms needed to do the shape retrieval.The argument <folder> is the folder containging the .pgm you want to analyse. <nb_thread> is the number of thread launched.
+The argument <regex> is optional. When it is given, the histograms are generated only for files whose name matches the regular expression. If there is none, the default regex ".*pgm" is used. For instance0
 
-generated all the histograms needed to do the shape retrieval.
-Be careful ! This executable is too much long (more than a day with parallelization). That's why you can use directly the histograms in the directory: histograms/database
+	./genHistograms database 8 
+
+computes the histograms of all pgm in database with 8 threads, or
+	
+	./genHistograms database 8 ".*snake.*pgm"
+
+computes the histograms of the pgm in database whose filename matches ".*snake.*pgm" on 8 threads.
+Be careful! This executable is too much long (more than a day with parallelization, about 100h sequentially). That's why you can use directly the histograms in the directory histograms/database
 
 	./indexing
 
