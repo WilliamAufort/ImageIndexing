@@ -121,6 +121,7 @@ $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\ma
 \begin{theo}
 	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have :
 		$$ B(p,r) \subset B(p,DT(p))$$
+\label{theoremDT}
 \end{theo}
 
 With this result, we can restrict the number of balls to scan to $\cplx{\left| \mathcal{X} \right|}$. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because of the other balls are included in some of those ones.
@@ -146,8 +147,24 @@ We use the implementation of the Distance Transformation provided in \textsc{DGt
 \end{theo}
 
 \begin{proof}
-Let $p \in \mathcal{X}$. We can easily see that the value returned for $g(p)$ at the end of the algorithm is $ \operatorname{max} \set{DT(q) | q \in \mathcal{X} \and p \in B(q,DT(q)) \subset \mathcal{X}}$
+Let $p \in \mathcal{X}$. We can easily see that the value returned for $g(p)$ at the end of the algorithm is 
+$ \operatorname{max} \set{DT(q) | q \in \mathcal{X} \wedge p \in B(q,DT(q)) \subset \mathcal{X}} 
+= \operatorname{max} \set{r | q \in \mathcal{X} \wedge p \in B(q,r) \subset \mathcal{X}}$ thanks to Theorem \ref{theoremDT}, which is exactly $g(p)$.
 \end{proof}
+
+The complexity of this algorithm is quite bad. For each point $p$, we build a ball of radius $DT(p)$ and scan all the points inside the ball to (eventually) update some values of granulometry. This step has a complexity $\cplx{{r_{max}}^2}$, where $r_max$ is the maximal radius of a ball contained in $\mathcal{X}$. Since we scan only one ball per point, the overall complexity is $\cplx{\left| \mathcal{X} \right|. {r_{max}}^2}$.
+
+\subsubsection{Clever algorithm using Medial Axis}
+
+As we have presented the issues of these algorithms, the goal is to reduce the number of balls we scan. Actually, we scan exactly $\left| \mathcal{X} \right|$ balls. We can reduce this number bycomputing the medial axis, which is the set of maximal balls included in the object.
+
+To implement this, we use two \textsc{DGtal} primitives : \textsc{PowerMap} and \textsc{ReducedMedialAxis}. We don't enter into all the details, but we juste summurize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using the power diagrams. 
+
+\subsubsection{Experiment: efficiency of the two algorithms}
+
+We can observe that the second algorithm scans less balls than the first one. On the other hand, since we had to compute the medial axis in the second algorithm, the gain on the execution time is less than the gain in terms of number of balls.
+
+But overall, these algorithms are not very fast, and it's a real problem when we are working in a database.
 
 \section{How to deal with noise: choices and implementation}
 
@@ -166,4 +183,9 @@ In the grayscale output image, we only keep the pixels with intensity greater th
 
 We give the simpler implementation of the filter in the file \texttt{deleteNoise.cpp}. One could improve it, for example using the fact that this filter is separable.
 
+\section*{Conclusion}
+
+The goal of this project was not not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which modelize the concept of segmentation we use implicitely to recognize objects. We used different algorithms to compute it and proved their correctness.
+
 \end{document}
+
