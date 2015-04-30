@@ -50,7 +50,7 @@ computes the histograms of all pgm in database with 8 threads, or
 	./genHistograms database 8 ".*snake.*pgm"
 
 computes the histograms of the pgm in database whose filename matches ".*snake.*pgm" on 8 threads.
-Be careful! This executable is too much long (more than a day with parallelization, about 100h sequentially). That's why you can use directly the histograms in the directory histograms/database
+Be careful! This executable is too much long (very long even with parallelization, about 100h sequentially). That's why you can use directly the histograms in the directory histograms/database.
 
 	./indexing
 
