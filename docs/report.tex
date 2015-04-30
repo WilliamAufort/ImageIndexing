@@ -189,7 +189,7 @@ But overall, these algorithms are not very fast, and it's a real problem when we
 
 Previously, we defined the granulometric function and we exposed the reasons for which this function could be interested for a shape indexing system. In this section, we are going to explain exactly how we use the granulometric function.
 
-\subsection{A metric based on statistical similarity}
+\subsection{A metric based on statistical similarity : the Earth Mover Distance}
 
 In order to build a shape indexing system, we have to define a metric to quantify the distance between two images. We chose to represent this function as an histogram, because it's a more compact representation and we can do easy computations on it. For instance, a distance between two histograms could be a simple $l_p$ norm over $\RR^n$, where $n$ is the dimension of the histogram. A distance directly between the two images to compare would have been quite hard.
 
@@ -245,7 +245,42 @@ What's more, we have a more efficent way to compute it:
 \]
 \end{theo}
 
-\cite{EMD-proof} proposes an intuitive proof based on the interpretation of the quantity $\sum_{i=1}^n{EMD_i}$ in term of area between the two curves which represents the cumultative distributions of $P$ and $Q$.TITI
+\cite{EMD-proof} proposes an intuitive proof based on the interpretation of the quantity $\sum_{i=1}^n{EMD_i}$ in term of area between the two curves which represents the cumultative distributions of $P$ and $Q$.
+
+% TODO : Figure du papier, attention à l'erreur de valeur
+
+\subsubsection{Properties and advantages}
+
+The Earth Mover Distance several advantages. First of all, it defines a metric in the mathematical sense:
+
+\begin{theo}[EMD is a metric]
+	In the general case (i.e not only in dimension 1), if the total weight of the two histograms are equal, then the Earth Mover Distance defines a metric: for all $P$, $Q$, and $R$ we have:
+	\begin{itemize}
+		\item $EMD(P,P) = 0$
+		\item $EMD(P,Q) = EMD(Q,P)$
+		\item $EMD(P,R) \leq EMD(P,Q) + EMD(Q,R)$
+	\end{itemize}
+\end{theo}
+
+\begin{proof}
+
+\begin{itemize}
+	\item Let $f_{i,j} = \begin{cases}
+                        	w_i & \text{ if } i = j\\ 
+                       	 	0 & \text{otherwise}
+                   	 	 \end{cases}$
+	
+	Clearly $f$ is solution of the linear program such that the value of the objective function is zero (because $d_{i,i} = 0$), which is optimal.
+
+	\item The linear programs associated to $EMD(P,Q)$ and $EMD(Q,P)$ are exactly the same (just invert conditions $2$ ans $3$), so they are equal.
+
+	\item Let $f_{P,Q}$ and $f_{Q,R}$ the solutions associated to the linear problem of $EMD(P,Q)$ and $EMD(Q,R)$. Intuitively, the solution $f$ obtained by composing these two solutions (first transform $P$ to $Q$, then $Q$ to $R$) is a valid transformation from$P$ to $R$, with cost associated $\leq EMD(P,Q)+EMD(Q,R)$. 
+
+	But since $EMD(P,R)$ is the minimal cost for all the transformations, we get that $EMD(P,R) \leq EMD(P,Q) + EMD(Q,R)$, which concludes the proof.
+\end{itemize}
+
+\end{proof}
+
 
 \section{How to deal with noise: choices and implementation}
 
