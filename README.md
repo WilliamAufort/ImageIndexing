@@ -41,7 +41,7 @@ uses a linear filter to delete noise on the image. Particularly efficient agains
 	./genHistograms <folder> <nb_thread> [<regex>]
 	
 generated all the histograms needed to do the shape retrieval.The argument <folder> is the folder containging the .pgm you want to analyse. <nb_thread> is the number of thread launched.
-The argument <regex> is optional. When it is given, the histograms are generated only for files whose name matches the regular expression. If there is none, the default regex ".*pgm" is used. For instance0
+The argument <regex> is optional. When it is given, the histograms are generated only for files whose name matches the regular expression. If there is none, the default regex ".*pgm" is used. For instance:
 
 	./genHistograms database 8 
 
