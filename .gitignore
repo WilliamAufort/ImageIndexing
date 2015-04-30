@@ -32,6 +32,7 @@ helloworld
 genHistogram
 retrieval
 indexing
+testEfficiency
 
 # Removed files
 *~
@@ -58,3 +59,4 @@ report.pdf
 project.pdf
 report-autopp.pdf
 Makefile
+
