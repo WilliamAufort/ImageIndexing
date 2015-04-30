@@ -36,7 +36,7 @@ Of course, other decompositions, more or less precise, are possible. From this, 
 %\end{figure}
 
 
-\section{Granulometric analysis applied to shape indexing}
+\section{Granulometric analysis}
 
 \subsection{Basic ideas}
 
@@ -69,7 +69,7 @@ If we plot the granulometry function on a 2D shape in the database, we can obser
     \label{apple-granulo}
 \end{figure}
 
-We can use the granulometric function to compare two images. To do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics. Compare two images remains to compare two histograms, so we have to define a distance between histograms.
+We can use the granulometric function to compare two images. To do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics. Compare two images remains to compare two histograms, so we have to define a distance between histograms. This work will be explained with more details in the next section.
 
 \subsection{Advantages}
 
@@ -181,6 +181,42 @@ To implement this, we use two \textsc{DGtal} primitives : \texttt{PowerMap} and 
 We can observe that the second algorithm scans less balls than the first one. On the other hand, since we had to compute the medial axis in the second algorithm, the gain on the execution time is less than the gain in terms of number of balls.
 But overall, these algorithms are not very fast, and it's a real problem when we are working in a large database, because the cost of precalculations is huge.
 
+\section{Application of granulometric analysis to shape indexing}
+
+Previously, we defined the granulometric function and we exposed the reasons for which this function could be interested for a shape indexing system. In this section, we are going to explain exactly how we use the granulometric function.
+
+\subsection{A metric based on statistical similarity}
+
+In order to build a shape indexing system, we have to define a metric to quantify the distance between two images. We chose to represent this function as an histogram, because it's a more compact representation and we can do easy computations on it. For instance, a distance between two histograms could be a simple $l_p$ norm over $\RR^n$, where $n$ is the dimension of the histogram. A distance directly between the two images to compare would have been quite hard.
+
+Unfortunetaly, we are not going to use the $l_p$ norms, because they don't highlight enough the statistical point of view we adopt with these histograms. We use a distance called the \textbf{Earth Mover Distance} (or EMD).
+
+\subsubsection{Definition}
+
+The Earth Mover Distance have been introduced in \cite{EMD-def} and is now used in many fields. We introduce in this part the original definition and some result we can get in our particular case.
+
+Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the miniaml cost to transform one distribution to the other one. The definition consider distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional arrays).
+
+\begin{defi}[Earth mover distance (general case)]
+	Let $P = \set{(p_1,w_{p_1}), \dots, (p_m,w_{p_m})}$ be a set of $m$ clusters, where $p_i$ represents the representative of the cluster and $w_{p_i}$ its weight. Similarly, let $Q = \set{(q_1,w_{q_1}), \dots, (q_n,w_{q_n})}$ be another set of $n$ clusters. Let $d_{i,j}$ be the ground distance between the clusters $p_i$ and $q_j$.
+	Let $(f_{i,j})$ be the solution to the following linear program:
+	Maximize $\sum_{i=1}^m \sum_{j=1}^n d_{i,j} f_{i,j}$ subject to
+\[
+    \begin{aligned}
+        f_{i,j} &\geq 0  \quad \forall i \in \set{1, \dots, m}, \forall j \in \set{1, \dots, n} \\
+        \sum_{j=1}^{n}{f_{i,j}} &\leq w_{p_i} \quad \forall i \in \set{1, \dots, m}\\
+        \sum_{i=1}^{m}{f_{i,j}} &\leq w_{q_j} \quad \forall j \in \set{1, \dots, n} \\
+        \sum_{i=1}^m \sum_{j=1}^n f_{i,j} &= \operatorname{min} \left( \sum_{i=1}^m w_{p_i} \quad,\quad \sum_{j=1}^n w_{q_j}\right)
+    \end{aligned}
+\]
+The Earth Mover distance is defined as the found work normalized by the total flow:
+\[
+	EMD(P,Q) = \frac{\sum_{i=1}^m \sum_{j=1}^n d_{i,j} f_{i,j}}{\sum_{i=1}^m \sum_{j=1}^n f_{i,j}}
+\]
+\end{defi}
+
+TOTO TITI
+
 
 \section{How to deal with noise: choices and implementation}
 
@@ -202,6 +238,9 @@ We give the simpler implementation of the filter in the file \texttt{deleteNoise
 \section*{Conclusion}
 
 The goal of this project was not not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which modelize the concept of segmentation we use implicitely to recognize objects. We used different algorithms to compute it and proved their correctness.
+
+\bibliographystyle{plain}
+\bibliography{biblio}
 
 \end{document}
 

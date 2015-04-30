@@ -1,4 +1,5 @@
 TEX = latex --shell-escape -interaction=nonstopmode
+BIB = bibtex
 
 all: report.pdf
 
@@ -10,8 +11,10 @@ report.pdf: report.ps
 report.ps: report.dvi
 	dvips $<
 
-report.dvi: report.tex macros.tex
-	$(TEX) $<
+report.dvi: report.tex biblio.bib macros.tex
+	$(TEX) report.tex
+	$(BIB) report	
+	$(TEX) report.tex
 
 clean:
 	@rm -f report.ps report.dvi report.pdf 
