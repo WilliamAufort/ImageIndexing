@@ -9,7 +9,6 @@ LINK_DIRECTORIES(${DGTAL_LIBRARY_DIRS})
 SET(SRCs
   helloworld
   granulometry
-  deleteNoise
   genHistogram
   testEfficency)
 
@@ -22,7 +21,7 @@ target_link_libraries(indexing ${DGTAL_LIBRARIES})
 
 # Retrieval
 
-add_executable(retrieval src/retrieval src/distance)
+add_executable(retrieval src/retrieval src/distance src/granulometry src/transforms)
 target_link_libraries(retrieval ${DGTAL_LIBRARIES})
 
 # genHistogram

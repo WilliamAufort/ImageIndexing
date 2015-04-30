@@ -1,5 +1,6 @@
 #include "../include/distance.h"
 #include "../include/granulometry.h"
+#include <iostream>
 
 using namespace std;
 using namespace DGtal;
@@ -9,11 +10,11 @@ int main (int argc, char* argv[])
 {
 	if (argc != 3)
 	{
-		cerr << "Use: ./retrieval image1.pgm image2.pgm" << endl;
+		cerr << "Use: ./retrieval image.pgm histo.hist" << endl;
 		exit (1);
 	}
 	trace.beginBlock ("Distance computations");
-	// Some calculations
+	cout << distanceImageToHisto(argv[1],argv[2]);
 	trace.endBlock();
 	return 0;
 }

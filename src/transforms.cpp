@@ -1,14 +1,8 @@
-#include "DGtal/base/Common.h"
-#include "DGtal/io/readers/GenericReader.h"
-#include "DGtal/helpers/StdDefs.h"
-#include "DGtal/images/ImageSelector.h"
-#include "DGtal/io/writers/PGMWriter.h"
+#include "../include/transforms.h"
 
 using namespace std;
 using namespace DGtal;
 using namespace Z2i;
-
-typedef ImageSelector<Domain, unsigned char>::Type Image;
 
 /***************************************\
 | Implementation of a simple smoothing 	|
@@ -33,7 +27,7 @@ which seems sufficient for the work we are doing with it.
 
 // Return 1 if belongs P belongs to the object, 0 otherwise (not on the object or out of the border)
 
-unsigned int getValue(Image& image, Point p)
+unsigned int getValue(myLittleImage& image, Point p)
 {
 	if (image.domain().isInside(p))
 		return (image(p) > 0);
@@ -42,9 +36,9 @@ unsigned int getValue(Image& image, Point p)
 
 // Apply the filter on the image
 
-void applyFilter(Image& image, Image& filteredImage)
+void applyFilter(myLittleImage& image, myLittleImage& filteredImage)
 {	
-	for (Image::Domain::ConstIterator it = image.domain().begin(); it != image.domain().end(); ++it)
+	for (myLittleImage::Domain::ConstIterator it = image.domain().begin(); it != image.domain().end(); ++it)
 	{
 		Point ref = *it;
 		// the filter
@@ -58,6 +52,11 @@ void applyFilter(Image& image, Image& filteredImage)
 	}
 }
 
+
+
+//// Test
+
+/*
 int main (int argc, char* argv[])
 {
 	if (argc != 3)
@@ -66,9 +65,10 @@ int main (int argc, char* argv[])
 		exit(1);
 	}
 	trace.beginBlock ("Delete Noise");
-	Image image = GenericReader<Image>::import(argv[1]);
-	Image filteredImage (image.domain());
+	myLittleImage image = GenericReader<myLittleImage>::import(argv[1]);
+	myLittleImage filteredImage (image.domain());
 	applyFilter(image, filteredImage);
-	PGMWriter<Image>::exportPGM(argv[2],filteredImage);
+	PGMWriter<myLittleImage>::exportPGM(argv[2],filteredImage);
 	return 0;
 }
+*/
