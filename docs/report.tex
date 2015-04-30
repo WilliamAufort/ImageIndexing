@@ -42,7 +42,7 @@ Of course, other decompositions, more or less precise, are possible. From this, 
 
 When we are watching images, to associate them to concepts, we use our knowledge of these concepts. For example, an apple is a quite circular object with sometimes a stalk and leaves, a camel is a mammal with one or two humps, etc.. Basically, for organic objects, we use a kind of segmentation characterisation to identify the concepts: we recover it by identify its different parts.
 
-A famous tool used in volumetric analysis to detere segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
+A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
 
 \begin{defi}[Granulometric function]
 Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by :
@@ -176,14 +176,14 @@ The complexity of this algorithm is quite bad. For each point $p$, we build a ba
 
 \subsubsection{Clever algorithm using Medial Axis}
 
-As we have presented the issues of these algorithms, the goal is to reduce the number of balls we scan. Actually, we scan exactly $\left| \mathcal{X} \right|$ balls. We can reduce this number bycomputing the medial axis, which is the set of maximal balls included in the object.
+As we have presented the issues of these algorithms, the goal is to reduce the number of balls we scan. Actually, we scan exactly $\left| \mathcal{X} \right|$ balls. We can reduce this number by computing the medial axis, which is the set of maximal balls included in the object.
 
-To implement this, we use two \textsc{DGtal} primitives : \texttt{PowerMap} and \texttt{ReducedMedialAxis}. We don't enter into all the details, but we juste summurize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using power diagrams. 
+To implement this, we use two \textsc{DGtal} primitives : \texttt{PowerMap} and \texttt{ReducedMedialAxis}. We don't enter into all the details, but we just summarize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using power diagrams. 
 
 \subsubsection{Experiment: efficiency of the two algorithms}
 
 We can observe that the second algorithm scans less balls than the first one. On the other hand, since we had to compute the medial axis in the second algorithm, the gain on the execution time is less than the gain in terms of number of balls.
-But overall, these algorithms are not very fast, and it's a real problem when we are working in a large database, because the cost of precalculations is huge.
+But overall, these algorithms are not very fast, and it's a real problem when we are working in a large database, because the cost of precomputations is huge.
 
 \section{Application of granulometric analysis to shape indexing}
 
@@ -193,13 +193,13 @@ Previously, we defined the granulometric function and we exposed the reasons for
 
 In order to build a shape indexing system, we have to define a metric to quantify the distance between two images. We chose to represent this function as an histogram, because it's a more compact representation and we can do easy computations on it. For instance, a distance between two histograms could be a simple $l_p$ norm over $\RR^n$, where $n$ is the dimension of the histogram. A distance directly between the two images to compare would have been quite hard.
 
-Unfortunetaly, we are not going to use the $l_p$ norms, because they don't highlight enough the statistical point of view we adopt with these histograms. We use a distance called the \textbf{Earth Mover Distance} (or EMD).
+Unfortunately, we are not going to use the $l_p$ norms, because they don't highlight enough the statistical point of view we adopt with these histograms. We use a distance called the \textbf{Earth Mover Distance} (or EMD).
 
 \subsubsection{Definition}
 
 The Earth Mover Distance have been introduced in \cite{EMD-def} and is now used in many fields. We introduce in this part the original definition and some result we can get in our particular case.
 
-Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the miniaml cost to transform one distribution to the other one. The definition consider distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional data).
+Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the minimal cost to transform one distribution to the other one. The definition consider distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional data).
 
 \begin{defi}[Earth mover distance (general case)]
 	Let $P = \set{(p_1,w_{p_1}), \dots, (p_m,w_{p_m})}$ be a set of $m$ clusters, where $p_i$ represents the representative of the cluster and $w_{p_i}$ its weight. Similarly, let $Q = \set{(q_1,w_{q_1}), \dots, (q_n,w_{q_n})}$ be another set of $n$ clusters. Let $d_{i,j}$ be the ground distance between the clusters $p_i$ and $q_j$.
@@ -223,13 +223,13 @@ In out particular case, $P$ and $Q$ represent our histograms. The $p_i$'s (respe
 
 The second condition limits what the clusters of $P$ can send, and the firth condition limits what the clusters of $Q$ can receive. Finally, the fourth condition forces to move the maximal amount possible.
 
-Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and that's more they are also normalized (so $n = m$ and $(p1,\dots,p_n) = (q1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition becames :
+Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and that's more they are also normalized (so $n = m$ and $(p1,\dots,p_n) = (q1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition became :
 
 \[
 	 \sum_{i=1}^m \sum_{j=1}^n f_{i,j} = \sum_{i=1}^m w_{p_i} = \sum_{j=1}^n w_{q_j}
 \]
 
-What's more, we have a more efficent way to compute it:
+What's more, we have a more efficient way to compute it:
 
 \begin{theo}[EMD in one dimension]
 	Under the preivous hypothesis, we define the sequence $(EMD_i)_{i=0,\dots,n}$ by
@@ -245,7 +245,7 @@ What's more, we have a more efficent way to compute it:
 \]
 \end{theo}
 
-\cite{EMD-proof} proposes an intuitive proof based on the interpretation of the quantity $\sum_{i=1}^n{EMD_i}$ in term of area between the two curves which represents the cumultative distributions of $P$ and $Q$.
+\cite{EMD-proof} proposes an intuitive proof based on the interpretation of the quantity $\sum_{i=1}^n{EMD_i}$ in term of area between the two curves which represents the cumulative distributions of $P$ and $Q$.
 
 % TODO : Figure du papier, attention à l'erreur de valeur
 
@@ -301,7 +301,7 @@ We give a simpler implementation of the filter. One could improve it, for exampl
 
 \section*{Conclusion}
 
-The goal of this project was not not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which modelize the concept of segmentation we use implicitely to recognize objects. We used different algorithms to compute it and proved their correctness.
+The goal of this project was not not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness.
 
 \bibliographystyle{plain}
 \bibliography{biblio}
