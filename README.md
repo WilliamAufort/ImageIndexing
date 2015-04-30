@@ -59,3 +59,9 @@ returns a vector of scalar quantities which describes the shape. Here, we just c
 	./retrieval
 
 just says "Distance computations" for the moment.
+
+#Documents
+
+We can also find in the folder "docs" the subject of the project and our report about the project, required by our school. You can compile this last one using simply:
+
+	make
