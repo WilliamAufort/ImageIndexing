@@ -14,11 +14,27 @@
 
 \subsection*{General introduction}
 
-The objective of this project is to design a binary shape indexing system. Given a database of binary shapes (PGM files) associated to different classes, and a binary image, the goal is to find the class which correspond the most to the image. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
+The objective of this project is to design a binary shape indexing system. Given a database of binary shapes (PGM files) associated to different classes, and a binary image, the goal is to find the class which correspond the most to the image.
+One important problem of image classification based is the definition of a suitable metric to measure similarity between two images. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
 
 \subsection*{The database used}
 
-% TODO Quelques mots sur la base de données, le type d'images (noir & blanc, type d'objets --> difficulté, ...)
+In this project, we have access to a database of about 1000 images in the PGM format. All these images are made with two gray levels, respectively black and white. Excepted for one image (\texttt{rat-09}\footnote{We can't really explain why, but that's it...}), the object is defined by the white component. The database contains 70 classes, that we can divide into three main categories :
+\begin{itemize}
+	\item the objects (vehicles, usual objects like phones, watches, ...);
+	\item the animals (for instance, camels, octopuses, children, ...);
+	\item and the geometric shapes (most of them denoted by \texttt{device-i} for some $i$).
+\end{itemize}
+
+Of course, other decompositions, more or less precise, are possible. From this, we just have to keep in mind that such a diversity on the objects to study is a real difficulty to algorithm design.
+
+%\begin{figure}[!ht]
+%    \centering
+%    \includegraphics[height=175pt]{../database/shapedata.pgm}
+%	\label{shapedata}
+%	\caption{}
+%\end{figure}
+
 
 \section{Granulometric analysis applied to shape indexing}
 
@@ -158,13 +174,13 @@ The complexity of this algorithm is quite bad. For each point $p$, we build a ba
 
 As we have presented the issues of these algorithms, the goal is to reduce the number of balls we scan. Actually, we scan exactly $\left| \mathcal{X} \right|$ balls. We can reduce this number bycomputing the medial axis, which is the set of maximal balls included in the object.
 
-To implement this, we use two \textsc{DGtal} primitives : \textsc{PowerMap} and \textsc{ReducedMedialAxis}. We don't enter into all the details, but we juste summurize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using the power diagrams. 
+To implement this, we use two \textsc{DGtal} primitives : \texttt{PowerMap} and \texttt{ReducedMedialAxis}. We don't enter into all the details, but we juste summurize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using power diagrams. 
 
 \subsubsection{Experiment: efficiency of the two algorithms}
 
 We can observe that the second algorithm scans less balls than the first one. On the other hand, since we had to compute the medial axis in the second algorithm, the gain on the execution time is less than the gain in terms of number of balls.
+But overall, these algorithms are not very fast, and it's a real problem when we are working in a large database, because the cost of precalculations is huge.
 
-But overall, these algorithms are not very fast, and it's a real problem when we are working in a database.
 
 \section{How to deal with noise: choices and implementation}
 
