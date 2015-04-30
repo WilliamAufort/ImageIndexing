@@ -69,7 +69,11 @@ If we plot the granulometry function on a 2D shape in the database, we can obser
     \label{apple-granulo}
 \end{figure}
 
-We can use the granulometric function to compare two images. To do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics. Compare two images remains to compare two histograms, so we have to define a distance between histograms. This work will be explained with more details in the next section.
+We can use the granulometric function to compare two images. To do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics.
+
+% TODO : Histograms construction
+
+Compare two images remains to compare two histograms, so we have to define a distance between histograms. This work will be explained with more details in the next section.
 
 \subsection{Advantages}
 
@@ -195,7 +199,7 @@ Unfortunetaly, we are not going to use the $l_p$ norms, because they don't highl
 
 The Earth Mover Distance have been introduced in \cite{EMD-def} and is now used in many fields. We introduce in this part the original definition and some result we can get in our particular case.
 
-Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the miniaml cost to transform one distribution to the other one. The definition consider distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional arrays).
+Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the miniaml cost to transform one distribution to the other one. The definition consider distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional data).
 
 \begin{defi}[Earth mover distance (general case)]
 	Let $P = \set{(p_1,w_{p_1}), \dots, (p_m,w_{p_m})}$ be a set of $m$ clusters, where $p_i$ represents the representative of the cluster and $w_{p_i}$ its weight. Similarly, let $Q = \set{(q_1,w_{q_1}), \dots, (q_n,w_{q_n})}$ be another set of $n$ clusters. Let $d_{i,j}$ be the ground distance between the clusters $p_i$ and $q_j$.
@@ -215,8 +219,33 @@ The Earth Mover distance is defined as the found work normalized by the total fl
 \]
 \end{defi}
 
-TOTO TITI
+In out particular case, $P$ and $Q$ represent our histograms. The $p_i$'s (respectively the $q_i$'s) represent the values that figures on the histograms. The weights $w_k$ are simply the frequency associated to the value. The $f_{i,j}$ can be interpreted as the flow between $p_i$ and $q_j$. Informally, if the histograms are interpreted as two different ways of piling up a certain amount of dirt, the Earth Mover Distance is simply the minimum cost of turning one pile into the other.
 
+The second condition limits what the clusters of $P$ can send, and the firth condition limits what the clusters of $Q$ can receive. Finally, the fourth condition forces to move the maximal amount possible.
+
+Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and that's more they are also normalized (so $n = m$ and $(p1,\dots,p_n) = (q1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition becames :
+
+\[
+	 \sum_{i=1}^m \sum_{j=1}^n f_{i,j} = \sum_{i=1}^m w_{p_i} = \sum_{j=1}^n w_{q_j}
+\]
+
+What's more, we have a more efficent way to compute it:
+
+\begin{theo}[EMD in one dimension]
+	Under the preivous hypothesis, we define the sequence $(EMD_i)_{i=0,\dots,n}$ by
+\[
+	\begin{aligned}
+		EMD_0 &= 0\\
+		EMD_{i+1} &= w_{p_i} - w_{q_i} + EMD_i\\
+	\end{aligned}
+\]
+	Then, we have: 
+\[
+	EMD(P,Q) = \sum_{i=1}^n{EMD_i}
+\]
+\end{theo}
+
+\cite{EMD-proof} proposes an intuitive proof based on the interpretation of the quantity $\sum_{i=1}^n{EMD_i}$ in term of area between the two curves which represents the cumultative distributions of $P$ and $Q$.TITI
 
 \section{How to deal with noise: choices and implementation}
 
@@ -233,7 +262,7 @@ We were interested in deleting specular noise. Our choice is to implement a bino
 
 In the grayscale output image, we only keep the pixels with intensity greater than $8 \times 255$, where $8$ represents half of the sum of the weights in the filter ($16$ here) and $255$ the intensity for the white part of the image (i.e. the final object we keep). For more simplicity, we don't keep the $255$ factor, since the only possible intensity values in the input image are $0$ and $255$.
 
-We give the simpler implementation of the filter in the file \texttt{deleteNoise.cpp}. One could improve it, for example using the fact that this filter is separable.
+We give a simpler implementation of the filter. One could improve it, for example using the fact that this filter is separable to decompose the calculations into two less costly steps.
 
 \section*{Conclusion}
 

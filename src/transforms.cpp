@@ -53,6 +53,25 @@ void applyFilter(myLittleImage& image, myLittleImage& filteredImage)
 }
 
 
+/*************\
+| Compression |
+\*************/
+
+/* What is the result of compressing the block :
+
+	---				---
+	| Block1   Block2 |
+	|				  |
+	| Block3   Block4 |
+	---				---
+
+---> Two adjencents blocks have to be 1 */
+	
+
+bool compressionBlock(bool Block1, bool Block2, bool Block3, bool Block4)
+{
+	return ((Block1 && Block2) || (Block2 && Block4) || (Block4 && Block3) || (Block3 && Block1));
+}
 
 //// Test
 
