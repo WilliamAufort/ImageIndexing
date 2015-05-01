@@ -28,11 +28,11 @@ int main (int argc, char* argv[])
     cout<<choosenFile<<" "<<getFileName(choosenFile)<<" "<<extractClass(getFileName(choosenFile))<<" "<<reverse[extractClass(getFileName(choosenFile))]<<endl;
 
     fileList.clear();
-    modifyImage(choosenFile, "tmp.pgm");
+    modifyImage(choosenFile, "temp.pgm");
     GetFilesInDirectory(fileList, argv[3]);
-    imageToHistogram("tmp.pgm");
+    imageToHistogram("temp.pgm");
 
-	vector<double> histoTmp = readHisto(changeExtension("tmp.pgm"));
+	vector<double> histoTmp = readHisto(changeExtension("temp.pgm"));
 
 
     vector<vector<double>> notations(70);
