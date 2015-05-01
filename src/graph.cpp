@@ -16,8 +16,7 @@ int main (int argc, char* argv[])
 		exit (1);
 	}
     random_device rd;
-    vector<string> fileList;
-    GetFilesInDirectory(fileList, argv[1]);
+    vector<string> fileList = GetFilesInDirectory(argv[1]);
     vector<string> fileListClass = filtre(fileList, string(argv[1])+"/"+string(argv[2])+"-.*\\.pgm");
     string choosenFile = fileListClass[rd()%fileListClass.size()];
     vector<string> order = readFile(".classification.order");
@@ -27,9 +26,8 @@ int main (int argc, char* argv[])
 
     cout<<choosenFile<<" "<<getFileName(choosenFile)<<" "<<extractClass(getFileName(choosenFile))<<" "<<reverse[extractClass(getFileName(choosenFile))]<<endl;
 
-    fileList.clear();
     modifyImage(choosenFile, "temp.pgm");
-    GetFilesInDirectory(fileList, argv[3]);
+    fileList = GetFilesInDirectory(argv[3]);
     vector<double> histoTmp = imageToHistogram("temp.pgm", true);
 
 

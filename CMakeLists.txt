@@ -38,7 +38,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 # Indexing
 
-add_executable(indexing src/indexing src/granulometry)
+add_executable(indexing src/indexing src/granulometry src/toolbox)
 target_link_libraries(indexing ${DGTAL_LIBRARIES})
 
 # Retrieval

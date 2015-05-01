@@ -21,35 +21,35 @@ vector<string> liste;
 mutex mtx;
 size_t pos;
 
-string changeExtension(string fileName)
-{
-	int lastIndex = fileName.find_last_of(".");
-	string newFile = fileName.substr(0, lastIndex) + ".hist";
-	return newFile;
-}
-
-void append(string& filename)
+/**
+* Append a line in .hist.done
+*
+* @param str A string to append to .hist.done
+*/
+void append(string& str)
 {
     ofstream outfile;
     outfile.open(".hist.done", ios_base::app);
-    outfile << filename << endl;
+    outfile << str << endl;
     outfile.close();
 }
 
+/**
+* Read .hist.done
+*
+* @return The list of all line of .hist.done
+*/
 vector<string> filename_done()
 {
-    ifstream infile;
-    infile.open(".hist.done");
-    string line;
-    vector<string> out;
-
-    while (getline(infile, line))
-        out.push_back(line);
-    infile.close();
-
-    return out;
+    return readFile(".hist.done");;
 }
 
+/**
+* What a thread have to do. They compute histograms of all images in liste. Each thread take a filename in liste, do the computation and continue...
+* When there is no more untreated file in liste, the thread finish. We use mutex to avoid race condition.
+*
+* @param id The id of the thread
+*/
 void threadWork(size_t id)
 {
     while(pos < liste.size())
@@ -68,6 +68,11 @@ void threadWork(size_t id)
     cout << "Ay sir! Thread " << id << " is finished."<<endl;
 }
 
+/**
+* Compute the histogram of an image
+*
+* @param filename The image whose we want to compute the histogram
+*/
 void calcul(string filename)
 {
     myLittleImage image = GenericReader<myLittleImage>::import(filename);
@@ -93,6 +98,15 @@ void calcul(string filename)
 	buildHistogram(granuloImage, maxGranulo, pas, nbPoints, fileName);
 }
 
+/**
+* Generate all histograms of a set of images optionally matching a regex
+*
+* @param folder The folder containing the images
+*
+* @param nb_thread The number of thread
+*
+* @param regex An optional argument. All file treated have to match the regex
+*/
 int main(int argc, char* argv[])
 {
 	if (argc < 3 || argc > 4)
@@ -101,7 +115,7 @@ int main(int argc, char* argv[])
 		exit (1);
 	}
 
-	GetFilesInDirectory(liste, argv[1]);
+	liste = GetFilesInDirectory(argv[1]);
 
     cout<<liste.size()<<endl;
 

@@ -1,16 +1,10 @@
 #include "../include/granulometry.h"
+#include "../include/toolbox.h"
 #include "DGtal/io/readers/GenericReader.h"
 
 using namespace std;
 using namespace DGtal;
 using namespace Z2i;
-
-string changeExtension(string fileName)
-{
-	int lastIndex = fileName.find_last_of(".");
-	string newFile = fileName.substr(0, lastIndex) + ".hist";
-	return newFile;
-}
 
 int main(int argc, char* argv[])
 {

@@ -10,6 +10,13 @@ using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
+/**
+* Read a histogram from a file
+*
+* @param fileName The filename of the histogram
+*
+* @return The histogram as a vector of double
+*/
 vector<double> readHisto(string fileName)
 {
 	vector<double> histo;
@@ -28,6 +35,16 @@ vector<double> readHisto(string fileName)
 	}
 }
 
+/**
+* The distance between two histograms. This is an edit distance between to histograms based on the displacements needed to reach the second
+* histogram from the first
+*
+* @param hitso1 An histogram
+*
+* @param hitso2 An histogram
+*
+* @return The distance between the two histograms
+*/
 double EMD(vector<double> histo1, vector<double> histo2)
 {
 	double EMD = 0;
@@ -40,13 +57,12 @@ double EMD(vector<double> histo1, vector<double> histo2)
 	return EMD;
 }
 
-string changeExtension(string fileName)
-{
-	int lastIndex = fileName.find_last_of(".");
-	string newFile = fileName.substr(0, lastIndex) + ".hist";
-	return newFile;
-}
-
+/**
+* Given an image, this function compute the histogram and save it in a file. The histogram filename is the same as the image filename
+* except the extension is changed for .hist
+*
+* @param filename The filename of the image
+*/
 void saveHistogramOfImage(string filename)
 {
     myLittleImage image = GenericReader<myLittleImage>::import(filename);
@@ -63,6 +79,15 @@ void saveHistogramOfImage(string filename)
 	buildHistogram(granuloImage, maxGranulo, pas, nbPoints, fileName);
 }
 
+/**
+* Given an image, this function compute the histogram
+*
+* @param filename The filename of the image
+*
+* @param smooth A boolean to set the activation of the anti-noise filter on the image
+*
+* @return The histogram of the image
+*/
 vector<double> imageToHistogram(string filename, bool smooth)
 {
     myLittleImage image = GenericReader<myLittleImage>::import(filename);
@@ -84,6 +109,16 @@ vector<double> imageToHistogram(string filename, bool smooth)
 	return buildHistogram(granuloImage, maxGranulo, pas, nbPoints);
 }
 
+/**
+* Compute the distance between an image and a histogram. This function compute the histogram of the image and returns the distance between
+* the two histograms
+*
+* @param imageFile The filename of the image
+*
+* @param histoFile The filename of the histogram
+*
+* @return The distance
+*/
 double distanceImageToHisto(string imageFile, string histoFile)
 {
 	vector<double> histo1 = imageToHistogram(imageFile);
@@ -91,6 +126,16 @@ double distanceImageToHisto(string imageFile, string histoFile)
 	return EMD(histo1,histo2);
 }
 
+/**
+* Compute the distance between two images. This function compute the histograms of the images and returns the distance between
+* the two histograms
+*
+* @param imageFile1 The filename of the first image
+*
+* @param imageFile1 The filename of the second image
+*
+* @return The distance
+*/
 double distanceImageToImage(string imageFile1, string imageFile2)
 {
 	saveHistogramOfImage(imageFile2);

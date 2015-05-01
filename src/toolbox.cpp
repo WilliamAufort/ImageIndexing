@@ -13,12 +13,33 @@
 
 using namespace std;
 
+/**
+* Change l'extension du nom de fichier donné pour .hist
+*
+* @param fileName A filename containing a '.'
+*
+* @return The modified extension
+*/
+string changeExtension(string fileName)
+{
+	int lastIndex = fileName.find_last_of(".");
+	string newFile = fileName.substr(0, lastIndex) + ".hist";
+	return newFile;
+}
 
-void GetFilesInDirectory(vector<string> &out, const string &directory)
+/**
+* List all files (not directories) in a directory
+*
+* @param directory The name of a directory
+*
+* @return The list of files in directory
+*/
+vector<string> GetFilesInDirectory(const string &directory)
 {
     DIR *dir;
     struct dirent *ent;
     struct stat st;
+    vector<string> out;
 
     dir = opendir(directory.c_str());
     while ((ent = readdir(dir)) != NULL)
@@ -42,6 +63,15 @@ void GetFilesInDirectory(vector<string> &out, const string &directory)
     closedir(dir);
 }
 
+/**
+* Filter the strings of a list which match a regex
+*
+* @param liste A vector of strings
+*
+* @param regexpr A regular expression
+*
+* @return The list of strings for liste which match regexpr
+*/
 vector<string> filtre(const vector<string>& liste, const string& regexpr)
 {
     regex e(regexpr);
@@ -54,6 +84,15 @@ vector<string> filtre(const vector<string>& liste, const string& regexpr)
     return out;
 }
 
+/**
+* Compute the set-theoretic difference of two vectors of strings
+*
+* @param liste A vector of strings
+*
+* @param done A vector of strings
+*
+* @return The différent liste \ done
+*/
 vector<string> difference(const vector<string>& liste, const vector<string>& done)
 {
     vector<string> out;
@@ -74,6 +113,13 @@ vector<string> difference(const vector<string>& liste, const vector<string>& don
     return out;
 }
 
+/**
+* Read each line of a file and return a vector of strings
+*
+* @param filename A string containt the filename
+*
+* @return A vector of strings where each string is a line of the file
+*/
 vector<string> readFile(string filename)
 {
     ifstream infile;
@@ -88,6 +134,13 @@ vector<string> readFile(string filename)
     return out;
 }
 
+/**
+* Extract the image class from a filename
+*
+* @param filename A string containt the filename of the kind a/unix/path/class-number.pgm
+*
+* @return A string containing class
+*/
 string extractClass(string filename)
 {
 	size_t begin = filename.find_last_of("/");
@@ -96,23 +149,30 @@ string extractClass(string filename)
 	return filename.substr(begin+1, length);
 }
 
+/**
+* Extract the path from a complete filename
+*
+* @param filename A string containt the filename of the kind a/unix/path/file
+*
+* @return A string containing a/unix/path
+*/
 string getPath(const string& str)
 {
   unsigned found = str.find_last_of("/");
   return str.substr(0,found);
 }
 
+/**
+* Extract the filename from a complete filename
+*
+* @param filename A string containt the filename of the kind a/unix/path/file
+*
+* @return A string containing file
+*/
 string getFileName(const string& str)
 {
   unsigned found = str.find_last_of("/");
   return str.substr(found+1);
-}
-
-string doubleToString(double x)
-{
-	ostringstream strs;
-	strs << x;
-	return strs.str();
 }
 
 void modifyImage(string inputFile, string outputFile)
@@ -129,9 +189,9 @@ void modifyImage(string inputFile, string outputFile)
 		double randomScale = distrib(generator) * 3;
 		cout << "noise : " << randomNoise << ", angle : " << randomAngle << ", scale : " << randomScale << endl;
 		int i;
-		i = system(("./imgRotate -i "+inputFile+" -o tmp.pgm -a "+doubleToString(randomAngle)+" 2> /dev/null").c_str());
-		i = system(("./imgScale -i tmp.pgm -o tmp2.pgm -s "+doubleToString(randomScale)+" 2> /dev/null").c_str());
-		i = system(("./imgAddNoise -i tmp2.pgm -o "+outputFile+" -n "+doubleToString(randomNoise)+" 2> /dev/null").c_str());
+		i = system(("./imgRotate -i "+inputFile+" -o tmp.pgm -a "+to_string(randomAngle)+" 2> /dev/null").c_str());
+		i = system(("./imgScale -i tmp.pgm -o tmp2.pgm -s "+to_string(randomScale)+" 2> /dev/null").c_str());
+		i = system(("./imgAddNoise -i tmp2.pgm -o "+outputFile+" -n "+to_string(randomNoise)+" 2> /dev/null").c_str());
 		i = system("rm tmp.pgm tmp2.pgm");
 	}
 }
