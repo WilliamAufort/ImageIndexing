@@ -12,7 +12,8 @@ set output "plot.pdf" # le nom du fichier qui est engendre
 set title "TOUT"
 set xlabel "Index"
 set ylabel "Note"
-set key off
+set key outside
+set key right top
 
 
 # Dessin en joignant des points
