@@ -26,14 +26,16 @@ In this project, we have access to a database of about 1000 images in the PGM fo
 	\item and the geometric shapes (most of them denoted by \texttt{device-i} for some $i$).
 \end{itemize}
 
+The figure \ref{shapedata} illustrates these three categories.
+
 Of course, other decompositions, more or less precise, are possible. From this, we just have to keep in mind that such a diversity on the objects to study is a real difficulty to algorithm design.
 
-%\begin{figure}[!ht]
-%    \centering
-%    \includegraphics[height=175pt]{../database/shapedata.pgm}
-%	\label{shapedata}
-%	\caption{}
-%\end{figure}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[height=175pt]{../database/shapedata.eps}
+	\label{shapedata}
+	\caption{A panel of objects of the database: bats, bones and geometrical objects}
+\end{figure}
 
 
 \section{How to deal with noise: choices and implementation}
@@ -52,8 +54,6 @@ More precisely, we were interested in deleting specular noise. In particular, th
 In the grayscale output image, we only keep the pixels with intensity greater than $8 \times 255$, where $8$ represents half of the sum of the weights in the filter ($16$ here) and $255$ the intensity for the white part of the image (i.e. the final object we keep). For more simplicity, we don't keep the $255$ factor, since the only possible intensity values in the input image are $0$ and $255$.
 
 We give a simpler implementation of the filter. One could improve it, for example using the fact that this filter is separable to decompose the calculations into two less costly steps.
-
-
 
 \section{Granulometric analysis}
 
@@ -96,7 +96,7 @@ Compare two images remains to compare two histograms, so we have to define a dis
 
 \subsection{Advantages}
 
-\subsubsection{Invariant by translation, rotation and symmetry}
+\subsubsection{Invariant by translation, rotation, scaling and symmetry}
 
 The invariance with respect to translation, rotation and symmetry is an important property. But we have to be a little bit more precise:
 
@@ -110,9 +110,10 @@ In other words, there is a trivial isomorphism between the two images $\mathcal{
 
 But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center.
 
-Nonetheless, intuitively if there exists some modifications in the granulometric function, they are not going to be very large in some sense.
+Nonetheless, intuitively if there exists some modifications in the granulometric function, they are not going to be very large in some sense. What's more, we can define the continuous granulometric function where $\mathcal{X}$ is a shape in $\RR^2$.
 
 % TODO: See if we can quantify the difference between the two.
+% TODO: Same question for scaling
 
 \subsection{Disadvantages}
 
@@ -142,11 +143,11 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 
 \subsubsection{Robustness in presence of (specular) noise}
 
-% TODO 
+As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, which clearly perturbate the granulometric function. That's why we need a noise filter as the one we exposed in the first 
 
 \subsubsection{Computation time}
 
-As we will see in the further section, the time needed to compute this function is quite important, and it's really a mess to evaluate it on all the images of the database. % TODO Parler du temps total?
+As we will see in the further section, the time needed to compute this function is quite important, and it's really a mess to evaluate it on all the images of the database. Indeed, for one image, the execution time can exceed two hours, which is unusable in practize.
 
 \subsection{Implementation}
 
@@ -260,7 +261,7 @@ In out particular case, $P$ and $Q$ represent our histograms. The $p_i$'s (respe
 
 The second condition limits what the clusters of $P$ can send, and the firth condition limits what the clusters of $Q$ can receive. Finally, the fourth condition forces to move the maximal amount possible.
 
-Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and that's more they are also normalized (so $n = m$ and $(p1,\dots,p_n) = (q1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition became:
+Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and what's more they are also normalized (so $n = m$ and $(p1,\dots,p_n) = (q1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition became:
 
 \[
 	 \sum_{i=1}^m \sum_{j=1}^n f_{i,j} = \sum_{i=1}^m w_{p_i} = \sum_{j=1}^n w_{q_j}
@@ -316,7 +317,7 @@ The Earth Mover Distance several advantages. First of all, it defines a true met
 
 \end{proof}
 
-The fact that it's a metric is quite important. We can compare it directly with classical metrics without lost of properties. The Earth Mover Distance is a more statistical distance than other metrics, and so it's more adapted in our case where our vectors are histograms. What's more, it matches perceptual similarity better than other measures. This was shown in \cite{EMD-use} for color and texture based image retrieval with another method. %TODO: Describe it a little bit ?
+The fact that it's a metric is quite important. We can compare it directly with classical metrics without lost of properties. The Earth Mover Distance is a more statistical distance than other metrics, and so it's more adapted in our case where our vectors are histograms. What's more, it matches perceptual similarity better than other measures. This was shown in \cite{EMD-use} for color and texture based image retrieval with another method.
 
 \subsection{The EMD to get a distance between an image and a class}
 
@@ -398,7 +399,7 @@ For the experiments, we run the script given to evaluate our shape indexing algo
 
 \section*{Conclusion}
 
-The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness.
+The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the expected performances. Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practize. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function.
 
 \bibliographystyle{plain}
 \bibliography{biblio}
