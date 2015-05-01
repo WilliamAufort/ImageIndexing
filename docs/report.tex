@@ -118,8 +118,16 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 
 \subsubsection{Loss of spatial information}
 
-% TODO dire quelque chose ici, voir une ouverture sur d'autres methodes (notamment les papiers que l'on a regardé)
+% TODO dire quelque chose ici, voir une ouverture sur d'autres methodes (notamment les papiers que l'on a regardé), remarquer que ceci 
+% est vrai pour beaucoup de méthodes
 
+\subsubsection{Robustness in presence of (specular) noise}
+
+% TODO 
+
+\subsubsection{Computation time}
+
+As we will see in the further section, the time needed to compute this function is quite important, and it's really a mess to evaluate it on all the images of the database. % TODO Parler du temps total?
 
 \subsection{Implementation}
 
@@ -286,7 +294,7 @@ The Earth Mover Distance several advantages. First of all, it defines a metric i
 
 An important aspect of the project is to deal with image which can be potentially noised.
 
-We were interested in deleting specular noise. Our choice is to implement a binomial filter saw during the course. This filter, used essentially for smoothing grayscale images, erases the potential specular noise on the image. If the image is not noisy, the experiment show that the initial image is not modified. The initial filter (i.e. for a grayscale image) is :
+We were interested in deleting specular noise. In particular, the Kanungo noise used in the evaluation of our method is a kind of specular noise, because it's a local swapping procedure. Our choice is to implement a binomial filter saw during the course. This filter, used essentially for smoothing grayscale images, erases the potential specular noise on the image. If the image is not noisy, the experiment show that the initial image is not modified. The initial filter (i.e. for a grayscale image) is :
 
 \setcounter{MaxMatrixCols}{3}
 \[ F = \quad \frac{1}{16} \begin{pmatrix}
