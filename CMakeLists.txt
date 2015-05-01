@@ -58,6 +58,11 @@ target_link_libraries(testEfficiency ${DGTAL_LIBRARIES})
 add_executable(helloworld src/helloworld src/toolbox)
 target_link_libraries(helloworld ${DGTAL_LIBRARIES})
 
+# graph
+
+add_executable(graph src/graph src/toolbox)
+target_link_libraries(graph ${DGTAL_LIBRARIES})
+
 #tests
 
 add_executable(imgRotate imgRotate)
