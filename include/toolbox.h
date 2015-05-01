@@ -5,3 +5,6 @@ std::vector<std::string> filtre(const std::vector<std::string>& liste, const std
 std::vector<std::string> difference(const std::vector<std::string>& liste, const std::vector<std::string>& done);
 std::vector<std::string> readFile(std::string filename);
 std::string extractClass(std::string filename);
+void modifyImage(std::string input, std::string output);
+std::string getPath(const std::string& str);
+std::string getFileName(const std::string& str);

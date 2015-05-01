@@ -73,7 +73,7 @@ vector<string> difference(const vector<string>& liste, const vector<string>& don
 vector<string> readFile(string filename)
 {
     ifstream infile;
-    infile.open("filename");
+    infile.open(filename);
     string line;
     vector<string> out;
 
@@ -90,4 +90,21 @@ string extractClass(string filename)
 	size_t end = filename.find_last_of("-");
 	size_t length = end - begin-1;
 	return filename.substr(begin+1, length);
+}
+
+void modifyImage(string input, string output)
+{
+    system(("cp "+input+" "+output).c_str());
+}
+
+string getPath(const string& str)
+{
+  unsigned found = str.find_last_of("/");
+  return str.substr(0,found);
+}
+
+string getFileName(const string& str)
+{
+  unsigned found = str.find_last_of("/");
+  return str.substr(found+1);
 }

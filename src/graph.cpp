@@ -10,7 +10,7 @@ using namespace Z2i;
 
 int main (int argc, char* argv[])
 {
-	if (argc != 3)
+	if (argc != 4)
 	{
 		cerr << "Use: ./graph database class histograms/databse" << endl;
 		exit (1);
@@ -20,21 +20,48 @@ int main (int argc, char* argv[])
     GetFilesInDirectory(fileList, argv[1]);
     vector<string> fileListClass = filtre(fileList, string(argv[1])+"/"+string(argv[2])+"-.*\\.pgm");
     string choosenFile = fileListClass[rd()%fileListClass.size()];
+    vector<string> order = readFile(".classification.order");
+    map<string, int> reverse;
+    for(size_t i=0; i<order.size(); ++i)
+        reverse[order[i]] = i;
 
-    modifyImage(choosenFile, "tmp.pmg");
+    cout<<choosenFile<<" "<<getFileName(choosenFile)<<" "<<extractClass(getFileName(choosenFile))<<" "<<reverse[extractClass(getFileName(choosenFile))]<<endl;
 
+    fileList.clear();
+    modifyImage(choosenFile, "tmp.pgm");
     GetFilesInDirectory(fileList, argv[3]);
+    imageToHistogram("tmp.pgm");
 
-    imageToHistogram("tmp.pmg");
-	vector<double> histoTmp = readHisto(changeExtension("tmp.pmg"));
+	vector<double> histoTmp = readHisto(changeExtension("tmp.pgm"));
 
-    map<string, vector<double>> notations;
+
+    vector<vector<double>> notations(70);
+    int tre = 0;
     for(string s : fileList)
     {
-        vector<double> histo = readHisto(histoFile);
-        notations[extractClass(s)].push_back(EMD(histoTmp,histo));
+        vector<double> histo = readHisto(s);
+        notations[reverse[extractClass(getFileName(s))]].push_back(EMD(histoTmp, histo));
     }
 
+    ofstream file("plot/plot.dat");
+
+    file<<"class ";
+    for(size_t i=0;i<15;++i)
+        file<<i<<" ";
+    file<<endl;
+
+
+    for(size_t i=0;i<70;++i)
+    {
+        file << i <<" ";
+        for(size_t j=0;j<15;++j)
+            file<<notations[i][j]<<" ";
+        file<<endl;
+    }
+
+    file.close();
+
+    system("gnuplot -persist plot/plot.p");
 
 	return 0;
 }

@@ -34,6 +34,15 @@ retrieval
 indexing
 testEfficiency
 graph
+imgAddNoise
+imgRotate
+imgScale
+
+# Temp
+tmp.*
+
+# Data
+*.dat
 
 # Removed files
 *~
@@ -61,3 +70,5 @@ project.pdf
 report-autopp.pdf
 Makefile
 
+# Gnuplot
+plot.pdf

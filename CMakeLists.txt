@@ -60,7 +60,7 @@ target_link_libraries(helloworld ${DGTAL_LIBRARIES})
 
 # graph
 
-add_executable(graph src/graph src/toolbox)
+add_executable(graph src/graph src/toolbox src/distance src/granulometry)
 target_link_libraries(graph ${DGTAL_LIBRARIES})
 
 #tests
