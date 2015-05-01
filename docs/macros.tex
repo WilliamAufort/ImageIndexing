@@ -33,11 +33,6 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows,shapes.arrows, chains, positioning, automata, graphs, decorations.pathreplacing}
 
-%\usepackage[ruled,vlined,french]{algorithm2e}
-%\providecommand{\SetAlgoLined}{\SetLine}
-%\providecommand{\DontPrintSemicolon}{\dontprintsemicolon}
-
-%\usepackage{forest}
 \usepackage{comment} %http://www.ctan.org/tex-archive/macros/latex/contrib/comment
 \usepackage{multirow} %http://www.ctan.org/tex-archive/macros/latex/contrib/multirow
 \usepackage{diagbox} %http://www.ctan.org/tex-archive/macros/latex/contrib/diagbox
@@ -56,14 +51,14 @@ titleboxcolor = black]{defi}{Definition}{compteurDef}
 \newcounter{ThComp}
 \newcounter{DefComp}
 
-\newboxedtheorem[boxcolor=red, background=red!5, titlebackground=red!50,titleboxcolor = black]{theoreme}{Th\'{e}or\`{e}me}{TheC}
-\newboxedtheorem[boxcolor=orange, background=orange!5, titlebackground=orange!50,titleboxcolor = black]{definition}{D\'{e}finition}{DefC}
+\newboxedtheorem[boxcolor=red, background=red!5, titlebackground=red!50,titleboxcolor = black]{theoreme}{Theorem}{TheC}
+\newboxedtheorem[boxcolor=orange, background=orange!5, titlebackground=orange!50,titleboxcolor = black]{definition}{Definition}{DefC}
 \newboxedtheorem[boxcolor=blue, background=blue!5, titlebackground=blue!20,titleboxcolor = black]{proposition}{Proposition}{ProC}
-\newboxedtheorem[boxcolor=cyan, background=cyan!5, titlebackground=cyan!20,titleboxcolor = black]{corollaire}{Corollaire}{CorC}
-\newboxedtheorem[boxcolor=black, background=black!0, titlebackground=black!20,titleboxcolor = black]{remarque}{Remarque}{RemC}
+\newboxedtheorem[boxcolor=cyan, background=cyan!5, titlebackground=cyan!20,titleboxcolor = black]{corollaire}{Corollary}{CorC}
+\newboxedtheorem[boxcolor=black, background=black!0, titlebackground=black!20,titleboxcolor = black]{remarque}{Remark}{RemC}
 \newboxedtheorem[boxcolor=green!70!black, background=green!70!black!5, titlebackground=green!70!black!30,titleboxcolor = black]{notation}{Notation}{NotC}
-\newboxedtheorem[boxcolor=yellow, background=yellow!0, titlebackground=yellow!30,titleboxcolor = black]{exemple}{Exemple}{ExeC}
-\newboxedtheorem[boxcolor=magenta, background=magenta!5, titlebackground=magenta!30,titleboxcolor = black]{lemme}{Lemme}{LemC}
+\newboxedtheorem[boxcolor=yellow, background=yellow!0, titlebackground=yellow!30,titleboxcolor = black]{exemple}{Example}{ExeC}
+\newboxedtheorem[boxcolor=magenta, background=magenta!5, titlebackground=magenta!30,titleboxcolor = black]{lemme}{Lemma}{LemC}
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\la}{\leftarrow}
@@ -72,25 +67,6 @@ titleboxcolor = black]{defi}{Definition}{compteurDef}
 \newcommand{\RR}{\mathbb{R}}
 \newcommand{\ZZ}{\mathbb{Z}}
 \newcommand{\Ztwo}{\mathbb{Z}^{2}}
-\newcommand{\NN}{\mathbb{N}}
-\newcommand{\PP}{\mathbb{P}}
-\newcommand{\EE}{\mathbb{E}}
-\newcommand{\IE}{\mathbb{E}}
-\newcommand{\IR}{\mathbb{R}}
-\newcommand{\IZ}{\mathbb{Z}}
-\newcommand{\IN}{\mathbb{N}}
-\newcommand{\IP}{\mathbb{P}}
-
-\newcommand{\cF}{\mathcal{F}}
-\newcommand{\ck}{\mathcal{K}}
-\newcommand{\cL}{\mathcal{L}}
-\newcommand{\cN}{\mathcal{N}}
-\newcommand{\cNU}{\mathcal{NU}}
-\newcommand{\A}{\mathcal{A}}
-\newcommand{\B}{\mathcal{B}}
-\newcommand{\F}{\mathcal{F}}
-\renewcommand{\L}{\mathcal{L}}
-\newcommand{\N}{\mathcal{N}}
 
 \newcommand{\ens}[1]{\left\{ #1 \right\}}
 \newcommand{\set}[1]{\left\{ #1 \right\}}
@@ -121,91 +97,4 @@ titleboxcolor = black]{defi}{Definition}{compteurDef}
 \newcommand{\Rainbowdash}{\Vdash}
 \newcommand{\notRainbowdash}{\nVdash}
 \newcommand{\bottom}{\bot}
-
-%TD/TP
-\newenvironment{answer}{\color{blue}}{}
-
-
-%EvalPerf
-\newcommand{\Var}{\text{Var}}
-\newcommand{\prob}[1]{\PP\left( #1 \right)}
-\newcommand{\esp}[1]{\EE\left( #1 \right)}
-
-
-%SystDist
-\newcommand{\Receive}{\texttt{Receive~}}
-\newcommand{\Send}{\texttt{Send~}}
-
-
-%Preuves
-\newcommand{\betaeq}{=_\beta}
-\newcommand{\betared}{\vartriangleright_\beta}
-\newcommand{\parabetared}{\vartriangleright_{||\beta}}
-\newcommand{\Ackermann}{\A}
-
-
-%Cplx
-\newcommand{\Time}{\textsc{Time}}
-\newcommand{\TIME}{\textsc{Time}}
-
-\newcommand{\dtime}{\textsc{DTime}}
-\newcommand{\dTime}{\textsc{DTime}}
-\newcommand{\DTime}{\textsc{DTime}}
-
-\newcommand{\ntime}{\textsc{NTime}}
-\newcommand{\nTime}{\textsc{NTime}}
-\newcommand{\NTime}{\textsc{NTime}}
-
-\renewcommand{\P}{\textsc{P}}
-
-\newcommand{\pTime}{\textsc{PTime}}
-\newcommand{\PTime}{\textsc{PTime}}
-
-\newcommand{\NP}{\textsc{NP}}
-
-\newcommand{\npTime}{\textsc{NPTime}}
-\newcommand{\NPTime}{\textsc{NPTime}}
-
-\newcommand{\EXP}{\textsc{Exp}}
-\newcommand{\expTime}{\textsc{Exp}}
-\newcommand{\ExpTime}{\textsc{Exp}}
-\newcommand{\EXPTime}{\textsc{Exp}}
-
-\newcommand{\Space}{\textsc{Space}}
-
-\newcommand{\dSpace}{\textsc{DSpace}}
-\newcommand{\DSpace}{\textsc{DSpace}}
-
-
-\newcommand{\nSpace}{\textsc{NSpace}}\newcommand{\NSpace}{\textsc{NSpace}}
-
-\newcommand{\pSpace}{\textsc{PSpace}}
-\newcommand{\PSpace}{\textsc{PSpace}}
-
-\newcommand{\npSpace}{\textsc{NPSpace}}
-\newcommand{\NpSpace}{\textsc{NPSpace}}
-\newcommand{\NPSpace}{\textsc{NPSpace}}
-
-\newcommand{\SpaceTM}{\textsc{SpaceTM}}
-
-\newcommand{\nL}{\textsc{NL}}
-\newcommand{\NL}{\textsc{NL}}
-
-\newcommand{\LL}{\textsc{L}}
-
-\newcommand{\coNP}{co\text{-}\textsc{NP}}
-
-\newcommand{\conL}{co\text{-}\textsc{NL}}
-\newcommand{\coNL}{co\text{-}\textsc{NL}}
-
-\newcommand{\npc}{\text{\textit{NP-C}}}
-
-\newcommand{\PH}{\textsc{PH}}
-
-\newcommand{\TISP}{\textsc{TISP}}
-
-\newcommand{\Size}{\textsc{Size}}
-\newcommand{\SIZE}{\textsc{Size}}
-
-
 
