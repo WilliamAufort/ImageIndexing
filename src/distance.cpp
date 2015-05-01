@@ -46,7 +46,7 @@ string changeExtension(string fileName)
 	return newFile;
 }
 
-void imageToHistogram(string filename)
+void saveHistogramOfImage(string filename)
 {
     myLittleImage image = GenericReader<myLittleImage>::import(filename);
 	PointPredicate predicate(image,0);
@@ -62,16 +62,30 @@ void imageToHistogram(string filename)
 	buildHistogram(granuloImage, maxGranulo, pas, nbPoints, fileName);
 }
 
+vector<double> imageToHistogram(string filename)
+{
+    myLittleImage image = GenericReader<myLittleImage>::import(filename);
+	PointPredicate predicate(image,0);
+	DTL2 dtL2(image.domain(), predicate, l2Metric);
+	myLittleImage granuloImage (image.domain());
+	unsigned int nbPoints = granuloWithMedialAxis(image,granuloImage);
+	unsigned int maxGranulo = 0;
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+		if (granuloImage(*it) > maxGranulo)
+			maxGranulo = granuloImage(*it);
+	unsigned int pas = 20;
+	return buildHistogram(granuloImage, maxGranulo, pas, nbPoints);
+}
+
 double distanceImageToHisto(string imageFile, string histoFile)
 {
-	imageToHistogram(imageFile);
-	vector<double> histo1 = readHisto(changeExtension(imageFile));
+	vector<double> histo1 = imageToHistogram(imageFile);
 	vector<double> histo2 = readHisto(histoFile);
 	return EMD(histo1,histo2);
 }
 
 double distanceImageToImage(string imageFile1, string imageFile2)
 {
-	imageToHistogram(imageFile2);
+	saveHistogramOfImage(imageFile2);
 	return distanceImageToHisto(imageFile1,changeExtension(imageFile2));
 }

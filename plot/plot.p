@@ -39,3 +39,9 @@ plot "plot/plot.dat" using 1:2 title columnheader(2), \
      "plot/plot.dat" using 1:14 title columnheader(14), \
      "plot/plot.dat" using 1:15 title columnheader(15), \
      "plot/plot.dat" using 1:16 title columnheader(16)
+     
+plot "plot/plot.dat" using 1:17 title columnheader(17), \
+     "plot/plot.dat" using 1:18 title columnheader(18), \
+     "plot/plot.dat" using 1:19 title columnheader(19), \
+     "plot/plot.dat" using 1:20 title columnheader(20), \
+     "plot/plot.dat" using 1:21 title columnheader(21)

@@ -30,9 +30,7 @@ int main (int argc, char* argv[])
     fileList.clear();
     modifyImage(choosenFile, "temp.pgm");
     GetFilesInDirectory(fileList, argv[3]);
-    imageToHistogram("temp.pgm");
-
-	vector<double> histoTmp = readHisto(changeExtension("temp.pgm"));
+    vector<double> histoTmp = imageToHistogram("temp.pgm");
 
 
     vector<vector<double>> notations(70);
@@ -48,19 +46,33 @@ int main (int argc, char* argv[])
     file<<"class ";
     for(size_t i=0;i<15;++i)
         file<<i<<" ";
+    file<<"min avg fancy1 fancy2 AVG";
     file<<endl;
 
 
     for(size_t i=0;i<70;++i)
     {
         file << i <<" ";
+        double inf = 1000000;
+        double avg = 0;
+        double fancy1 = 0;
+        double fancy2 = 0;
         for(size_t j=0;j<15;++j)
+        {
             file<<notations[i][j]<<" ";
+            if(notations[i][j] < inf)
+                inf = notations[i][j];
+            avg += notations[i][j];
+            fancy1 += sqrt(notations[i][j]);
+            fancy2 += pow(notations[i][j]/2,2);
+        }
+        file<<inf<<" "<<avg/15<<" "<<fancy1/15<<" "<<fancy2/25<<" "<<((fancy2/25)+fancy1+(avg/15)+inf)/4;
         file<<endl;
     }
 
-    file.close();
 
+
+    file.close();
     system("gnuplot -persist plot/plot.p");
 
 	return 0;

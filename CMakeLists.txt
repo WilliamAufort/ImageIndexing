@@ -29,7 +29,10 @@ SET(SRCs
   helloworld
   granulometry
   genHistogram
-  testEfficency)
+  testEfficiency
+  indexing
+  retrieval
+  graph)
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
@@ -40,7 +43,7 @@ target_link_libraries(indexing ${DGTAL_LIBRARIES})
 
 # Retrieval
 
-add_executable(retrieval src/retrieval src/distance src/granulometry src/transforms)
+add_executable(retrieval src/retrieval src/distance src/toolbox src/granulometry src/transforms)
 target_link_libraries(retrieval ${DGTAL_LIBRARIES})
 
 # genHistogram
@@ -65,10 +68,10 @@ target_link_libraries(graph ${DGTAL_LIBRARIES})
 
 #tests
 
-add_executable(imgRotate imgRotate)
+add_executable(imgRotate imgRotate.cpp)
 target_link_libraries (imgRotate ${DGTAL_LIBRARIES}  ${Boost_LIBRAIRIES}  ${Boost_PROGRAM_OPTIONS_LIBRARY})
-add_executable(imgScale imgScale)
+add_executable(imgScale imgScale.cpp)
 target_link_libraries (imgScale ${DGTAL_LIBRARIES}  ${Boost_LIBRAIRIES}  ${Boost_PROGRAM_OPTIONS_LIBRARY})
-add_executable(imgAddNoise imgAddNoise)
+add_executable(imgAddNoise imgAddNoise.cpp)
 target_link_libraries (imgAddNoise ${DGTAL_LIBRARIES}  ${Boost_LIBRAIRIES}  ${Boost_PROGRAM_OPTIONS_LIBRARY})
 

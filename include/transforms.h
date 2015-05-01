@@ -1,5 +1,4 @@
-#ifndef Transforms_DEF
-#define Transforms_DEF
+#pragma once
 
 #include "DGtal/base/Common.h"
 #include "DGtal/helpers/StdDefs.h"
@@ -9,5 +8,3 @@ typedef DGtal::ImageSelector<DGtal::Z2i::Domain, unsigned char>::Type myLittleIm
 
 unsigned int getValue(myLittleImage& image, DGtal::Z2i::Point p);
 void applyFilter(myLittleImage& image, myLittleImage& filteredImage);
-
-#endif
