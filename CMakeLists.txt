@@ -34,4 +34,10 @@ target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
 add_executable(testEfficiency src/testEfficiency src/granulometry)
 target_link_libraries(testEfficiency ${DGTAL_LIBRARIES})
 
+# graph
+
+add_executable(graph src/graph src/toolbox)
+target_link_libraries(graph ${DGTAL_LIBRARIES})
+
+
 
