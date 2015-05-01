@@ -118,8 +118,16 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 
 \subsubsection{Loss of spatial information}
 
-% TODO dire quelque chose ici, voir une ouverture sur d'autres methodes (notamment les papiers que l'on a regardé)
+% TODO dire quelque chose ici, voir une ouverture sur d'autres methodes (notamment les papiers que l'on a regardé), remarquer que ceci 
+% est vrai pour beaucoup de méthodes
 
+\subsubsection{Robustness in presence of (specular) noise}
+
+% TODO 
+
+\subsubsection{Computation time}
+
+As we will see in the further section, the time needed to compute this function is quite important, and it's really a mess to evaluate it on all the images of the database. % TODO Parler du temps total?
 
 \subsection{Implementation}
 
@@ -145,6 +153,12 @@ $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\ma
 \end{theo}
 
 With this result, we can restrict the number of balls to scan to $\cplx{\left| \mathcal{X} \right|}$. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because of the other balls are included in some of those ones.
+
+\begin{proof}
+	
+Let us suppose that $B(p,r) \nsubseteq B(p,DT(p))$ for some $p$ and $r$. Let $p'$ be the point of the border \widetilde{\mathcal{X}} such that $d(p,p') = DT(p)$. Let $q = p + (p'-p).\frac{r}{DT(p)}
+
+\end{proof}
 
 We use the implementation of the Distance Transformation provided in \textsc{DGtal}. Once we have computed the Distance Transformation, the naive algorithm we can use to compute the granulometric function works as follows:
 
@@ -286,7 +300,7 @@ The Earth Mover Distance several advantages. First of all, it defines a metric i
 
 An important aspect of the project is to deal with image which can be potentially noised.
 
-We were interested in deleting specular noise. Our choice is to implement a binomial filter saw during the course. This filter, used essentially for smoothing grayscale images, erases the potential specular noise on the image. If the image is not noisy, the experiment show that the initial image is not modified. The initial filter (i.e. for a grayscale image) is :
+We were interested in deleting specular noise. In particular, the Kanungo noise used in the evaluation of our method is a kind of specular noise, because it's a local swapping procedure. Our choice is to implement a binomial filter saw during the course. This filter, used essentially for smoothing grayscale images, erases the potential specular noise on the image. If the image is not noisy, the experiment show that the initial image is not modified. The initial filter (i.e. for a grayscale image) is :
 
 \setcounter{MaxMatrixCols}{3}
 \[ F = \quad \frac{1}{16} \begin{pmatrix}
