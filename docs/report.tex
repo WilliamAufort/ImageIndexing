@@ -154,6 +154,12 @@ $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\ma
 
 With this result, we can restrict the number of balls to scan to $\cplx{\left| \mathcal{X} \right|}$. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because of the other balls are included in some of those ones.
 
+\begin{proof}
+	
+Let us suppose that $B(p,r) \nsubseteq B(p,DT(p))$ for some $p$ and $r$. Let $p'$ be the point of the border \widetilde{\mathcal{X}} such that $d(p,p') = DT(p)$. Let $q = p + (p'-p).\frac{r}{DT(p)}
+
+\end{proof}
+
 We use the implementation of the Distance Transformation provided in \textsc{DGtal}. Once we have computed the Distance Transformation, the naive algorithm we can use to compute the granulometric function works as follows:
 
 \IncMargin{1em}

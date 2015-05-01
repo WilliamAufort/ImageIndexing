@@ -83,3 +83,11 @@ vector<string> readFile(string filename)
 
     return out;
 }
+
+string extractClass(string filename)
+{
+	size_t begin = filename.find_last_of("/");
+	size_t end = filename.find_last_of("-");
+	size_t length = end - begin-1;
+	return filename.substr(begin+1, length);
+}

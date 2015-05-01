@@ -53,6 +53,11 @@ target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
 add_executable(testEfficiency src/testEfficiency src/granulometry)
 target_link_libraries(testEfficiency ${DGTAL_LIBRARIES})
 
+# Helloworld (basic tests)
+
+add_executable(helloworld src/helloworld src/toolbox)
+target_link_libraries(helloworld ${DGTAL_LIBRARIES})
+
 # graph
 
 add_executable(graph src/graph src/toolbox)
