@@ -331,9 +331,16 @@ In order to define and justify a distance, we have to observe the global behavio
 	\item Each curve $i$ represents the mark of the image $\mathcal{C}_i$ for the different classes. 
 \end{itemize}
 
-% TODO: Include graphics
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[height=250pt]{images/plot.1.ps}
+	\caption{In such a graph, on a given class (abscissa), the distances could be differently distributed. We have to keep in mind this to design a distance.}
+	\label{graph}
+\end{figure}
 
-This set of curve is quite dense, but we can (quite) easily distinguish the possible behaviours of the value.
+% TODO Enlever les légendes?
+
+One example is given in figure \ref{graph}. This set of curve is quite dense, but we can (quite) easily distinguish the possible behaviours of the value.
 
 In some classes, all the images are very similar (for example in the \texttt{apple} class). In the curves, on the right abscissa corresponding to these class (for instance \texttt{apple}), we can see that all the Earth Mover Distances are closed. On the opposite, when there are very different images on the same class (as in the figure \ref{horseshoes}), the EMD values could be very different.
 
