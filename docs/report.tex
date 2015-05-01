@@ -156,7 +156,11 @@ With this result, we can restrict the number of balls to scan to $\cplx{\left| \
 
 \begin{proof}
 	
-Let us suppose that $B(p,r) \nsubseteq B(p,DT(p))$ for some $p$ and $r$. Let $p'$ be the point of the border \widetilde{\mathcal{X}} such that $d(p,p') = DT(p)$. Let $q = p + (p'-p).\frac{r}{DT(p)}
+Let us suppose that $B(p,r) \nsubseteq B(p,DT(p))$ for some $p$ and $r$. This implies that $r > DT(p)$.
+
+Let $p'$ be the point of the border $\widetilde{\mathcal{X}}$ such that $d(p,p') = DT(p)$. Let $q = p + (p'-p).\frac{r}{DT(p)}.$ 
+
+$d(p,q) = \frac{r}{DT(p)}.d(p,p') = r > DT(p)$. Hence, by construction of $q$, we can deduce that $q \notin \mathcal{X}$, so we get a contraction with $q \in B(p,r) \subset \mathcal{X}$. 
 
 \end{proof}
 
@@ -255,7 +259,7 @@ What's more, we have a more efficient way to compute it:
 \]
 	Then, we have: 
 \[
-	EMD(P,Q) = \sum_{i=1}^n{EMD_i}
+	EMD(P,Q) = \sum_{i=1}^n{ \left| EMD_i \right|}
 \]
 \end{theo}
 
