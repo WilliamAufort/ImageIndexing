@@ -56,26 +56,15 @@ titleboxcolor = black]{defi}{Definition}{compteurDef}
 \newcounter{ThComp}
 \newcounter{DefComp}
 
-\newtheorem*{fact}{Fact}
-\newtheorem*{csq}{Consequence}
-\newtheorem{thm}[ThComp]{Theorem}
-\newtheorem{theorem}[ThComp]{Theorem}
-\newtheorem{propo}[ThComp]{Proposition}
-\newtheorem{proposition}[ThComp]{Proposition}
-\newtheorem{lemma}[ThComp]{Lemma}
-\newtheorem*{corol}{Corollary}
-\newtheorem{prop}[ThComp]{Property}
-\newtheorem{property}[ThComp]{Property}
-\theoremstyle{definition}
-\newtheorem*{ex}{Example}
-\newtheorem*{exs}{Examples}
-\newtheorem{exo}{Exercise}
-%\newtheorem{defi}[DefComp]{Definition}
-\newtheorem*{notation}{Notation}
-\newtheorem{definition}[DefComp]{Definition}
-\newtheorem{algo}{Algorithm}
-\theoremstyle{remark}
-\newtheorem*{Rq}{Remark}
+\newboxedtheorem[boxcolor=red, background=red!5, titlebackground=red!50,titleboxcolor = black]{theoreme}{Th\'{e}or\`{e}me}{TheC}
+\newboxedtheorem[boxcolor=orange, background=orange!5, titlebackground=orange!50,titleboxcolor = black]{definition}{D\'{e}finition}{DefC}
+\newboxedtheorem[boxcolor=blue, background=blue!5, titlebackground=blue!20,titleboxcolor = black]{proposition}{Proposition}{ProC}
+\newboxedtheorem[boxcolor=cyan, background=cyan!5, titlebackground=cyan!20,titleboxcolor = black]{corollaire}{Corollaire}{CorC}
+\newboxedtheorem[boxcolor=black, background=black!0, titlebackground=black!20,titleboxcolor = black]{remarque}{Remarque}{RemC}
+\newboxedtheorem[boxcolor=green!70!black, background=green!70!black!5, titlebackground=green!70!black!30,titleboxcolor = black]{notation}{Notation}{NotC}
+\newboxedtheorem[boxcolor=yellow, background=yellow!0, titlebackground=yellow!30,titleboxcolor = black]{exemple}{Exemple}{ExeC}
+\newboxedtheorem[boxcolor=magenta, background=magenta!5, titlebackground=magenta!30,titleboxcolor = black]{lemme}{Lemme}{LemC}
+
 \newcommand{\ra}{\rightarrow}
 \newcommand{\la}{\leftarrow}
 

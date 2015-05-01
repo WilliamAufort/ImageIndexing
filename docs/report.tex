@@ -63,11 +63,11 @@ When we are watching images, to associate them to concepts, we use our knowledge
 
 A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
 
-\begin{defi}[Granulometric function]
+\begin{definition}[Granulometric function]
 Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by:
 
 $$ g_{\mathcal{X}}(x) = \operatorname{max} \left\{ r | \exists c \in \mathcal{X}, x \in B(c,r) \wedge B(c,r) \subseteq \mathcal{X} \right\} $$ 
-\end{defi}
+\end{definition}
 
 In other words, we are looking for the radius of the greatest ball included in the shape $\mathcal{X}$ which contains our point $x$.
 
@@ -100,11 +100,11 @@ Compare two images remains to compare two histograms, so we have to define a dis
 
 The invariance with respect to translation, rotation and symmetry is an important property. But we have to be a little bit more precise:
 
-\begin{theo}[Invariance by translation]
+\begin{theoreme}[Invariance by translation]
 	Let $\mathcal{X}$ be a binary shape in $\Ztwo$. Let $\vec{t} \in \Ztwo$ be a vector of translation, and let $\mathcal{X}_{t} = \left\{ x + \vec{t}, x \in \mathcal{X} \right\}$. Then:
 	
 	$$ \forall x \in \mathcal{X}_{t}, g_{\mathcal{X}_{t}}(x) = g_{\mathcal{X}}(x-\vec{t}) $$
-\end{theo}
+\end{theoreme}
 
 In other words, there is a trivial isomorphism between the two images $\mathcal{X}$ and  $\mathcal{X}_t$ seen as unions of balls. With this remark, the proof of the theorem is completely trivial.
 
@@ -158,18 +158,18 @@ We present two algorithms. The first one is quite naive and have been implemente
 
 We recall the definition of the Distance Transformation saw during the class:
 
-\begin{defi}[Distance transformation]
+\begin{definition}[Distance transformation]
 Let $\mathcal{X}$ be a binary shape in $\Ztwo$. If $p$ is a point of $\mathcal{X}$, we called the Distance transformation at $p$, denoted by $DT(p)$, the smallest distance to the border of the image:
 $$ DT(p) = \underset{q \in \widetilde{\mathcal{X}}}{min} \quad d(p,q) $$
-\end{defi}
+\end{definition}
 
 $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. We are interested in it because of this trivial result:
 
-\begin{theo}
+\begin{theoreme}
 	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have:
 		$$ B(p,r) \subset B(p,DT(p))$$
 \label{theoremDT}
-\end{theo}
+\end{theoreme}
 
 With this result, we can restrict the number of balls to scan to $\cplx{\left| \mathcal{X} \right|}$. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because of the other balls are included in some of those ones.
 
@@ -199,9 +199,9 @@ We use the implementation of the Distance Transformation provided in \textsc{DGt
 \label{algo-naive}
 \end{algorithm}
 
-\begin{theo}[Correctness of Algorithm \ref{algo-naive}]
+\begin{theoreme}[Correctness of Algorithm \ref{algo-naive}]
 	At the end of the execution of the algorithm \ref{algo-naive}, $g$ is exactly the granulometry function on $\mathcal{X}$.
-\end{theo}
+\end{theoreme}
 
 \begin{proof}
 Let $p \in \mathcal{X}$. We can easily see that the value returned for $g(p)$ at the end of the algorithm is 
@@ -238,7 +238,7 @@ The Earth Mover Distance have been introduced in \cite{EMD-def} and is now used 
 
 Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the minimal cost to transform one distribution to the other one. The definition consider distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional data).
 
-\begin{defi}[Earth mover distance (general case)]
+\begin{definition}[Earth mover distance (general case)]
 	Let $P = \set{(p_1,w_{p_1}), \dots, (p_m,w_{p_m})}$ be a set of $m$ clusters, where $p_i$ represents the representative of the cluster and $w_{p_i}$ its weight. Similarly, let $Q = \set{(q_1,w_{q_1}), \dots, (q_n,w_{q_n})}$ be another set of $n$ clusters. Let $d_{i,j}$ be the ground distance between the clusters $p_i$ and $q_j$.
 	Let $(f_{i,j})$ be the solution to the following linear program:
 	Maximize $\sum_{i=1}^m \sum_{j=1}^n d_{i,j} f_{i,j}$ subject to
@@ -254,7 +254,7 @@ The Earth Mover distance is defined as the found work normalized by the total fl
 \[
 	EMD(P,Q) = \frac{\sum_{i=1}^m \sum_{j=1}^n d_{i,j} f_{i,j}}{\sum_{i=1}^m \sum_{j=1}^n f_{i,j}}
 \]
-\end{defi}
+\end{definition}
 
 In out particular case, $P$ and $Q$ represent our histograms. The $p_i$'s (respectively the $q_i$'s) represent the values that figures on the histograms. The weights $w_k$ are simply the frequency associated to the value. The $f_{i,j}$ can be interpreted as the flow between $p_i$ and $q_j$. Informally, if the histograms are interpreted as two different ways of piling up a certain amount of dirt, the Earth Mover Distance is simply the minimum cost of turning one pile into the other.
 
@@ -268,7 +268,7 @@ Hopefully, we are not going to use this linear program, since we work in the par
 
 What's more, we have a more efficient way to compute it:
 
-\begin{theo}[EMD in one dimension]
+\begin{theoreme}[EMD in one dimension]
 	Under the preivous hypothesis, we define the sequence $(EMD_i)_{i=0,\dots,n}$ by
 \[
 	\begin{aligned}
@@ -280,7 +280,7 @@ What's more, we have a more efficient way to compute it:
 \[
 	EMD(P,Q) = \sum_{i=1}^n{ \left| EMD_i \right|}
 \]
-\end{theo}
+\end{theoreme}
 
 \cite{EMD-proof} proposes an intuitive proof based on the interpretation of the quantity $\sum_{i=1}^n{EMD_i}$ in term of area between the two curves which represents the cumulative distributions of $P$ and $Q$.
 
@@ -288,14 +288,14 @@ What's more, we have a more efficient way to compute it:
 
 The Earth Mover Distance several advantages. First of all, it defines a true metric in the mathematical sense:
 
-\begin{theo}[EMD is a metric]
+\begin{theoreme}[EMD is a metric]
 	In the general case (i.e not only in dimension 1), if the total weight of the two histograms are equal, then the Earth Mover Distance defines a metric: for all $P$, $Q$, and $R$ we have:
 	\begin{itemize}
 		\item $EMD(P,P) = 0$
 		\item $EMD(P,Q) = EMD(Q,P)$
 		\item $EMD(P,R) \leq EMD(P,Q) + EMD(Q,R)$
 	\end{itemize}
-\end{theo}
+\end{theoreme}
 
 \begin{proof}
 
@@ -316,7 +316,7 @@ The Earth Mover Distance several advantages. First of all, it defines a true met
 
 \end{proof}
 
-The fact that it's a metric is quite important. We can compare it directly with classical metrics without loist of properties. The Earth Mover Distance is a more statistical distance than other metrics, and so it's more adapted in our case where our vectors are histograms. What's more, it matches perceptual similarity better than other measures. This was shown in \cite{EMD-use} for color and texture based image retrieval with another method. %TODO: Describe it a little bit ?
+The fact that it's a metric is quite important. We can compare it directly with classical metrics without lost of properties. The Earth Mover Distance is a more statistical distance than other metrics, and so it's more adapted in our case where our vectors are histograms. What's more, it matches perceptual similarity better than other measures. This was shown in \cite{EMD-use} for color and texture based image retrieval with another method. %TODO: Describe it a little bit ?
 
 \subsection{The EMD to get a distance between an image and a class}
 
@@ -333,7 +333,7 @@ In order to define and justify a distance, we have to observe the global behavio
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[height=250pt]{images/plot.1.ps}
+    \includegraphics[height=250pt]{images/plot_1.eps}
 	\caption{In such a graph, on a given class (abscissa), the distances could be differently distributed. We have to keep in mind this to design a distance.}
 	\label{graph}
 \end{figure}
@@ -380,13 +380,13 @@ For example, take the mean of the distance would be a bad solution, since we can
 
 On the curves, we also observe that the minimum of all the distance gives quite good results (i.e on the first five choices overall). These are all the reasons that why we use this distance:
 
-\begin{defi}
+\begin{definition}
 	Let $\mathcal{C} = \set{c_1,\dots,c_n}$ be a class of $n$ histograms (images), and $c$ be an histogram of an image $\mathcal{X}$. We define the distance between the image and the class by the quantity:
 
 \[
 	Dist(\mathcal{X},\mathcal{C}) = \underset{i = 1 \dots n}{\operatorname{min}} \left( EMD(c_i,c) \right)
 \]
-\end{defi}
+\end{definition}
 
 Let's now test our shape retrieval system.
 
