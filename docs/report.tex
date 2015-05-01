@@ -19,7 +19,7 @@ One important problem of image classification based is the definition of a suita
 
 \subsection*{The database used}
 
-In this project, we have access to a database of about 1000 images in the PGM format. All these images are made with two gray levels, respectively black and white. Excepted for one image (\texttt{rat-09}\footnote{We can't really explain why, but that's it...}), the object is defined by the white component. The database contains 70 classes, that we can divide into three main categories :
+In this project, we have access to a database of about 1000 images in the PGM format. All these images are made with two gray levels, respectively black and white. Excepted for one image (\texttt{rat-09.pgm}\footnote{We can't really explain why, but that's it...}), the object is defined by the white component. The database contains 70 classes, that we can divide into three main categories:
 \begin{itemize}
 	\item the objects (vehicles, usual objects like phones, watches, ...);
 	\item the animals (for instance, camels, octopuses, children, ...);
@@ -36,6 +36,25 @@ Of course, other decompositions, more or less precise, are possible. From this, 
 %\end{figure}
 
 
+\section{How to deal with noise: choices and implementation}
+
+First of all, an important aspect of the project is to deal with image which can be potentially noised.
+
+More precisely, we were interested in deleting specular noise. In particular, the Kanungo noise used in the evaluation of our method is a kind of specular noise, because it's a local swapping procedure. Our choice is to implement a binomial filter saw during the course. This filter, used essentially for smoothing grayscale images, erases the potential specular noise on the image. If the image is not noisy, the experiment show that the initial image is not modified. The initial filter (i.e. for a grayscale image) is:
+
+\setcounter{MaxMatrixCols}{3}
+\[ F = \quad \frac{1}{16} \begin{pmatrix}
+1 & 2 & 1 \\
+2 & 4 & 2 \\
+1 & 2 & 1
+\end{pmatrix}\]
+
+In the grayscale output image, we only keep the pixels with intensity greater than $8 \times 255$, where $8$ represents half of the sum of the weights in the filter ($16$ here) and $255$ the intensity for the white part of the image (i.e. the final object we keep). For more simplicity, we don't keep the $255$ factor, since the only possible intensity values in the input image are $0$ and $255$.
+
+We give a simpler implementation of the filter. One could improve it, for example using the fact that this filter is separable to decompose the calculations into two less costly steps.
+
+
+
 \section{Granulometric analysis}
 
 \subsection{Basic ideas}
@@ -45,7 +64,7 @@ When we are watching images, to associate them to concepts, we use our knowledge
 A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
 
 \begin{defi}[Granulometric function]
-Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by :
+Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by:
 
 $$ g_{\mathcal{X}}(x) = \operatorname{max} \left\{ r | \exists c \in \mathcal{X}, x \in B(c,r) \wedge B(c,r) \subseteq \mathcal{X} \right\} $$ 
 \end{defi}
@@ -71,7 +90,7 @@ If we plot the granulometry function on a 2D shape in the database, we can obser
 
 We can use the granulometric function to compare two images. To do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics.
 
-% TODO : Histograms construction
+% TODO: Histograms construction
 
 Compare two images remains to compare two histograms, so we have to define a distance between histograms. This work will be explained with more details in the next section.
 
@@ -82,7 +101,7 @@ Compare two images remains to compare two histograms, so we have to define a dis
 The invariance with respect to translation, rotation and symmetry is an important property. But we have to be a little bit more precise:
 
 \begin{theo}[Invariance by translation]
-	Let $\mathcal{X}$ be a binary shape in $\Ztwo$. Let $\vec{t} \in \Ztwo$ be a vector of translation, and let $\mathcal{X}_{t} = \left\{ x + \vec{t}, x \in \mathcal{X} \right\}$. Then :
+	Let $\mathcal{X}$ be a binary shape in $\Ztwo$. Let $\vec{t} \in \Ztwo$ be a vector of translation, and let $\mathcal{X}_{t} = \left\{ x + \vec{t}, x \in \mathcal{X} \right\}$. Then:
 	
 	$$ \forall x \in \mathcal{X}_{t}, g_{\mathcal{X}_{t}}(x) = g_{\mathcal{X}}(x-\vec{t}) $$
 \end{theo}
@@ -93,7 +112,7 @@ But the same result for rotations is not completely trivial. If we take a rotati
 
 Nonetheless, intuitively if there exists some modifications in the granulometric function, they are not going to be very large in some sense.
 
-% TODO : See if we can quantify the difference between the two.
+% TODO: See if we can quantify the difference between the two.
 
 \subsection{Disadvantages}
 
@@ -135,19 +154,19 @@ The general idea of the algorithms that computes the granulometric function is t
 
 We present two algorithms. The first one is quite naive and have been implemented first. It uses only the distance transformation (DT). The second one, closer to the medial axis concept, is an optimization where we drastically reduce the number of candidate balls to scan.
 
-\subsubsection{Naive algorithm : Distance Transformation}
+\subsubsection{Naive algorithm: Distance Transformation}
 
-We recall the definition of the Distance Transformation saw during the class :
+We recall the definition of the Distance Transformation saw during the class:
 
 \begin{defi}[Distance transformation]
-Let $\mathcal{X}$ be a binary shape in $\Ztwo$. If $p$ is a point of $\mathcal{X}$, we called the Distance transformation at $p$, denoted by $DT(p)$, the smallest distance to the border of the image :
+Let $\mathcal{X}$ be a binary shape in $\Ztwo$. If $p$ is a point of $\mathcal{X}$, we called the Distance transformation at $p$, denoted by $DT(p)$, the smallest distance to the border of the image:
 $$ DT(p) = \underset{q \in \widetilde{\mathcal{X}}}{min} \quad d(p,q) $$
 \end{defi}
 
-$DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. We are interested in it because of this trivial result :
+$DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. We are interested in it because of this trivial result:
 
 \begin{theo}
-	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have :
+	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have:
 		$$ B(p,r) \subset B(p,DT(p))$$
 \label{theoremDT}
 \end{theo}
@@ -196,7 +215,7 @@ The complexity of this algorithm is quite bad. For each point $p$, we build a ba
 
 As we have presented the issues of these algorithms, the goal is to reduce the number of balls we scan. Actually, we scan exactly $\left| \mathcal{X} \right|$ balls. We can reduce this number by computing the medial axis, which is the set of maximal balls included in the object.
 
-To implement this, we use two \textsc{DGtal} primitives : \texttt{PowerMap} and \texttt{ReducedMedialAxis}. We don't enter into all the details, but we just summarize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using power diagrams. 
+To implement this, we use two \textsc{DGtal} primitives: \texttt{PowerMap} and \texttt{ReducedMedialAxis}. We don't enter into all the details, but we just summarize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using power diagrams. 
 
 \subsubsection{Experiment: efficiency of the two algorithms}
 
@@ -207,7 +226,7 @@ But overall, these algorithms are not very fast, and it's a real problem when we
 
 Previously, we defined the granulometric function and we exposed the reasons for which this function could be interested for a shape indexing system. In this section, we are going to explain exactly how we use the granulometric function.
 
-\subsection{A metric based on statistical similarity : the Earth Mover Distance}
+\subsection{A metric based on statistical similarity: the Earth Mover Distance}
 
 In order to build a shape indexing system, we have to define a metric to quantify the distance between two images. We chose to represent this function as an histogram, because it's a more compact representation and we can do easy computations on it. For instance, a distance between two histograms could be a simple $l_p$ norm over $\RR^n$, where $n$ is the dimension of the histogram. A distance directly between the two images to compare would have been quite hard.
 
@@ -241,7 +260,7 @@ In out particular case, $P$ and $Q$ represent our histograms. The $p_i$'s (respe
 
 The second condition limits what the clusters of $P$ can send, and the firth condition limits what the clusters of $Q$ can receive. Finally, the fourth condition forces to move the maximal amount possible.
 
-Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and that's more they are also normalized (so $n = m$ and $(p1,\dots,p_n) = (q1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition became :
+Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and that's more they are also normalized (so $n = m$ and $(p1,\dots,p_n) = (q1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition became:
 
 \[
 	 \sum_{i=1}^m \sum_{j=1}^n f_{i,j} = \sum_{i=1}^m w_{p_i} = \sum_{j=1}^n w_{q_j}
@@ -265,11 +284,9 @@ What's more, we have a more efficient way to compute it:
 
 \cite{EMD-proof} proposes an intuitive proof based on the interpretation of the quantity $\sum_{i=1}^n{EMD_i}$ in term of area between the two curves which represents the cumulative distributions of $P$ and $Q$.
 
-% TODO : Figure du papier, attention à l'erreur de valeur
-
 \subsubsection{Properties and advantages}
 
-The Earth Mover Distance several advantages. First of all, it defines a metric in the mathematical sense:
+The Earth Mover Distance several advantages. First of all, it defines a true metric in the mathematical sense:
 
 \begin{theo}[EMD is a metric]
 	In the general case (i.e not only in dimension 1), if the total weight of the two histograms are equal, then the Earth Mover Distance defines a metric: for all $P$, $Q$, and $R$ we have:
@@ -299,27 +316,89 @@ The Earth Mover Distance several advantages. First of all, it defines a metric i
 
 \end{proof}
 
+The fact that it's a metric is quite important. We can compare it directly with classical metrics without loist of properties. The Earth Mover Distance is a more statistical distance than other metrics, and so it's more adapted in our case where our vectors are histograms. What's more, it matches perceptual similarity better than other measures. This was shown in \cite{EMD-use} for color and texture based image retrieval with another method. %TODO: Describe it a little bit ?
 
-\section{How to deal with noise: choices and implementation}
+\subsection{The EMD to get a distance between an image and a class}
 
-An important aspect of the project is to deal with image which can be potentially noised.
+In the previous paragraphs, we defined the metric we will use to compare to images and its properties. Now a new question appears. Given the distance $d_i$ of an image to the images $\mathcal{X}_i$ of a given class, how do we compute the mark of this class? In order to explain our choices, we first do some experiments to see the possible behaviours of the $d_i$'s, then we suggest a way to compute this mark and justify it. Then, we experimentally evaluate our retrieval system.
 
-We were interested in deleting specular noise. In particular, the Kanungo noise used in the evaluation of our method is a kind of specular noise, because it's a local swapping procedure. Our choice is to implement a binomial filter saw during the course. This filter, used essentially for smoothing grayscale images, erases the potential specular noise on the image. If the image is not noisy, the experiment show that the initial image is not modified. The initial filter (i.e. for a grayscale image) is :
+\subsubsection{Behaviours of the distances to the elements of a class}
 
-\setcounter{MaxMatrixCols}{3}
-\[ F = \quad \frac{1}{16} \begin{pmatrix}
-1 & 2 & 1 \\
-2 & 4 & 2 \\
-1 & 2 & 1
-\end{pmatrix}\]
+In order to define and justify a distance, we have to observe the global behaviour or the Earth Mover Distance. To do this, we wrote a program called \texttt{graph} which, given a class $\mathcal{C}$, plots a graph in which:
+\begin{itemize}
+	\item The abscissa axis represents the different classes;
+	\item The ordinate axis represents the mark of an image retrieval;
+	\item Each curve $i$ represents the mark of the image $\mathcal{C}_i$ for the different classes. 
+\end{itemize}
 
-In the grayscale output image, we only keep the pixels with intensity greater than $8 \times 255$, where $8$ represents half of the sum of the weights in the filter ($16$ here) and $255$ the intensity for the white part of the image (i.e. the final object we keep). For more simplicity, we don't keep the $255$ factor, since the only possible intensity values in the input image are $0$ and $255$.
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[height=250pt]{images/plot.1.ps}
+	\caption{In such a graph, on a given class (abscissa), the distances could be differently distributed. We have to keep in mind this to design a distance.}
+	\label{graph}
+\end{figure}
 
-We give a simpler implementation of the filter. One could improve it, for example using the fact that this filter is separable to decompose the calculations into two less costly steps.
+% TODO Enlever les légendes?
+
+One example is given in figure \ref{graph}. This set of curve is quite dense, but we can (quite) easily distinguish the possible behaviours of the value.
+
+In some classes, all the images are very similar (for example in the \texttt{apple} class). In the curves, on the right abscissa corresponding to these class (for instance \texttt{apple}), we can see that all the Earth Mover Distances are closed. On the opposite, when there are very different images on the same class (as in the figure \ref{horseshoes}), the EMD values could be very different.
+
+\begin{figure}[!ht]
+    \centering
+    \subfloat{
+        \label{horseshoes:1}
+        \includegraphics[height=80pt]{images/horseshoe-12}
+    }
+    \subfloat{
+        \label{horseshoes:2}
+        \includegraphics[height=80pt]{images/horseshoe-6}
+    }
+    \subfloat{
+        \label{horseshoes:3}
+        \includegraphics[height=80pt]{images/horseshoe-4}
+    }
+	\subfloat{
+        \label{horseshoes:4}
+        \includegraphics[height=80pt]{images/horseshoe-2}
+    }
+    \caption{In a single class (here \texttt{horseshoe}), we can have images with different granulometric functions, and so different EMDs to a same image} 
+	\label{horseshoes}
+\end{figure}
+
+Hence, on such graphs, we can see the two different behaviours: 
+\begin{itemize}
+	\item All the distances can be closed but not to 0;
+	\item The distances are quite distributed.
+\end{itemize}
+
+\subsubsection{Definition of the distance}
+
+The goal of the previous analysis was to decide what importance to give to low and high Earth Mover Distances.
+
+For example, take the mean of the distance would be a bad solution, since we can have an image very close to the input but all the other one in the class give important distances.
+
+On the curves, we also observe that the minimum of all the distance gives quite good results (i.e on the first five choices overall). These are all the reasons that why we use this distance:
+
+\begin{defi}
+	Let $\mathcal{C} = \set{c_1,\dots,c_n}$ be a class of $n$ histograms (images), and $c$ be an histogram of an image $\mathcal{X}$. We define the distance between the image and the class by the quantity:
+
+\[
+	Dist(\mathcal{X},\mathcal{C}) = \underset{i = 1 \dots n}{\operatorname{min}} \left( EMD(c_i,c) \right)
+\]
+\end{defi}
+
+Let's now test our shape retrieval system.
+
+\subsubsection{Experiments}
+
+For the experiments, we run the script given to evaluate our shape indexing algorithm. It builds a perturbated image (rotation, scaling and adding specular noise) from a random image of the database, and then runs our algorithm to get the rank of the correct class. If the rank belongs to $\set{1,\dots,10}$, the algorithm succeeds.
+
+%TODO Do the experiment
 
 \section*{Conclusion}
 
-The goal of this project was not not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness.
+The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness.
 
 \bibliographystyle{plain}
 \bibliography{biblio}
