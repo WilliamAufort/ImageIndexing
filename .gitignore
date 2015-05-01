@@ -33,6 +33,7 @@ genHistogram
 retrieval
 indexing
 testEfficiency
+graph
 
 # Removed files
 *~
