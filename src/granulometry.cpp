@@ -66,7 +66,7 @@ unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloI
 			Point bottom = center - Point::diagonal(radius +1);
 			Domain sphereDomain(bottom,top);
 			for (Domain::ConstIterator ite = sphereDomain.begin(); ite != sphereDomain.end(); ++ite)
-			{	
+			{
 				if ((granuloImage.domain().isInside(*ite)) // Point inside the image
 					&& (ball(*ite) > 0)					  // Point inside the ball
 					&& (granuloImage(*ite) < radius)) 	  // Granulometric value has to be updated
@@ -136,6 +136,29 @@ void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsign
 	}
 }
 
+vector<double> buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur)
+{
+	vector<double> histo(pas+1,0.0);
+	double cast_max = static_cast<double>(maxGranulo);
+	double cast_pas = static_cast<double>(pas);
+	double cast_compteur = static_cast<double>(compteur);
+	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
+	{
+		if (granuloImage.domain().isInside(*it)) // inside the image
+		{
+			unsigned int normalizedValue = static_cast<unsigned int>(static_cast<double>(granuloImage(*it)) / cast_max * cast_pas);
+			histo[normalizedValue]++;
+		}
+	}
+
+	for(size_t i=0; i<histo.size(); ++i)
+        histo[i] /= cast_compteur;
+
+    histo.erase(histo.begin());
+
+	return histo;
+}
+
 /// To test the speed of the two algorithms (used in testEfficiency.cpp)
 
 void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image, const char* inputFile)
@@ -152,12 +175,12 @@ void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, 
 void testSpeedNaive(myLittleImage& image, const char* inputFile)
 {
 	function<unsigned int(myLittleImage&, myLittleImage&)> f = &buildNaiveGranulo;
-	testSpeed(f,image,inputFile);	
+	testSpeed(f,image,inputFile);
 }
 
 void testSpeedQuick(myLittleImage& image, const char* inputFile)
 {
 	function<unsigned int(myLittleImage&, myLittleImage&)> f = &granuloWithMedialAxis;
-	testSpeed(f,image,inputFile);	
+	testSpeed(f,image,inputFile);
 }
 

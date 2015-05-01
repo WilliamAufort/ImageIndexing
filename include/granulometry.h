@@ -1,5 +1,4 @@
-#ifndef Granulo_DEF
-#define Granulo_DEF
+#pragma once
 
 #include <functional>
 #include "DGtal/base/Common.h"
@@ -25,11 +24,10 @@ unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage
 unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloImage);
 void saveGranulo(myLittleImage& granuloImage, unsigned int maxGranulo, std::string fileName);
 void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, std::string fileName);
+std::vector<double> buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur);
 
 /// Test efficiency of the two algorithms
 
 void testSpeed(std::function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image, const char* inputFile);
 void testSpeedNaive(myLittleImage& image, const char* inputFile);
 void testSpeedQuick(myLittleImage& image, const char* inputFile);
-
-#endif
