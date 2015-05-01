@@ -1,14 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <random>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <string.h>
 #include <unistd.h>
 #include <regex>
 #include "../include/toolbox.h"
+#include <stdlib.h>
 
 using namespace std;
+
 
 void GetFilesInDirectory(vector<string> &out, const string &directory)
 {
@@ -91,3 +95,31 @@ string extractClass(string filename)
 	size_t length = end - begin-1;
 	return filename.substr(begin+1, length);
 }
+
+string doubleToString(double x)
+{
+	ostringstream strs;
+	strs << x;
+	return strs.str();
+}
+
+void modifyImage(string inputFile, string outputFile)
+{
+	if (!system(NULL))
+		exit(EXIT_FAILURE);
+	else
+	{	
+		random_device rd;
+		mt19937 generator(rd());
+		uniform_real_distribution<> distrib(0,1);
+		double randomNoise = distrib(generator) * 0.5;
+		double randomAngle = distrib(generator) * 3.1415; 
+		double randomScale = distrib(generator) * 3; 
+		cout << "noise : " << randomNoise << ", angle : " << randomAngle << ", scale : " << randomScale << endl;	
+		int i;
+		i = system(("./imgRotate -i "+inputFile+" -o tmp.pgm -a "+doubleToString(randomAngle)+" 2> /dev/null").c_str());
+		i = system(("./imgScale -i tmp.pgm -o tmp2.pgm -s "+doubleToString(randomScale)+" 2> /dev/null").c_str());
+		i = system(("./imgAddNoise -i tmp2.pgm -o "+outputFile+" -n "+doubleToString(randomNoise)+" 2> /dev/null").c_str());
+		i = system("rm tmp.pgm tmp2.pgm");
+	}
+}	
