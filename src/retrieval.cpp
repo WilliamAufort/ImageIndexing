@@ -23,7 +23,7 @@ int main (int argc, char* argv[])
     for(size_t i=0; i<order.size(); ++i)
         reverse[order[i]] = i;
 
-    vector<double> histoTmp = imageToHistogram(argv[1]);
+    vector<double> histoTmp = imageToHistogram(argv[1], true);
 
 
     vector<vector<double>> notations(70);

@@ -3,6 +3,7 @@
 #include <cmath>
 #include "../include/distance.h"
 #include "../include/granulometry.h"
+#include "../include/transforms.h"
 #include "DGtal/io/readers/GenericReader.h"
 
 using namespace std;
@@ -62,9 +63,15 @@ void saveHistogramOfImage(string filename)
 	buildHistogram(granuloImage, maxGranulo, pas, nbPoints, fileName);
 }
 
-vector<double> imageToHistogram(string filename)
+vector<double> imageToHistogram(string filename, bool smooth)
 {
     myLittleImage image = GenericReader<myLittleImage>::import(filename);
+    myLittleImage filteredImage (image.domain());
+    if(smooth)
+    {
+        applyFilter(image, filteredImage);
+        image = filteredImage;
+    }
 	PointPredicate predicate(image,0);
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
 	myLittleImage granuloImage (image.domain());

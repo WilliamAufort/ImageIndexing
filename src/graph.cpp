@@ -30,7 +30,7 @@ int main (int argc, char* argv[])
     fileList.clear();
     modifyImage(choosenFile, "temp.pgm");
     GetFilesInDirectory(fileList, argv[3]);
-    vector<double> histoTmp = imageToHistogram("temp.pgm");
+    vector<double> histoTmp = imageToHistogram("temp.pgm", true);
 
 
     vector<vector<double>> notations(70);

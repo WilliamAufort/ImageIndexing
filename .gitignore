@@ -40,7 +40,7 @@ imgScale
 
 # Temp
 tmp.*
-temp.*
+temp*
 
 # Data
 *.dat
