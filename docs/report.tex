@@ -32,7 +32,7 @@ Of course, other decompositions, more or less precise, are possible. From this, 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[height=175pt]{../database/shapedata.eps}
+    \includegraphics[height=175pt]{images/shapedata.eps}
 	\caption{A panel of objects of the database: bats, bones and geometrical objects}
 	\label{shapedata}
 \end{figure}
@@ -117,7 +117,7 @@ What's more, all these properties holds for the continuous version of the granul
 	\begin{itemize}
 		\item If $t : \RR^2 \to \RR^2$ is a translation, then $\forall x \in \mathcal{X}, g_{t(\mathcal{X})}(x) = g_{\mathcal{X}}(t^{-1}(x))$, where $t^{-1}$ is the translation of vector $-\vec{t}$.
 		\item If $r : \RR^2 \to \RR^2$ is a rotation of center $c$ and angle $\theta$, then $\forall x \in \mathcal{X}, g_{r(\mathcal{X})}(x) = g_{\mathcal{X}}(r^{-1}(x))$, where $r^{-1}$ is the rotation of center $c$ and angle $-\theta$. 
-		\item If $h : \RR^2 \to \RR^2$ is an homothetic transformation of center $c$ and ration $\lambda$, then $\forall x \in \mathcal{X}, g_{h(\mathcal{X})}(x) = \lambda \times g_{\mathcal{X}}(h^{-1}(x))$, where $h^{-1}$ is the homothetic transformation of center $c$ and ratio $\frac{1}{\lambda}$.
+		\item If $h : \RR^2 \to \RR^2$ is an homothetic transformation of center $c$ and ratio $\lambda$, then $\forall x \in \mathcal{X}, g_{h(\mathcal{X})}(x) = \lambda \times g_{\mathcal{X}}(h^{-1}(x))$, where $h^{-1}$ is the homothetic transformation of center $c$ and ratio $\frac{1}{\lambda}$.
 	\end{itemize}
 \end{remarque}
 
@@ -125,7 +125,7 @@ What's more, all these properties holds for the continuous version of the granul
 
 The proof works as the previous one, with writing the isomorphisms between the two images.
 
-Hence nonetheless, intuitively if there exists some modifications in the granulometric function, they are not going to be very large, but it's difficult to quantify this difference.
+Hence nonetheless, intuitively if there exists some modifications in the granulometric function after rotation, translation or symmetry, they are not going to be very large, but it's difficult to quantify this difference. In the case of scaling, because of the factor $\lambda$ which appears outside in the formula, we can have side effects when $\lambda$ is small. Indeed, it would mean that we compress a lot of information, taht cannot appear in the case of rotation, symmetry or translation.
 
 \subsection{Disadvantages}
 
@@ -401,9 +401,11 @@ On the curves, we also observe that the minimum of all the distance gives quite 
 
 \end{definition}
 
-Let's now test our shape retrieval system.
+Contrary to the granulometric function which is really costly to compute, the distance is
 
 \subsubsection{Experiments}
+
+Let's now test our shape retrieval system.
 
 For the experiments, we run the script given to evaluate our shape indexing algorithm. It builds a perturbed image (rotation, scaling and adding specular noise) from a random image of the database, and then runs our algorithm to get the rank of the correct class. If the rank belongs to $\set{1,\dots,10}$, the algorithm succeeds.
 
@@ -496,6 +498,33 @@ For the experiments, we run the script given to evaluate our shape indexing algo
 	\\ \hline
 	device9 & device9 & sea\_snake & pocket & device6 & bone \\ \hline
 	score & 0.980719 & 0.86917 & 0.865189 & 0.865015 & 0.830019 \\ \hline
+	% Experience 4
+	\begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/test-octopus}
+    \end{minipage}
+    &
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/octopus}
+    \end{minipage}
+    & 
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/beetle}
+    \end{minipage}
+	&
+	\begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/device6-exp2}
+    \end{minipage}
+	&
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/elephant}
+    \end{minipage}
+	&
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/key}
+    \end{minipage}
+	\\ \hline
+	octopus & octopus & beetle & device6 & elephant & key \\ \hline
+	score & 0.894494 & 0.861499 & 0.855665 & 0.7806 & 0.767544 \\ \hline
   \end{tabular}
   \caption{Our results of retrieval run on the right side image. For some images, the classes found could be surprising, but there are a larger gap between the better mark and the furthers.}
 \end{table}
