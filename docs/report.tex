@@ -415,6 +415,7 @@ For the experiments, we run the script given to evaluate our shape indexing algo
     \hline
     original & first & second & third & fourth & fifth \\
 	\hline
+	% Experience 1
     \begin{minipage}{.3\textwidth}
       \includegraphics[width=\linewidth, width=20mm]{images/test-apple}
     \end{minipage}
@@ -439,12 +440,41 @@ For the experiments, we run the script given to evaluate our shape indexing algo
       \includegraphics[width=\linewidth, width=20mm]{images/device3}
     \end{minipage}
 	\\ \hline
-	% Element & score
 	apple & apple & device9 & cellular\_phone & device6 & device3 \\ \hline
 	score & 0.984914 & 0.964994 & 0.949397 & 0.929609 & 0.924559 \\ \hline
+	% Experience 2
+	\begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/test-bone}
+    \end{minipage}
+    &
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/bone}
+    \end{minipage}
+    & 
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/fork}
+    \end{minipage}
+	&
+	\begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/stef}
+    \end{minipage}
+	&
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/device8}
+    \end{minipage}
+	&
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/carriage}
+    \end{minipage}
+	\\ \hline
+	bone & bone & fork & stef & device8 & carriage \\ \hline
+	score & 0.945207 & 0.883185 & 0.873859 & 0.86771 & 0.844169 \\ \hline
   \end{tabular}
-  \caption{array}
+  \caption{Our results of retrieval run on the right side image. For some images, the classes found could be surprising, but there are a larger gap between the better mark and the furthers.}
 \end{table}
+
+% Note, on voit les images sous une faible résolution, en réalité les images sont plus grandes et le bruit est bien plus perceptible
+% --> Mentionner cela.
 
 \section*{Conclusion}
 
