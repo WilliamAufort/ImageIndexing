@@ -27,7 +27,6 @@ SET(SRCs
 
   # our executables
   helloworld
-  granulometry
   genHistogram
   testEfficiency
   indexing
