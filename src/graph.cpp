@@ -8,6 +8,10 @@ using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
+/**
+* Do the experiment described in the report to give the intuition of a correct distance between an image and a class
+*/
+
 int main (int argc, char* argv[])
 {
 	if (argc != 4)
@@ -30,9 +34,7 @@ int main (int argc, char* argv[])
     fileList = GetFilesInDirectory(argv[3]);
     vector<double> histoTmp = imageToHistogram("temp.pgm", true);
 
-
     vector<vector<double>> notations(70);
-    int tre = 0;
     for(string s : fileList)
     {
         vector<double> histo = readHisto(s);
@@ -46,7 +48,6 @@ int main (int argc, char* argv[])
         file<<i<<" ";
     file<<"min avg fancy1 fancy2 AVG";
     file<<endl;
-
 
     for(size_t i=0;i<70;++i)
     {
@@ -67,9 +68,6 @@ int main (int argc, char* argv[])
         file<<inf<<" "<<avg/15<<" "<<fancy1/15<<" "<<fancy2/25<<" "<<((fancy2/25)+fancy1+(avg/15)+inf)/4;
         file<<endl;
     }
-
-
-
     file.close();
     system("gnuplot -persist plot/plot.p");
 

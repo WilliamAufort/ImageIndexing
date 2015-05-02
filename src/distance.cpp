@@ -36,12 +36,12 @@ vector<double> readHisto(string fileName)
 }
 
 /**
-* The distance between two histograms. This is an edit distance between to histograms based on the displacements needed to reach the second
+* The distance between two histograms. This is an edit distance between histograms based on the displacements needed to reach the second
 * histogram from the first
 *
-* @param hitso1 An histogram
+* @param histo1 An histogram
 *
-* @param hitso2 An histogram
+* @param histo2 An histogram
 *
 * @return The distance between the two histograms
 */
@@ -58,7 +58,7 @@ double EMD(vector<double> histo1, vector<double> histo2)
 }
 
 /**
-* Given an image, this function compute the histogram and save it in a file. The histogram filename is the same as the image filename
+* Given an image, this function computes the histogram and save it in a file. The histogram filename is the same as the image filename
 * except the extension is changed for .hist
 *
 * @param filename The filename of the image
@@ -80,7 +80,7 @@ void saveHistogramOfImage(string filename)
 }
 
 /**
-* Given an image, this function compute the histogram
+* Given an image, this function computes the histogram
 *
 * @param filename The filename of the image
 *
@@ -110,7 +110,7 @@ vector<double> imageToHistogram(string filename, bool smooth)
 }
 
 /**
-* Compute the distance between an image and a histogram. This function compute the histogram of the image and returns the distance between
+* Compute the distance between an image and a histogram. This function computes the histogram of the image and returns the distance between
 * the two histograms
 *
 * @param imageFile The filename of the image

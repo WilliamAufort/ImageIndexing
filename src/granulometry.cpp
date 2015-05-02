@@ -7,17 +7,22 @@ using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
-/// Naive algorithm
-
+/**
+* Compute the granulometric function on a given image using the naive algorithm (see the report)
+*
+* @param image The input image 
+*
+* @param granuloImage The image where we store the granulometric function values
+*/
 unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage)
 {
 	PointPredicate predicate(image,0);
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
-	unsigned int compteur = 0; // number of points in the image
+	unsigned int nbPoints = 0;
 	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 		if (dtL2(*it) > 0) // inside the image
 		{
-			compteur++;
+			nbPoints++;
 			// Build a sphere inside the object of radius dtL2(*it)
 			unsigned int radius = static_cast<unsigned int>(dtL2(*it));
 			RealPoint center = *it;
@@ -29,35 +34,40 @@ unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage
 			for (Domain::ConstIterator ite = sphereDomain.begin(); ite != sphereDomain.end(); ++ite)
 			{
 				if ((granuloImage.domain().isInside(*ite)) // Point inside the image
-					&& (ball(*ite) > 0)					  // Point inside the ball
-					&& (granuloImage(*ite) < radius)) 	  // Granulometric value has to be updated
+					&& (ball(*ite) > 0)					   // Point inside the ball
+					&& (granuloImage(*ite) < radius)) 	   // Granulometric value has to be updated
 				{
 					granuloImage.setValue(*ite,radius);
 				}
 			}
 		}
-	return compteur;
+	return nbPoints;
 }
 
-/// Advanced granulometric algorithm
-
+/**
+* Compute the granulometric function with a smarter algorithm that uses the medial axis (see report for more details)
+*
+* @param image The input image 
+*
+* @param granuloImage The image where we store the granulometric function values
+*/
 unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloImage)
 {
 	PointPredicate predicate(image,0);
 	Z2i::L2PowerMetric l2power;
-	unsigned int compteurBalls = 0;
-	unsigned int compteurPoints = 0;
+	unsigned int nbBalls = 0;
+	unsigned int nbPoints = 0;
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
     Map power(image.domain(), dtL2, l2power);
 	RMA::Type rma = RMA::getReducedMedialAxisFromPowerMap(power);
 	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 	{
-		if (dtL2(*it) > 0)
-			compteurPoints++;
+		if (dtL2(*it) > 0) // Inside the image
+			nbPoints++;
 
-		if (rma(*it) > 0)
+		if (rma(*it) > 0) // Center of a ball
 		{
-			compteurBalls++;
+			nbBalls++;
 			unsigned int radius = static_cast<unsigned int>(dtL2(*it));
 			RealPoint center = *it;
 			ImplicitBall<Space> ball(center,radius);
@@ -76,19 +86,25 @@ unsigned int granuloWithMedialAxis(myLittleImage& image, myLittleImage& granuloI
 			}
 		}
 	}
-	trace.info() << "Granulometric function computed with " << compteurBalls << " balls" << endl;
-	return compteurPoints;
+	trace.info() << "Granulometric function computed with " << nbBalls << " balls" << endl;
+	return nbPoints;
 }
 
-/// A printer for granulometric images
-
+/**
+* Save the granometric function values stored in an image into an EPS file
+*
+* @param granuloImage The image containing the granulometric function values
+*
+* @param maxGranulo The maximum value of the granulometric function
+*
+* @param fileName A string containing the filename where we store the image
+*/
 void saveGranulo(myLittleImage& granuloImage, unsigned int maxGranulo, string fileName)
 {
 	Board2D board;
 	HueTwice colorMap(1,maxGranulo+1);
-	// Some constants to do the drawing
 	Point O(0,0);
-	string specificStyle =  O.className() + "/Paving"; // Point style
+	string specificStyle =  O.className() + "/Paving";
 	Color white(255,255,255);
     board << SetMode(granuloImage.domain().className(), "Paving")
       	  << granuloImage.domain()
@@ -107,14 +123,25 @@ void saveGranulo(myLittleImage& granuloImage, unsigned int maxGranulo, string fi
     board.saveEPS(fileName.c_str());
 }
 
-/// Build the histograms used in indexing
-
-void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur, string fileName)
+/**
+* Compute the histogram of a granulometric image and save it in a file
+*
+* @param granuloImage The image containing the granulometric values
+*
+* @param maxGranulo The maximum of the granulometric values
+*
+* @param pas The number of bins of the histogram
+*
+* @param nbPoints The number of points inside the object contained in granuloImage
+*
+* @param fileName The filename where we store the histogram
+*/
+void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int nbPoints, string fileName)
 {
 	vector<double> histo(pas+1,0.0);
 	double cast_max = static_cast<double>(maxGranulo);
 	double cast_pas = static_cast<double>(pas);
-	double cast_compteur = static_cast<double>(compteur);
+	double cast_nbPoints = static_cast<double>(nbPoints);
 	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 	{
 		if (granuloImage.domain().isInside(*it)) // inside the image
@@ -132,10 +159,23 @@ void buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsign
 		// Another advantage of this is that we use a kind a filter of "bad" balls which can
 		// appear in the border
 		for (unsigned int i= 1; i <= pas; ++i)
-			file << i << " " << histo[i] / cast_compteur << endl;
+			file << i << " " << histo[i] / cast_nbPoints << endl;
 	}
 }
 
+/**
+* Compute the histogram of a granulometric image, as previously, but return it
+*
+* @param granuloImage The image containing the granulometric values
+*
+* @param maxGranulo The maximum of the granulometric values
+*
+* @param pas The number of bins of the histogram
+*
+* @param nbPoints The number of points inside the object contained in granuloImage
+*
+* @return The histogram as a vector of doubles
+*/
 vector<double> buildHistogram(myLittleImage& granuloImage, unsigned int maxGranulo, unsigned int pas, unsigned int compteur)
 {
 	vector<double> histo(pas+1,0.0);
@@ -159,9 +199,14 @@ vector<double> buildHistogram(myLittleImage& granuloImage, unsigned int maxGranu
 	return histo;
 }
 
-/// To test the speed of the two algorithms (used in testEfficiency.cpp)
-
-void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image, const char* inputFile)
+/**
+* Test the speed of any algorithm which computes the granulometric function (used in testEfficiency.cpp)
+*
+* @param granulo The granulometric algorithm used
+*
+* @param image The input image of the algorithm
+*/
+void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image)
 {
 	trace.beginBlock ("Test");
 
@@ -172,15 +217,24 @@ void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, 
 	return;
 }
 
-void testSpeedNaive(myLittleImage& image, const char* inputFile)
+/**
+* Test the speed of the naive algorithm
+*
+* @param image The input image of the algorithm
+*/
+void testSpeedNaive(myLittleImage& image)
 {
 	function<unsigned int(myLittleImage&, myLittleImage&)> f = &buildNaiveGranulo;
-	testSpeed(f,image,inputFile);
+	testSpeed(f,image);
 }
 
-void testSpeedQuick(myLittleImage& image, const char* inputFile)
+/**
+* Test the speed of the second algorithm
+*
+* @param image The input image of the algorithm
+*/
+void testSpeedQuick(myLittleImage& image)
 {
 	function<unsigned int(myLittleImage&, myLittleImage&)> f = &granuloWithMedialAxis;
-	testSpeed(f,image,inputFile);
+	testSpeed(f,image);
 }
-

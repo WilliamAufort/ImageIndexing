@@ -14,7 +14,7 @@
 using namespace std;
 
 /**
-* Change l'extension du nom de fichier donné pour .hist
+* Change the extension of the filename given to .hist
 *
 * @param fileName A filename containing a '.'
 *
@@ -92,7 +92,7 @@ vector<string> filtre(const vector<string>& liste, const string& regexpr)
 *
 * @param done A vector of strings
 *
-* @return The différent liste \ done
+* @return The difference liste \ done
 */
 vector<string> difference(const vector<string>& liste, const vector<string>& done)
 {
@@ -138,7 +138,7 @@ vector<string> readFile(string filename)
 /**
 * Extract the image class from a filename
 *
-* @param filename A string containt the filename of the kind a/unix/path/class-number.pgm
+* @param filename A string containing the filename of the kind a/unix/path/class-number.pgm
 *
 * @return A string containing class
 */
@@ -166,7 +166,7 @@ string getPath(const string& str)
 /**
 * Extract the filename from a complete filename
 *
-* @param filename A string containt the filename of the kind a/unix/path/file
+* @param filename A string containing the filename of the kind a/unix/path/file
 *
 * @return A string containing file
 */
@@ -175,6 +175,16 @@ string getFileName(const string& str)
   unsigned found = str.find_last_of("/");
   return str.substr(found+1);
 }
+
+/**
+* Apply a rotation, a scaling, and noise to an image with random parameters. 
+*
+* It uses the different executables provided to evaluate our program.
+*
+* @param inputFile A string containing the filename of the input image
+*
+* @param outputFile A string containing the filename when you want to store the transformed image
+*/
 
 void modifyImage(string inputFile, string outputFile)
 {

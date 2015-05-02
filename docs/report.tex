@@ -110,14 +110,14 @@ If we plot the granulometry function on a 2D shape in the database, we can obser
 We can use the granulometric function to compare two images. To do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics. Even if it's a common notion, we recall its "definition":
 
 \begin{definition}[(normalized) histogram]
-	Let $w \in \mathcal{N}$ be a integer. Let $g: \mathcal{X} \to \RR^+$ be a granulometric function. We denote by $g_{max}$ the maximum value of $g$ over $\mathcal{X}$. We define the histogram of $g$ as the curve of the function $Hist(g): \set{0,\dots,w-1} \to \left[0,1\right]$ such that:
+	Let $b \in \mathcal{N}$ be a integer (the number of bins of the histogram). Let $g: \mathcal{X} \to \RR^+$ be a granulometric function. We denote by $g_{max}$ the maximum value of $g$ over $\mathcal{X}$. We define the histogram of $g$ as the curve of the function $Hist(g): \set{0,\dots,w-1} \to \left[0,1\right]$ such that:
 
 \[
-	Hist(g)(n) = Card \left( \set{ x \in \mathcal{X}, \frac{n}{w}g_{max} < g(x) \leq \frac{n-1}{w}g_{max}} \right)
+	Hist(g)(n) = Card \left( \set{ x \in \mathcal{X}, \frac{n}{b}g_{max} < g(x) \leq \frac{n-1}{b}g_{max}} \right)
 \]
 \end{definition}
 
-One can notice that we fix $w$ in this definition. In practize, we choose it not too small to observe something about the repartition of the data, but not too big also. Indeed, it induces more computations to have a very precise precise distribution we don't need. In our experiments, we have fixes $w = 20$, which seems to be a correct value with regard to our results.
+One can notice that we fix $b$ in this definition. In practize, we choose it not too small to observe something about the repartition of the data, but not too big also. Indeed, it induces more computations to have a very precise precise distribution we don't need. In our experiments, we have fixes $w = 20$, which seems to be a correct value with regard to our results.
 
 Thus, compare two images remains to compare two histograms, so we have to define a distance between histograms. This work will be explained with more details in the next section.
 

@@ -4,29 +4,15 @@ using namespace std;
 using namespace DGtal;
 using namespace Z2i;
 
-/***************************************\
-| Implementation of a simple smoothing 	|
-| filter whose goal is to reduce 		|
-| specular noise on an image 			|
-\***************************************/
-
-/*
-
-The chosen filter is the binomial filter :
-
-	--		  --
-	| 1  2  1  |
-	| 2  4  2  |
-	| 1  2  1  |
-	--        --
-
-which seems sufficient for the work we are doing with it.
-
+/**
+* Decide whether a point belongs to an object or not 
+*
+* @param image The image containing the object
+*
+* @param P a point
+*
+* @return 1 if P belongs to the object, 0 otherwise
 */
-
-
-// Return 1 if belongs P belongs to the object, 0 otherwise (not on the object or out of the border)
-
 unsigned int getValue(myLittleImage& image, Point p)
 {
 	if (image.domain().isInside(p))
@@ -34,14 +20,26 @@ unsigned int getValue(myLittleImage& image, Point p)
 	return 0;
 }
 
-// Apply the filter on the image
-
+/**
+* Apply the filter:
+*
+*	--		  --
+*	| 1  2  1  |
+*	| 2  4  2  |
+*	| 1  2  1  | 
+*	--        --
+*
+* on the image to delete the noise
+*
+* @param image The input image
+*
+* @param filteredImage The image where we have to store the filtered image
+*/
 void applyFilter(myLittleImage& image, myLittleImage& filteredImage)
 {	
 	for (myLittleImage::Domain::ConstIterator it = image.domain().begin(); it != image.domain().end(); ++it)
 	{
 		Point ref = *it;
-		// the filter
 		int value = getValue(image,ref+Point(-1,1)) + 2*getValue(image,ref+Point(0,1)) + getValue(image,ref+Point(1,1))
 					+ 2*getValue(image,ref+Point(-1,0)) + 4*getValue(image,ref) + 2*getValue(image,ref+Point(1,0))
 					+ getValue(image,ref+Point(-1,-1)) + 2*getValue(image,ref+Point(0,-1)) + getValue(image,ref+Point(1,-1));

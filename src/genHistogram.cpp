@@ -45,8 +45,8 @@ vector<string> filename_done()
 }
 
 /**
-* What a thread have to do. They compute histograms of all images in liste. Each thread takes a filename in liste, do the computation and continue...
-* When there is no more untreated file in liste, the thread finish. We use mutex to avoid race condition.
+* What a thread have to do. They compute histograms of all images in liste. Each thread takes a filename in liste, does the computation and continues...
+* When there is no more untreated file in liste, the thread finishes. We use mutex to avoid race condition.
 *
 * @param id The id of the thread
 */
@@ -76,23 +76,15 @@ void threadWork(size_t id)
 void calcul(string filename)
 {
     myLittleImage image = GenericReader<myLittleImage>::import(filename);
+	myLittleImage granuloImage (image.domain());
 
 	PointPredicate predicate(image,0);
 	DTL2 dtL2(image.domain(), predicate, l2Metric);
-	/// Initialize
-
-	myLittleImage granuloImage (image.domain());
-	/// Granulometric function calculations
-
 	unsigned int nbPoints = buildNaiveGranulo(image,granuloImage);
-	/// Maximal value
-
 	unsigned int maxGranulo = 0;
 	for (myLittleImage::Domain::ConstIterator it = granuloImage.domain().begin(); it != granuloImage.domain().end(); ++it)
 		if (granuloImage(*it) > maxGranulo)
 			maxGranulo = granuloImage(*it);
-	/// Histogramm
-
 	unsigned int pas = 20;
 	string fileName = "histograms/"+changeExtension(filename);
 	buildHistogram(granuloImage, maxGranulo, pas, nbPoints, fileName);
