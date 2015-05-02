@@ -18,7 +18,7 @@ using namespace Z2i;
 */
 vector<double> buildScore(const vector<string>& fileList, const string& imageFileName)
 {
-    vector<string> order = readFile(".classification.order");
+    vector<string> order = readFile("../.classification.order");
     map<string, int> reverse;
     for(size_t i=0; i<order.size(); ++i)
         reverse[order[i]] = i;
@@ -60,7 +60,7 @@ int main (int argc, char* argv[])
 		exit (1);
 	}
 	random_device rd;
-    vector<string> fileList = GetFilesInDirectory("histograms/database");
+    vector<string> fileList = GetFilesInDirectory("../histograms/database");
     vector<double> final = buildScore(fileList, argv[1]);
 
     for(size_t i=0; i<70; ++i)

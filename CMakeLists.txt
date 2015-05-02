@@ -38,33 +38,33 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 # Indexing
 
-add_executable(indexing src/indexing src/granulometry src/toolbox)
-target_link_libraries(indexing ${DGTAL_LIBRARIES})
+#add_executable(indexing src/indexing src/granulometry src/toolbox)
+#target_link_libraries(indexing ${DGTAL_LIBRARIES})
 
 # Retrieval
 
-add_executable(retrieval src/retrieval src/distance src/toolbox src/granulometry src/transforms)
-target_link_libraries(retrieval ${DGTAL_LIBRARIES})
+#add_executable(retrieval src/retrieval src/distance src/toolbox src/granulometry src/transforms)
+#target_link_libraries(retrieval ${DGTAL_LIBRARIES})
 
 # genHistogram
 
-add_executable(genHistogram src/genHistogram src/granulometry src/toolbox)
-target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
+#add_executable(genHistogram src/genHistogram src/granulometry src/toolbox)
+#target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
 
 # testEfficiency
 
-add_executable(testEfficiency src/testEfficiency src/granulometry)
-target_link_libraries(testEfficiency ${DGTAL_LIBRARIES})
+#add_executable(testEfficiency src/testEfficiency src/granulometry)
+#target_link_libraries(testEfficiency ${DGTAL_LIBRARIES})
 
 # Helloworld (basic tests)
 
-add_executable(helloworld src/helloworld src/toolbox)
+add_executable(helloworld src/helloworld src/transforms)
 target_link_libraries(helloworld ${DGTAL_LIBRARIES})
 
 # graph
 
-add_executable(graph src/graph src/toolbox src/distance src/granulometry src/transforms)
-target_link_libraries(graph ${DGTAL_LIBRARIES})
+#add_executable(graph src/graph src/toolbox src/distance src/granulometry src/transforms)
+#target_link_libraries(graph ${DGTAL_LIBRARIES})
 
 #tests
 

@@ -28,6 +28,8 @@ In this project, we have access to a database of about 1000 images in the PGM fo
 
 The figure \ref{shapedata} illustrates these three categories.
 
+\label{categories}
+
 Of course, other decompositions, more or less precise, are possible. From this, we just have to keep in mind that such a diversity on the objects to study is a real difficulty to algorithm design.
 
 \begin{figure}[!ht]
@@ -39,6 +41,8 @@ Of course, other decompositions, more or less precise, are possible. From this, 
 
 
 \section{How to deal with noise: choices and implementation}
+
+\label{filter}
 
 First of all, an important aspect of the project is to deal with image which can be potentially noised.
 
@@ -54,6 +58,21 @@ More precisely, we were interested in deleting specular noise. In particular, th
 In the grayscale output image, we only keep the pixels with intensity greater than $8 \times 255$, where $8$ represents half of the sum of the weights in the filter ($16$ here) and $255$ the intensity for the white part of the image (i.e. the final object we keep). For more simplicity, we don't keep the $255$ factor, since the only possible intensity values in the input image are $0$ and $255$.
 
 We give a simpler implementation of the filter. One could improve it, for example using the fact that this filter is separable to decompose the calculations into two less costly steps.
+
+The figure \ref{filter-exp} shows the efficiency of the filter on a small octopus image, even if some tentacles have been merged. In bigger images, since the size of the mask is small, this effect has less probability to occur.
+
+\begin{figure}[!ht]
+    \centering
+    \subfloat{
+        \includegraphics[height=125pt]{images/test-octopus}
+    }
+    \qquad\qquad\qquad
+    \subfloat{
+        \includegraphics[height=125pt]{images/octopus-without-noise}
+    }
+    \caption{The filter eliminates almost all the noise of this image.}
+    \label{filter-exp}
+\end{figure}
 
 \section{Granulometric analysis}
 
@@ -131,6 +150,8 @@ Hence nonetheless, intuitively if there exists some modifications in the granulo
 
 \subsubsection{Geometrical objects with perturbations}
 
+\label{geo-perturb}
+
 Some of the classes are defined by the basic geometrical object they refers to. For example, the object presented in the figure \ref{device9-6}, as all the elements in the class \texttt{device9}, are very close to a ball, excepted that they are crossed by some perturbing element (in the figure it's a line). The problem on such images is that that king of noise perturb a lot the output of the granulometric function, as we can see in the figure \ref{device9-6}.
 
 \begin{figure}[!ht]
@@ -154,7 +175,14 @@ One of the problem of this method is to not take into account the distribution o
 
 \subsubsection{Robustness in presence of (specular) noise}
 
-As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, which clearly perturb the granulometric function. That's why we need a noise filter as the one we exposed in the first 
+As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, which clearly perturb the granulometric function. The figure \ref{device9-6-noised} illustrates it. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[height=200pt]{images/granulo-noised}
+    \caption{Perturbation with a specular noise, mostly on the border of the image. But hence, the radius of the centered balls also decreases.}
+	\label{device9-6-noised}
+\end{figure}
 
 \subsubsection{Computation time}
 
@@ -233,6 +261,8 @@ To implement this, we use two \textsc{DGtal} primitives: \texttt{PowerMap} and \
 
 We can observe that the second algorithm scans less balls than the first one. On the other hand, since we had to compute the medial axis in the second algorithm, the gain on the execution time is less than the gain in terms of number of balls.
 But overall, these algorithms are not very fast, and it's a real problem when we are working in a large database, because the cost of precomputations is huge.
+
+To give some order of magnitudes, on the few tests we have done on it, the number of balls decreases by roughly $20 \%$, but the computation cost decreases only by roughly $10$ or $15 \%$.
 
 \section{Application of granulometric analysis to shape indexing}
 
@@ -350,7 +380,7 @@ In order to define and justify a distance, we have to observe the global behavio
 	\label{graph}
 \end{figure}
 
-% TODO Enlever les légendes?
+% TODO Enlever les légendes? 
 
 One example is given in figure \ref{graph}. This set of curve is quite dense, but we can (quite) easily distinguish the possible behaviours of the value.
 
@@ -401,15 +431,46 @@ On the curves, we also observe that the minimum of all the distance gives quite 
 
 \end{definition}
 
-Contrary to the granulometric function which is really costly to compute, the distance is
+One can notice that with such a distance, if we want to add a new class, or new images in this class, we don't need to modify all the computations done. We just have to compute the corresponding histograms.
+
+What's more, contrary to the granulometric function which is really costly to compute, the distance computations are cheap once we have compute \textbf{all} the histograms of the images of the database.
+
+\subsubsection{Implementation details: histograms computations}
+
+The method we propose need some histograms precalculations, more precisely one per image of the database. But we saw that it was too much long. In order to precompute all the histograms faster, we design a simple parallel process to compute them based on threads. Each thread takes a file name in a list, do the computations and then chooses another file name, etc. In order to avoid race condition, we use a mutex. With this program (see \texttt{genHistogram.cpp} for more details), we divide the computation time by 8 (the number of threads used). That's why you don't have (and it's not recommanded) to compute all the base histograms again.
 
 \subsubsection{Experiments}
 
 Let's now test our shape retrieval system.
 
-For the experiments, we run the script given to evaluate our shape indexing algorithm. It builds a perturbed image (rotation, scaling and adding specular noise) from a random image of the database, and then runs our algorithm to get the rank of the correct class. If the rank belongs to $\set{1,\dots,10}$, the algorithm succeeds.
+For the experiments, we follow the principle of the script given to evaluate our shape indexing algorithm. We build a perturbed image (rotation, scaling and adding specular noise) from a random image of the database (we can choose the class), and then run our algorithm to get the rank of the correct class. If the rank belongs to $\set{1,\dots,10}$, the script says that the algorithm succeeds.
 
-%TODO Details about the experiment
+The table \ref{results} of the appendix presents some of our results on several inputs. More precisely, we test our algorithm on the different categories exposed in \ref{categories} and we show the five first class of the output with one representative (not necessairly those for which the minimum was reached, but the closest image, intuitively). At each time, the algorithms returns the good class at the first position, even if the scaling factor is small (for the \texttt{octopus} noised image, $\lambda = 0.212535$).
+
+We present a short analysis on each example of the table:
+
+\begin{itemize}
+	\item For the \texttt{apple}, the five first results have good marks, because they all have a big circular part. Nonetheless, the apple has been recognized first.
+	\item For \texttt{Bone} and \texttt{device9}, the marks the first image got is much better than the following. Even if some of them are not very closed from the original object (for instance the \texttt{pocket}), the difference of the marks is quite sufficient to distiguish them.
+	\item As we already tell it, even with a noise factor small, the algorithm gives the correct answer for the first class, even if the mark was less good than for the previous test.
+\end{itemize}
+
+We advertise that, excepted for the last image, we can't see clearly the noise on the table because of the document resolution. But all the images receives a specular noise of random amplitude.
+
+But the definition of the experiment was a part of the excellent results of the algorithm. Indeed, we only modify images that are already in the database. If we take other images, the result could be different, in particular for the class $\texttt{device-i}$ as explain in the section \ref{geo-perturb}
+
+\section*{Conclusion}
+
+The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the performances which exceeded our expectations. Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practice. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function.
+
+\bibliographystyle{plain}
+\bibliography{biblio}
+
+\newpage
+
+\appendix
+
+\section{Experimental results}
 
 \begin{table}[h!]
   \centering
@@ -527,18 +588,8 @@ For the experiments, we run the script given to evaluate our shape indexing algo
 	score & 0.894494 & 0.861499 & 0.855665 & 0.7806 & 0.767544 \\ \hline
   \end{tabular}
   \caption{Our results of retrieval run on the right side image. For some images, the classes found could be surprising, but there are a larger gap between the better mark and the furthers.}
+  \label{results}
 \end{table}
-
-% Note, on voit les images sous une faible résolution, en réalité les images sont plus grandes et le bruit est bien plus perceptible
-% --> Mentionner cela.
-
-\section*{Conclusion}
-
-The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the expected performances. Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practice. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function.
-
-
-\bibliographystyle{plain}
-\bibliography{biblio}
 
 \end{document}
 

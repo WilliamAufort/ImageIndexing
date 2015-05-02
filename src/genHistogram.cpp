@@ -45,7 +45,7 @@ vector<string> filename_done()
 }
 
 /**
-* What a thread have to do. They compute histograms of all images in liste. Each thread take a filename in liste, do the computation and continue...
+* What a thread have to do. They compute histograms of all images in liste. Each thread takes a filename in liste, do the computation and continue...
 * When there is no more untreated file in liste, the thread finish. We use mutex to avoid race condition.
 *
 * @param id The id of the thread
