@@ -108,12 +108,24 @@ The invariance with respect to translation, rotation and symmetry is an importan
 
 In other words, there is a trivial isomorphism between the two images $\mathcal{X}$ and  $\mathcal{X}_t$ seen as unions of balls. With this remark, the proof of the theorem is completely trivial.
 
-But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center.
+But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center, a translation of a vector $v \in \RR^2$, or a scaling with any scaling factor.
 
-Nonetheless, intuitively if there exists some modifications in the granulometric function, they are not going to be very large in some sense. What's more, we can define the continuous granulometric function where $\mathcal{X}$ is a shape in $\RR^2$.
 
-% TODO: See if we can quantify the difference between the two.
-% TODO: Same question for scaling
+What's more, all these properties holds for the continuous version of the granulometric function (i.e. where $\mathcal{X}$ is a shape in $\RR^2$). Indeed, we clearly have:
+
+\begin{remarque}[Properties for $\mathcal{X} \subset \RR^2$]
+	\begin{itemize}
+		\item If $t : \RR^2 \to \RR^2$ is a translation, then $\forall x \in \mathcal{X}, g_{t(\mathcal{X})}(x) = g_{\mathcal{X}}(t^{-1}(x))$, where $t^{-1}$ is the translation of vector $-\vec{t}$.
+		\item If $r : \RR^2 \to \RR^2$ is a rotation of center $c$ and angle $\theta$, then $\forall x \in \mathcal{X}, g_{r(\mathcal{X})}(x) = g_{\mathcal{X}}(r^{-1}(x))$, where $r^{-1}$ is the rotation of center $c$ and angle $-\theta$. 
+		\item If $h : \RR^2 \to \RR^2$ is an homothetic transformation of center $c$ and ration $\lambda$, then $\forall x \in \mathcal{X}, g_{h(\mathcal{X})}(x) = \lambda \times g_{\mathcal{X}}(h^{-1}(x))$, where $h^{-1}$ is the homothetic transformation of center $c$ and ratio $\frac{1}{\lambda}$.
+	\end{itemize}
+\end{remarque}
+
+% TODO Check all these theorems
+
+The proof works as the previous one, with writting the isomorphisms between the two images.
+
+Hence nonetheless, intuitively if there exists some modifications in the granulometric function, they are not going to be very large, but it's difficult to quantify this difference.
 
 \subsection{Disadvantages}
 
@@ -138,8 +150,7 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 
 \subsubsection{Loss of spatial information}
 
-% TODO dire quelque chose ici, voir une ouverture sur d'autres methodes (notamment les papiers que l'on a regardé), remarquer que ceci 
-% est vrai pour beaucoup de méthodes
+One of the problem of this method is to not take into account the distribution of the values on the image, or in the space more generally. For example, you cannot distinguish between a disk and a donut or a rope only with the granulometric function, because for all these objects, the function is constant. Some methods use a decomposition of the image into different regions and then divides the computations spatially, for example \cite{spacial-decompo}, and it could be interesting to adapt such methods with the granulometric function.
 
 \subsubsection{Robustness in presence of (specular) noise}
 
@@ -387,6 +398,7 @@ On the curves, we also observe that the minimum of all the distance gives quite 
 \[
 	Dist(\mathcal{X},\mathcal{C}) = \underset{i = 1 \dots n}{\operatorname{min}} \left( EMD(c_i,c) \right)
 \]
+
 \end{definition}
 
 Let's now test our shape retrieval system.
@@ -395,11 +407,49 @@ Let's now test our shape retrieval system.
 
 For the experiments, we run the script given to evaluate our shape indexing algorithm. It builds a perturbated image (rotation, scaling and adding specular noise) from a random image of the database, and then runs our algorithm to get the rank of the correct class. If the rank belongs to $\set{1,\dots,10}$, the algorithm succeeds.
 
-%TODO Do the experiment
+%TODO Details about the experiment
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ | m{2.2cm} | m{2.2cm} | m{2.2cm} | m{2.2cm} | m{2.2cm} | m{2.2cm} | }
+    \hline
+    original & first & second & third & fourth & fifth \\
+	\hline
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/test-apple}
+    \end{minipage}
+    &
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/apple-1}
+    \end{minipage}
+    & 
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/device9}
+    \end{minipage}
+	&
+	\begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/cellular_phone}
+    \end{minipage}
+	&
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/device6}
+    \end{minipage}
+	&
+    \begin{minipage}{.3\textwidth}
+      \includegraphics[width=\linewidth, width=20mm]{images/device3}
+    \end{minipage}
+	\\ \hline
+	% Element & score
+	apple & apple & device9 & cellular\_phone & device6 & device3 \\ \hline
+	score & 0.984914 & 0.964994 & 0.949397 & 0.929609 & 0.924559 \\ \hline
+  \end{tabular}
+  \caption{array}
+\end{table}
 
 \section*{Conclusion}
 
 The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the expected performances. Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practize. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function.
+
 
 \bibliographystyle{plain}
 \bibliography{biblio}
