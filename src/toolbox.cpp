@@ -60,7 +60,8 @@ vector<string> GetFilesInDirectory(const string &directory)
 
         out.push_back(full_file_name);
     }
-    closedir(dir);
+	closedir(dir);
+	return out;
 }
 
 /**
