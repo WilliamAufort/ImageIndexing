@@ -71,25 +71,25 @@ The figure \ref{filter-exp} shows the efficiency of the filter on a small octopu
     }
     \caption{The filter eliminates almost all the noise of this image.}
     \label{filter-exp}
-\end{figure}
+\end{figure}	
 
 \section{Granulometric analysis}
 
 \subsection{Basic ideas}
 
-When we are watching images, to associate them to concepts, we use our knowledge of these concepts. For example, an apple is a quite circular object with sometimes a stalk and leaves, a camel is a mammal with one or two humps, etc.. Basically, for organic objects, we use a kind of segmentation characterisation to identify the concepts: we recover it by identify its different parts.
+When we are watching images, to associate them to a concept or class, we use our knowledge about how these objects are composed. For example, an apple is a quite circular object with sometimes a stalk with leaves, a camel is a mammal with one or two humps, etc.. Basically, for organic objects, we use a kind of segmentation characterisation to identify the class: we recover it by identify its different parts.
 
 A famous tool used in volumetric analysis to determine segmentation is the \textbf{granulometric function}. Indeed, it plays an important role for shape description, what we want exactly to do.
 
 \begin{definition}[Granulometric function]
-Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by:
+Let $\mathcal{X}$ be a binary shape in $\Ztwo$. We denoted by $B(c,r)$ the euclidean digital ball with center $c \in \Ztwo$ and radius $r \in \RR$. We define the granulometric function $g_{\mathcal{X}}$ on $\mathcal{X}$ by:
 
 $$ g_{\mathcal{X}}(x) = \operatorname{max} \left\{ r | \exists c \in \mathcal{X}, x \in B(c,r) \wedge B(c,r) \subseteq \mathcal{X} \right\} $$ 
 \end{definition}
 
 In other words, we are looking for the radius of the greatest ball included in the shape $\mathcal{X}$ which contains our point $x$.
 
-If we plot the granulometry function on a 2D shape in the database, we can observe that the different values of the granulometric function correspond to the different "parts" of the object. An example is given on figure \ref{apple-granulo}.
+If we represent the granulometry function with a colormap on a 2D shape, we can observe that the different values correspond to the different "parts" of the object. An example is given on figure \ref{apple-granulo}.
 
 \begin{figure}[!ht]
     \centering
@@ -106,17 +106,17 @@ If we plot the granulometry function on a 2D shape in the database, we can obser
     \label{apple-granulo}
 \end{figure}
 
-We can use the granulometric function to compare two images. To do this, we can see the granulometric function as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be describes for examples with histograms like those we use in statistics. Even if it's a common notion, we recall its "definition":
+We can use the granulometric function to compare two images. To do this, we can see it as a distribution of the radius of the maximal balls over the object $\mathcal{X}$, which can be described for examples with histograms like those we use in statistics. Even if it's a common notion, we recall its "definition":
 
 \begin{definition}[(normalized) histogram]
-	Let $b \in \mathcal{N}$ be a integer (the number of bins of the histogram). Let $g: \mathcal{X} \to \RR^+$ be a granulometric function. We denote by $g_{max}$ the maximum value of $g$ over $\mathcal{X}$. We define the histogram of $g$ as the curve of the function $Hist(g): \set{0,\dots,w-1} \to \left[0,1\right]$ such that:
+	Let $b \in \mathbb{N}$ be the number of bins of the histogram. Let $g: \mathcal{X} \to \RR^+$ be the granulometric function. We denote by $g_{max}$ the maximum value of $g$ over $\mathcal{X}$. We define the (normalized) histogram of $g$ as the curve of the function $Hist(g): \set{0,\dots,w-1} \to \left[0,1\right]$ such that:
 
 \[
 	Hist(g)(n) = Card \left( \set{ x \in \mathcal{X}, \frac{n}{b}g_{max} < g(x) \leq \frac{n-1}{b}g_{max}} \right)
 \]
 \end{definition}
 
-One can notice that we fix $b$ in this definition. In practize, we choose it not too small to observe something about the repartition of the data, but not too big also. Indeed, it induces more computations to have a very precise precise distribution we don't need. In our experiments, we have fixes $w = 20$, which seems to be a correct value with regard to our results.
+One can notice that we fix $b$ in this definition. In practize, we choose it not too small to observe something about the repartition of the data, but not too big also. Indeed, it will induce more computations to have a very precise distribution that we don't need. In our experiments, we have fixed $w = 20$, which seems to be a correct value with regard to our results.
 
 Thus, compare two images remains to compare two histograms, so we have to define a distance between histograms. This work will be explained with more details in the next section.
 
@@ -134,7 +134,7 @@ The invariance with respect to translation, rotation and symmetry is an importan
 
 In other words, there is a trivial isomorphism between the two images $\mathcal{X}$ and  $\mathcal{X}_t$ seen as unions of balls. With this remark, the proof of the theorem is completely trivial.
 
-But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center, a translation of a vector $v \in \RR^2$, or a scaling with any scaling factor.
+But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center, a translation of a vector $v \in \RR^2$, or a scaling with any scaling factor. Such behaviour can perturbate the granulometric function, so we can't ensure an equality like in the previous theorem.
 
 
 What's more, all these properties holds for the continuous version of the granulometric function (i.e. where $\mathcal{X}$ is a shape in $\RR^2$). Indeed, we clearly have:
@@ -147,11 +147,9 @@ What's more, all these properties holds for the continuous version of the granul
 	\end{itemize}
 \end{remarque}
 
-% TODO Check all these theorems
-
 The proof works as the previous one, with writing the isomorphisms between the two images.
 
-Hence nonetheless, intuitively if there exists some modifications in the granulometric function after rotation, translation or symmetry, they are not going to be very large, but it's difficult to quantify this difference. In the case of scaling, because of the factor $\lambda$ which appears outside in the formula, we can have side effects when $\lambda$ is small. Indeed, it would mean that we compress a lot of information, taht cannot appear in the case of rotation, symmetry or translation.
+Hence, intuitively if there exists some modifications in the granulometric function after rotation, translation or symmetry, they are not going to be very large, but it's difficult to quantify this difference. In the case of scaling, because of the factor $\lambda$ which appears in the formula, we have a lost of information when $\lambda$ is small.
 
 \subsection{Disadvantages}
 
@@ -159,7 +157,7 @@ Hence nonetheless, intuitively if there exists some modifications in the granulo
 
 \label{geo-perturb}
 
-Some of the classes are defined by the basic geometrical object they refers to. For example, the object presented in the figure \ref{device9-6}, as all the elements in the class \texttt{device9}, are very close to a ball, excepted that they are crossed by some perturbing element (in the figure it's a line). The problem on such images is that that king of noise perturb a lot the output of the granulometric function, as we can see in the figure \ref{device9-6}.
+Some of the classes are defined by the simplest geometrical object they are closed to. For example, the object presented in the figure \ref{device9-6}, as all the elements in the class \texttt{device9}, are very close to a ball, excepted that they are crossed by some perturbing element (in the figure it's a line). In such images the granulometric function is very perturbated, as we can see in the figure \ref{device9-6}.
 
 \begin{figure}[!ht]
     \centering
@@ -176,10 +174,6 @@ Some of the classes are defined by the basic geometrical object they refers to. 
 	\label{device9-6}
 \end{figure}
 
-\subsubsection{Loss of spatial information}
-
-One of the problem of this method is to not take into account the distribution of the values on the image, or in the space more generally. For example, you cannot distinguish between a disk and a donut or a rope only with the granulometric function, because for all these objects, the function is constant. Some methods use a decomposition of the image into different regions and then divides the computations spatially, for example \cite{spacial-decompo}, and it could be interesting to adapt such methods with the granulometric function.
-
 \subsubsection{Robustness in presence of (specular) noise}
 
 As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, which clearly perturb the granulometric function. The figure \ref{device9-6-noised} illustrates it. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
@@ -195,9 +189,14 @@ As we can guess, the balls of the initial image won't be available for the noisy
 
 As we will see in the further section, the time needed to compute this function is quite important, and it's really a mess to evaluate it on all the images of the database. Indeed, for one image, the execution time can exceed two hours, which is unusable in practice.
 
+\subsubsection{Loss of spatial information}
+
+One of the problem of this method is to not take into account the distribution of the values in the image, or in the space more generally. For example, you cannot distinguish between a disk and a donut or a rope only with the granulometric function, because for all these objects the function is constant. Some methods use a decomposition of the image into different regions and then divides the computations spatially, for example \cite{spacial-decompo}, and it could be interesting to adapt such methods with the granulometric function.
+
+
 \subsection{Implementation}
 
-The general idea of the algorithms that computes the granulometric function is to get a quite good set of candidate balls. A ball included in the image is a candidate ball if it must have a contribution on the granulometric function of a point of the image. Indeed, most of the complexity of the algorithm leads on the iterator over those balls in order to compute the maximal radius for each point. 
+The general idea of the algorithms that compute the granulometric function is to get a good set of candidate balls (i.e. sufficient and not too large). A ball included in the image is a candidate ball if it must have a contribution on the granulometric function of a point of the image. Indeed, most of the complexity of the algorithms leads on the iteration over those balls in order to compute the maximal radius for each point. 
 
 We present two algorithms. The first one is quite naive and have been implemented first. It uses only the distance transformation (DT). The second one, closer to the medial axis concept, is an optimization where we drastically reduce the number of candidate balls to scan.
 
@@ -210,11 +209,11 @@ Let $\mathcal{X}$ be a binary shape in $\Ztwo$. If $p$ is a point of $\mathcal{X
 $$ DT(p) = \underset{q \in \widetilde{\mathcal{X}}}{min} \quad d(p,q) $$
 \end{definition}
 
-$DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. We are interested in it because of this trivial result:
+Equivalently, $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. The principal interest of the Distance Transformation is the follwing result:
 
 \begin{theoreme}
 	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have:
-		$$ B(p,r) \subset B(p,DT(p))$$
+		$$ B(p,r) \subseteq B(p,DT(p))$$
 \label{theoremDT}
 \end{theoreme}
 
