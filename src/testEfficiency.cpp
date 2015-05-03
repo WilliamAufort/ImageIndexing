@@ -19,11 +19,11 @@ int main(int argc, char* argv[])
 	myLittleImage image = GenericReader<myLittleImage>::import(argv[1]);
 
 	trace.beginBlock ("Naive method");
-	testSpeedNaive(image,argv[1]);
+	testSpeedNaive(image);
 	trace.endBlock();
 
 	trace.beginBlock("Medial axis method");
-	testSpeedQuick(image,argv[1]);
+	testSpeedQuick(image);
 	trace.endBlock();
 	return 0;
 }

@@ -29,5 +29,5 @@ std::vector<double> buildHistogram(myLittleImage& granuloImage, unsigned int max
 /// Test efficiency of the two algorithms
 
 void testSpeed(std::function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, myLittleImage& image, const char* inputFile);
-void testSpeedNaive(myLittleImage& image, const char* inputFile);
-void testSpeedQuick(myLittleImage& image, const char* inputFile);
+void testSpeedNaive(myLittleImage& image);
+void testSpeedQuick(myLittleImage& image);
