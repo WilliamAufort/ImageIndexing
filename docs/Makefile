@@ -15,6 +15,7 @@ report.dvi: report.tex biblio.bib macros.tex
 	$(TEX) report.tex
 	$(BIB) report	
 	$(TEX) report.tex
+	$(TEX) report.tex
 
 clean:
 	@rm -f report.ps report.dvi report.pdf 
