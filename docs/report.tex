@@ -369,11 +369,11 @@ The fact that it's a metric is quite important. We can compare it directly with 
 
 \subsection{The Earth Mover Distance to get a distance between an image and a class}
 
-In the previous paragraphs, we defined the metric we will use to compare to images and its properties. Now a new question appears. Given the distance $d_i$ of an image to the images $\mathcal{X}_i$ of a given class, how do we compute the mark of this class? In order to explain our choices, we first do some experiments to see the possible behaviours of the $d_i$'s, then we suggest a way to compute this mark and justify it. Then, we experimentally evaluate our retrieval system.
+In the previous paragraphs, we defined the metric we will use to compare to images and its properties. Now a new question appears. Given the distance $d_i$ of an image to the images $\mathcal{X}_i$ of a given class, how do we compute the mark of this class? In order to explain our choices, we first do some experiments to see the possible behaviours of the $d_i$'s, then we suggest a way to compute this mark and justify it. Finally, we experimentally evaluate our retrieval system.
 
 \subsubsection{Behaviours of the distances to the elements of a class}
 
-In order to define and justify a distance, we have to observe the global behaviour or the Earth Mover Distance. To do this, we wrote a program called \texttt{graph} which, given a class $\mathcal{C}$, plots a graph in which:
+In order to define and justify a distance, we have to observe the global behaviour of the Earth Mover Distance. To do this, we have written a program called \texttt{graph} which, given a class $\mathcal{C}$, plots a graph in which:
 \begin{itemize}
 	\item The abscissa axis represents the different classes;
 	\item The ordinate axis represents the mark of an image retrieval;
@@ -389,9 +389,9 @@ In order to define and justify a distance, we have to observe the global behavio
 
 % TODO Enlever les légendes? 
 
-One example is given in figure \ref{graph}. This set of curve is quite dense, but we can (quite) easily distinguish the possible behaviours of the value.
+One example is given in figure \ref{graph}. This set of curve is quite dense, but we can distinguish the possible behaviours of the values.
 
-In some classes, all the images are very similar (for example in the \texttt{apple} class). In the curves, on the right abscissa corresponding to these class (for instance \texttt{apple}), we can see that all the Earth Mover Distances are closed. On the opposite, when there are very different images on the same class (as in the figure \ref{horseshoes}), the EMD values could be very different.
+In some classes, all the images are very similar (for example in the \texttt{apple} class). In the curves, on the right abscissa corresponding to these classes (for instance \texttt{apple}), we can see that all the Earth Mover Distances are closed. On the opposite, when there are very different images on the same class (as in the figure \ref{horseshoes} for horseshoes), the EMD values could be very different.
 
 \begin{figure}[!ht]
     \centering
@@ -411,13 +411,13 @@ In some classes, all the images are very similar (for example in the \texttt{app
         \label{horseshoes:4}
         \includegraphics[height=80pt]{images/horseshoe-2}
     }
-    \caption{In a single class (here \texttt{horseshoe}), we can have images with different granulometric functions, and so different EMDs to a same image} 
+    \caption{In a single class (here \texttt{horseshoe}), we can have images with different granulometric functions (because of holes), and so different EMDs to a same image} 
 	\label{horseshoes}
 \end{figure}
 
 Hence, on such graphs, we can see the two different behaviours: 
 \begin{itemize}
-	\item All the distances can be closed but not to 0;
+	\item All the distances can be closed, but not necessarily to 0;
 	\item The distances are quite distributed.
 \end{itemize}
 
@@ -425,7 +425,7 @@ Hence, on such graphs, we can see the two different behaviours:
 
 The goal of the previous analysis was to decide what importance to give to low and high Earth Mover Distances.
 
-For example, take the mean of the distance would be a bad solution, since we can have an image very close to the input but all the other one in the class give important distances.
+For example, take the mean of the distance would be a bad solution, since we can have an image very close to the input but all the other ones in the class give important distances. In such a case the algorithm will fail.
 
 On the curves, we also observe that the minimum of all the distance gives quite good results (i.e on the first five choices overall). These are all the reasons that why we use this distance:
 
@@ -438,7 +438,7 @@ On the curves, we also observe that the minimum of all the distance gives quite 
 
 \end{definition}
 
-One can notice that with such a distance, if we want to add a new class, or new images in this class, we don't need to modify all the computations done. We just have to compute the corresponding histograms.
+One can notice that with such a distance, if we want to add a new class, or new images in this class, we don't need to modify all the computations done. We just have to compute the corresponding histograms and add them to the others.
 
 What's more, contrary to the granulometric function which is really costly to compute, the distance computations are cheap once we have compute \textbf{all} the histograms of the images of the database.
 
@@ -462,7 +462,7 @@ We present a short analysis on each example of the table:
 	\item As we already tell it, even with a noise factor small, the algorithm gives the correct answer for the first class, even if the mark was less good than for the previous test.
 \end{itemize}
 
-We advertise that, excepted for the last image, we can't see clearly the noise on the table because of the document resolution. But all the images receives a specular noise of random amplitude.
+We advertise that, excepted for the last image, we can't see clearly the noise on the table because of the document resolution. But all the images receives a specular noise of random amplitude. Moreover, we will see in the next section that some few classes gives quite bad results, and 
 
 But the definition of the experiment was a part of the excellent results of the algorithm. Indeed, we only modify images that are already in the database. If we take other images, the result could be different, in particular for the class $\texttt{device-i}$ as explain in the section \ref{geo-perturb}
 
@@ -484,7 +484,11 @@ The executable is called \texttt{fastRetrieval}, but you can run the tests direc
 
 \section*{Conclusion}
 
-The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the performances which exceeded our expectations, even when we scale the image to provided a quick version of the retrieval system. Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practice, without the scaling trick. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function, as discussed in the section \ref{loss-information}.
+The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination.
+
+Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the performances which exceeded our expectations, even when we scale the image to provided a quick version of the retrieval system.
+
+Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practice, without the scaling trick. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function, as discussed in the section \ref{loss-information}.
 
 \bibliographystyle{plain}
 \bibliography{biblio}
