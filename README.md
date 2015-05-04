@@ -18,11 +18,20 @@ You will need development packages for boost and boost-programs_option. Then, ge
 Get the code of the project and compile it using cmake :
 
 	git clone https://github.com/WilliamAufort/ImageIndexing.git
-	cd ImageIndexing && mkdir build & cd build
+	cd ImageIndexing && mkdir build && cd build
 	cmake .. -DDGtal_DIR=folder
 	make
+	mv ../scriptClassification.sh .
 
 where "folder" is your DGtal build folder.
+
+# Run the tests
+
+Once you have done the previous commands, in the build directory, you have a script to test the classification on random examples. To run it, just use
+
+	bash scriptClassification.sh
+
+Be careful: don't use chmod or something loke that. For unknown reasons, there is a weird behaviour of $RANDOM which doesn't give a random number at each time anymore. Also, make sure you have moved the script in the build directory, otherwise you will have problems when trying to run it, because of relative paths of executables mostly.
 
 # Execute
 
