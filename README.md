@@ -74,6 +74,4 @@ runs the two algorithms we discuss in the report to compute the granulometric va
 We can also find in the folder "docs" the subject of the project and our report about the project, required by our school. You can compile this last one using simply:
 
 	make
-	make
 
-(The second one is necessary to link refs and labels in the document.
