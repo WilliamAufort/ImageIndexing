@@ -47,6 +47,10 @@ returns a vector of scalar quantities which describes the shape. Here, we just c
 
 outputs consecutively on the console the marks of each class with the image input, in the same order as in the file .classification.order
 
+	./fastRetrieval image.pgm
+
+Fast version (recommended) of the previous executable. In fact, we just resize the image before start the algorithm. Experimentally, the performances are not changing a lot, but the executing time is drastically reduced.
+
 	./genHistograms <folder> <nb_thread> [<regex>]
 	
 generated all the histograms needed to do the shape retrieval. The argument <folder> is the folder containging the .pgm you want to analyse. <nb_thread> is the number of threads launched.

@@ -137,7 +137,7 @@ In other words, there is a trivial isomorphism between the two images $\mathcal{
 But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center, a translation of a vector $v \in \RR^2$, or a scaling with any scaling factor. Such behaviour can perturbate the granulometric function, so we can't ensure an equality like in the previous theorem.
 
 
-What's more, all these properties holds for the continuous version of the granulometric function (i.e. where $\mathcal{X}$ is a shape in $\RR^2$). Indeed, we clearly have:
+However, all these properties holds for the continuous version of the granulometric function (i.e. where $\mathcal{X}$ is a shape in $\RR^2$). Indeed, we clearly have:
 
 \begin{remarque}[Properties for $\mathcal{X} \subset \RR^2$]
 	\begin{itemize}
@@ -149,7 +149,7 @@ What's more, all these properties holds for the continuous version of the granul
 
 The proof works as the previous one, with writing the isomorphisms between the two images.
 
-Hence, intuitively if there exists some modifications in the granulometric function after rotation, translation or symmetry, they are not going to be very large, but it's difficult to quantify this difference. In the case of scaling, because of the factor $\lambda$ which appears in the formula, we have a lost of information when $\lambda$ is small.
+Hence, intuitively if there exists some modifications in the granulometric function after rotation, translation or symmetry, they are not going to be very large, but it's difficult to quantify this difference. In the case of scaling, because of the factor $\lambda$ which appears in the formula, we have a loss of information when $\lambda$ is small.
 
 \subsection{Disadvantages}
 
@@ -176,12 +176,12 @@ Some of the classes are defined by the simplest geometrical object they are clos
 
 \subsubsection{Robustness in presence of (specular) noise}
 
-As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, which clearly perturb the granulometric function. The figure \ref{device9-6-noised} illustrates it. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
+As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, especially on the border of the image, which clearly perturbate the granulometric function. The figure \ref{device9-6-noised} illustrates it. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[height=200pt]{images/granulo-noised}
-    \caption{Perturbation with a specular noise, mostly on the border of the image. But hence, the radius of the centered balls also decreases.}
+    \caption{Perturbation with a specular noise, mostly on the border of the image. The radius of the "centered" balls also decreases sometimes.}
 	\label{device9-6-noised}
 \end{figure}
 
@@ -191,14 +191,15 @@ As we will see in the further section, the time needed to compute this function 
 
 \subsubsection{Loss of spatial information}
 
-One of the problem of this method is to not take into account the distribution of the values in the image, or in the space more generally. For example, you cannot distinguish between a disk and a donut or a rope only with the granulometric function, because for all these objects the function is constant. Some methods use a decomposition of the image into different regions and then divides the computations spatially, for example \cite{spacial-decompo}, and it could be interesting to adapt such methods with the granulometric function.
+\label{loss-information}
 
+One of the problem of this method is to not take into account the distribution of the values in the image, or in the space more generally. For example, you cannot distinguish between a disk and a donut or a rope only with the granulometric function, because for all these objects the function is constant. Some methods use a decomposition of the image into different regions and then divide the computations spatially, for example \cite{spacial-decompo}, and it could be interesting to adapt such methods with the granulometric function.
 
 \subsection{Implementation}
 
 The general idea of the algorithms that compute the granulometric function is to get a good set of candidate balls (i.e. sufficient and not too large). A ball included in the image is a candidate ball if it must have a contribution on the granulometric function of a point of the image. Indeed, most of the complexity of the algorithms leads on the iteration over those balls in order to compute the maximal radius for each point. 
 
-We present two algorithms. The first one is quite naive and have been implemented first. It uses only the distance transformation (DT). The second one, closer to the medial axis concept, is an optimization where we drastically reduce the number of candidate balls to scan.
+We present two algorithms. The first one is quite naive and have been implemented first. It uses only the distance transformation (DT). The second one, closer to the medial axis concept, is an optimization where we reduce the number of candidate balls to scan.
 
 \subsubsection{Naive algorithm: Distance Transformation}
 
@@ -217,7 +218,7 @@ Equivalently, $DT(p)$ represents the maximum radius of a ball containing $p$, in
 \label{theoremDT}
 \end{theoreme}
 
-With this result, we can restrict the number of balls to scan to $\cplx{\left| \mathcal{X} \right|}$. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because of the other balls are included in some of those ones.
+With this result, we have to scan $\cplx{\left| \mathcal{X} \right|}$ balls. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because all the other balls are included in some of those ones.
 
 \begin{proof}
 	
@@ -225,7 +226,7 @@ Let us suppose that $B(p,r) \nsubseteq B(p,DT(p))$ for some $p$ and $r$. This im
 
 Let $p'$ be the point of the border $\widetilde{\mathcal{X}}$ such that $d(p,p') = DT(p)$. Let $q = p + (p'-p).\frac{r}{DT(p)}.$ 
 
-$d(p,q) = \frac{r}{DT(p)}.d(p,p') = r > DT(p)$. Hence, by construction of $q$, we can deduce that $q \notin \mathcal{X}$, so we get a contraction with $q \in B(p,r) \subset \mathcal{X}$. 
+$d(p,q) = \frac{r}{DT(p)}.d(p,p') = r > DT(p)$. Hence, by construction of $q$, we can deduce that $q \notin \mathcal{X}$, and we get a contraction with $q \in B(p,r) \subset \mathcal{X}$. 
 
 \end{proof}
 
@@ -255,36 +256,36 @@ $ \operatorname{max} \set{DT(q) | q \in \mathcal{X} \wedge p \in B(q,DT(q)) \sub
 = \operatorname{max} \set{r | q \in \mathcal{X} \wedge p \in B(q,r) \subset \mathcal{X}}$ thanks to Theorem \ref{theoremDT}, which is exactly $g(p)$.
 \end{proof}
 
-The complexity of this algorithm is quite bad. For each point $p$, we build a ball of radius $DT(p)$ and scan all the points inside the ball to (eventually) update some values of granulometry. This step has a complexity $\cplx{{r_{max}}^2}$, where $r_max$ is the maximal radius of a ball contained in $\mathcal{X}$. Since we scan only one ball per point, the overall complexity is $\cplx{\left| \mathcal{X} \right|. {r_{max}}^2}$.
+The complexity of this algorithm is quite bad. For each point $p$, we build a ball of radius $DT(p)$ and scan all the points inside the ball to (eventually) update some values of granulometry. This step has a complexity $\cplx{{r_{max}}^2}$, where $r_{max}$ is the maximal radius of a ball contained in $\mathcal{X}$. Since we scan only one ball per point, the overall complexity is $\cplx{\left| \mathcal{X} \right|. {r_{max}}^2}$.
 
 \subsubsection{Clever algorithm using Medial Axis}
 
 As we have presented the issues of these algorithms, the goal is to reduce the number of balls we scan. Actually, we scan exactly $\left| \mathcal{X} \right|$ balls. We can reduce this number by computing the medial axis, which is the set of maximal balls included in the object.
 
-To implement this, we use two \textsc{DGtal} primitives: \texttt{PowerMap} and \texttt{ReducedMedialAxis}. We don't enter into all the details, but we just summarize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using power diagrams. 
+To implement this, we use two \textsc{DGtal} primitives: \texttt{PowerMap} and \texttt{ReducedMedialAxis}. We don't enter into all the details, but we just summarize the idea. The idea is to eliminate the balls which are completely included in another one, so we turn our initial problem into a combinatorial covering one, which can be solved using power diagrams \cite{DMA-extraction}.
 
 \subsubsection{Experiment: efficiency of the two algorithms}
 
-We can observe that the second algorithm scans less balls than the first one. On the other hand, since we had to compute the medial axis in the second algorithm, the gain on the execution time is less than the gain in terms of number of balls.
+We can observe that the second algorithm scans less balls than the first one, which was the expected behaviour. On the other hand, since we had to compute the medial axis in the second algorithm, the gain on the execution time is less than the gain in terms of number of balls.
 But overall, these algorithms are not very fast, and it's a real problem when we are working in a large database, because the cost of precomputations is huge.
 
 To give some order of magnitudes, on the few tests we have done on it, the number of balls decreases by roughly $20 \%$, but the computation cost decreases only by roughly $10$ or $15 \%$.
 
-\section{Application of granulometric analysis to shape indexing}
+\section{Application of granulometric analysis to shape retrieval}
 
-Previously, we defined the granulometric function and we exposed the reasons for which this function could be interested for a shape indexing system. In this section, we are going to explain exactly how we use the granulometric function.
+Previously, we defined the granulometric function and we exposed the reasons for which this function could be interested for a shape retrieval system. In this section, we are going to explain exactly how we use the granulometric function.
 
 \subsection{A metric based on statistical similarity: the Earth Mover Distance}
 
-In order to build a shape indexing system, we have to define a metric to quantify the distance between two images. We chose to represent this function as an histogram, because it's a more compact representation and we can do easy computations on it. For instance, a distance between two histograms could be a simple $l_p$ norm over $\RR^n$, where $n$ is the dimension of the histogram. A distance directly between the two images to compare would have been quite hard.
+In order to build a shape indexing system, we have to define a metric to quantify the distance between two images. We choose to represent this function as an histogram, because it's a more compact representation and we can do easy computations on it. For instance, a distance between two histograms could be a simple $l_p$ norm over $\RR^n$, where $n$ is the dimension of the histogram.
 
-Unfortunately, we are not going to use the $l_p$ norms, because they don't highlight enough the statistical point of view we adopt with these histograms. We use a distance called the \textbf{Earth Mover Distance} (or EMD).
+But we are not going to use the $l_p$ norms, because they don't highlight enough the statistical point of view we adopt with these histograms. We use a distance called the \textbf{Earth Mover Distance} (or EMD).
 
 \subsubsection{Definition}
 
 The Earth Mover Distance have been introduced in \cite{EMD-def} and is now used in many fields. We introduce in this part the original definition and some result we can get in our particular case.
 
-Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the minimal cost to transform one distribution to the other one. The definition consider distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional data).
+Basically, to compare two distributions, we can see them as a solution of a transportation problem. More precisely, it's the minimal cost to transform one distribution to the other one. The definition considers distributions in $\RR^d$, but we only use it with $d=1$ (one-dimensional data).
 
 \begin{definition}[Earth mover distance (general case)]
 	Let $P = \set{(p_1,w_{p_1}), \dots, (p_m,w_{p_m})}$ be a set of $m$ clusters, where $p_i$ represents the representative of the cluster and $w_{p_i}$ its weight. Similarly, let $Q = \set{(q_1,w_{q_1}), \dots, (q_n,w_{q_n})}$ be another set of $n$ clusters. Let $d_{i,j}$ be the ground distance between the clusters $p_i$ and $q_j$.
@@ -304,17 +305,17 @@ The Earth Mover distance is defined as the found work normalized by the total fl
 \]
 \end{definition}
 
-In out particular case, $P$ and $Q$ represent our histograms. The $p_i$'s (respectively the $q_i$'s) represent the values that figures on the histograms. The weights $w_k$ are simply the frequency associated to the value. The $f_{i,j}$ can be interpreted as the flow between $p_i$ and $q_j$. Informally, if the histograms are interpreted as two different ways of piling up a certain amount of dirt, the Earth Mover Distance is simply the minimum cost of turning one pile into the other.
+In our particular case, $P$ and $Q$ represent our histograms. The $p_i$'s (respectively the $q_i$'s) represent the values that figure on the histograms. The weights $w_k$ are simply the frequencies associated to the values. The $f_{i,j}$ can be interpreted as the flow between $p_i$ and $q_j$. Informally, if the histograms are interpreted as two different ways of piling up a certain amount of dirt, the Earth Mover Distance is simply the minimum cost of turning one pile into the other.
 
 The second condition limits what the clusters of $P$ can send, and the firth condition limits what the clusters of $Q$ can receive. Finally, the fourth condition forces to move the maximal amount possible.
 
-Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and what's more they are also normalized (so $n = m$ and $(p_1,\dots,p_n) = (q_1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition became:
+Hopefully, we are not going to use this linear program, since we work in the particular case where the histograms are one-dimensional, and what's more normalized (so $n = m$ and $(p_1,\dots,p_n) = (q_1,\dots,q_n) = (1,\dots,n)$). For example, in our case, the fourth condition became:
 
 \[
 	 \sum_{i=1}^m \sum_{j=1}^n f_{i,j} = \sum_{i=1}^m w_{p_i} = \sum_{j=1}^n w_{q_j}
 \]
 
-What's more, we have a more efficient way to compute it:
+Furthermore, we have a more efficient way to compute it:
 
 \begin{theoreme}[EMD in one dimension]
 	Under the previous hypothesis, we define the sequence $(EMD_i)_{i=0,\dots,n}$ by
@@ -334,7 +335,7 @@ What's more, we have a more efficient way to compute it:
 
 \subsubsection{Properties and advantages}
 
-The Earth Mover Distance several advantages. First of all, it defines a true metric in the mathematical sense:
+The Earth Mover Distance have several advantages. First of all, it defines a true metric in the mathematical sense:
 
 \begin{theoreme}[EMD is a metric]
 	In the general case (i.e not only in dimension 1), if the total weight of the two histograms are equal, then the Earth Mover Distance defines a metric: for all $P$, $Q$, and $R$ we have:
@@ -353,20 +354,20 @@ The Earth Mover Distance several advantages. First of all, it defines a true met
                        	 	0 & \text{otherwise}
                    	 	 \end{cases}$
 	
-	Clearly $f$ is solution of the linear program such that the value of the objective function is zero (because $d_{i,i} = 0$), which is optimal.
+	One can easliy check that $f$ is a solution of the linear program such that the value of the objective function is zero (because $d_{i,i} = 0$), which is optimal.
 
 	\item The linear programs associated to $EMD(P,Q)$ and $EMD(Q,P)$ are exactly the same (just invert conditions $2$ ans $3$), so they are equal.
 
-	\item Let $f_{P,Q}$ and $f_{Q,R}$ the solutions associated to the linear problem of $EMD(P,Q)$ and $EMD(Q,R)$. Intuitively, the solution $f$ obtained by composing these two solutions (first transform $P$ to $Q$, then $Q$ to $R$) is a valid transformation from$P$ to $R$, with cost associated $\leq EMD(P,Q)+EMD(Q,R)$. 
+	\item Let $f_{P,Q}$ and $f_{Q,R}$ the solutions associated to the linear problem of $EMD(P,Q)$ and $EMD(Q,R)$. Intuitively, the solution $f$ obtained by composing these two solutions (first transform $P$ into $Q$, then $Q$ into $R$) is a valid transformation from $P$ into $R$, with cost associated $\leq EMD(P,Q)+EMD(Q,R)$. 
 
 	But since $EMD(P,R)$ is the minimal cost for all the transformations, we get that $EMD(P,R) \leq EMD(P,Q) + EMD(Q,R)$, which concludes the proof.
 \end{itemize}
 
 \end{proof}
 
-The fact that it's a metric is quite important. We can compare it directly with classical metrics without lost of properties. The Earth Mover Distance is a more statistical distance than other metrics, and so it's more adapted in our case where our vectors are histograms. What's more, it matches perceptual similarity better than other measures. This was shown in \cite{EMD-use} for color and texture based image retrieval with another method.
+The fact that it's a metric is quite important. We can compare it directly with classical metrics without loss of properties. Since the Earth Mover Distance is a statistical distance than other metrics, it's more adapted in our case where our vectors are histograms. Moreover, it matches perceptual similarity better than other measures. This was shown in \cite{EMD-use} for color and texture based image retrieval with another method.
 
-\subsection{The EMD to get a distance between an image and a class}
+\subsection{The Earth Mover Distance to get a distance between an image and a class}
 
 In the previous paragraphs, we defined the metric we will use to compare to images and its properties. Now a new question appears. Given the distance $d_i$ of an image to the images $\mathcal{X}_i$ of a given class, how do we compute the mark of this class? In order to explain our choices, we first do some experiments to see the possible behaviours of the $d_i$'s, then we suggest a way to compute this mark and justify it. Then, we experimentally evaluate our retrieval system.
 
@@ -465,9 +466,25 @@ We advertise that, excepted for the last image, we can't see clearly the noise o
 
 But the definition of the experiment was a part of the excellent results of the algorithm. Indeed, we only modify images that are already in the database. If we take other images, the result could be different, in particular for the class $\texttt{device-i}$ as explain in the section \ref{geo-perturb}
 
+\subsubsection{Experiments: Fast version}
+
+The last result was quite surprising: even with a reduced image with noise, our algorithm seems to answer well to the class query. Hence we can use this fact to decrease drastically the (huge) complexity of our retrieval system: befoire submitting the noised image to the retrieval, we scaled it to fit in a medium-size image (about $300\times300$ pixels).
+
+With this fast version (it takes at most one minute per image, instead of possibly hours in the previous worst case), we also have almost excellent results on the same protocol, except in few cases:
+\begin{itemize}
+ \item when the scaling factor is too small, which is not a realistic situation;
+ \item with some \texttt{cattle} and \texttt{frog} images. One explanation could be that the black marks of the cows are not contained in the image, which causes troubles in the granulometry function, as explained in the section \ref{geo-perturb}. A solution could be to fill the interior of the object, but this stupid solution can transform a donut into a ball, with an important loss of information
+ \item with the class \textt{glass}, we get also surprising results (no good retrieval with score $< 10$). Contrary to the previous case, we can't provide any satisfying explanation to it.
+\end{itemize}
+
+Some statistics about the efficiency of the fast algorithm are summarized in the table \ref{results-fast} of the appendix.
+
+The executable is called \texttt{fastRetrieval}, but you can run the tests directly with the script provided in the project.
+
+
 \section*{Conclusion}
 
-The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the performances which exceeded our expectations. Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practice. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function.
+The goal of this project was not to implement the maximal number of image indexing processes and to mix them on a single tool with any coherence and fancy linear combination. Our approach was to start with a fixed first idea, the granulometric function, and to work around it in order to see the benefits and disadvantages of methods based on it. We saw that with the granulometric function we can give a representation of the object in terms of thickness, which models the concept of segmentation we use implicitly to recognize objects. We used different algorithms to compute it and proved their correctness. With our experiments, we checked the performances which exceeded our expectations, even when we scale the image to provided a quick version of the retrieval system. Therefore, one could improve this shape retrieval system, mostly by speed up the granulometric computations, which take too much time to be used in practice, without the scaling trick. Another possible improvement could be to search how to integrate the spatial information lost in the granulometric function, as discussed in the section \ref{loss-information}.
 
 \bibliographystyle{plain}
 \bibliography{biblio}
@@ -476,7 +493,7 @@ The goal of this project was not to implement the maximal number of image indexi
 
 \appendix
 
-\section{Experimental results}
+\section{Experimental results on the different categories of images}
 
 \begin{table}[h!]
   \centering
@@ -595,6 +612,25 @@ The goal of this project was not to implement the maximal number of image indexi
   \end{tabular}
   \caption{Our results of retrieval run on the right side image. For some images, the classes found could be surprising, but there are a larger gap between the better mark and the furthers.}
   \label{results}
+\end{table}
+
+\section{Results of the classification script}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+   \hline
+   First place & \multicolumn{2}{c|}{between 2 and 10} & \multicolumn{2}{c|}{ Larger than 10} \\
+   \hline
+    & scaling $>0.5$ & scaling $<0.5$ & scaling $>0.5$ & scaling $<0.5$ \\
+   \hline
+   154 & 18 & 8 & 11 & 9 \\
+   \hline
+   77 \% & 9 \% & 4 \% & 5.5 \% & 4.5 \% \\
+   \hline
+\end{tabular}
+\caption{Statistics about the efficiency of the algorithm. Among the incorrect results, the half are caused by a small scaling ratio.}
+\label{results-fast}
 \end{table}
 
 \end{document}
