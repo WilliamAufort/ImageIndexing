@@ -27,8 +27,6 @@ In this project, we have access to a database of about 1000 images in the PGM fo
 	\item and the geometric shapes (most of them denoted by \texttt{device-i} for some $i$).
 \end{itemize}
 
-\label{categories}
-
 Of course, other decompositions, more or less precise, are possible. Thereafter, we have to keep in mind that such a diversity on the objects to study is a real difficulty to design an efficient algorithm.
 
 \begin{figure}[!ht]
@@ -180,7 +178,7 @@ As we can guess, the balls of the initial image won't be available for the noisy
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[height=200pt]{images/granulo-noised}
+    %\includegraphics[height=200pt]{images/granulo-noised}
     \caption{Perturbation with a specular noise, mostly on the border of the image. The radius of the "centered" balls also decreases sometimes.}
 	\label{device9-6-noised}
 \end{figure}
@@ -452,7 +450,7 @@ Let's now test our shape retrieval system.
 
 For the experiments, we follow the principle of the script given to evaluate our shape indexing algorithm. We build a perturbed image (rotation, scaling and adding specular noise) from a random image of the database (we can choose the class), and then run our algorithm to get the rank of the correct class. If the rank belongs to $\set{1,\dots,10}$, the script says that the algorithm succeeds.
 
-The table \ref{results} of the appendix presents some of our results on several inputs. More precisely, we test our algorithm on the different categories exposed in \ref{categories} and we show the five first class of the output with one representative (not necessairly those for which the minimum was reached, but the closest image, intuitively). At each time, the algorithms returns the good class at the first position, even if the scaling factor is small (for the \texttt{octopus} noised image, $\lambda = 0.212535$).
+The table \ref{results} of the appendix presents some of our results on several inputs. More precisely, we test our algorithm on the different categories exposed in the introduction and we show the five first class of the output with one representative (not necessairly those for which the minimum was reached, but the closest image, intuitively). At each time, the algorithms returns the good class at the first position, even if the scaling factor is small (for the \texttt{octopus} noised image, $\lambda = 0.212535$).
 
 We present a short analysis on each example of the table:
 
@@ -474,7 +472,7 @@ With this fast version (it takes at most one minute per image, instead of possib
 \begin{itemize}
  \item when the scaling factor is too small, which is not a realistic situation;
  \item with some \texttt{cattle} and \texttt{frog} images. One explanation could be that the black marks of the cows are not contained in the image, which causes troubles in the granulometry function, as explained in the section \ref{geo-perturb}. A solution could be to fill the interior of the object, but this stupid solution can transform a donut into a ball, with an important loss of information
- \item with the class \textt{glass}, we get also surprising results (no good retrieval with score $< 10$). Contrary to the previous case, we can't provide any satisfying explanation to it.
+ \item with the class \texttt{glass}, we get also surprising results (no good retrieval with score $< 10$). Contrary to the previous case, we can't provide any satisfying explanation to it.
 \end{itemize}
 
 Some statistics about the efficiency of the fast algorithm are summarized in the table \ref{results-fast} of the appendix.
