@@ -174,14 +174,7 @@ Some of the classes are defined by the simplest geometrical object they are clos
 
 \subsubsection{Robustness in presence of (specular) noise}
 
-As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, especially on the border of the image, which clearly perturbate the granulometric function. The figure \ref{device9-6-noised} illustrates it. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
-
-\begin{figure}[!ht]
-    \centering
-    %\includegraphics[height=200pt]{images/granulo-noised}
-    \caption{Perturbation with a specular noise, mostly on the border of the image. The radius of the "centered" balls also decreases sometimes.}
-	\label{device9-6-noised}
-\end{figure}
+As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, especially on the border of the image, which clearly perturbate the granulometric function. Moreover, this also decreases the radius of some "centered" balls. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
 
 \subsubsection{Computation time}
 
