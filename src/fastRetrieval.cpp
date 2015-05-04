@@ -71,7 +71,7 @@ vector<double> buildScore(const vector<string>& fileList, const string& imageFil
 *
 * @return Its size
 */
-double size(MyImage& image)
+double sizeOfImage(MyImage& image)
 {
 	Point p = image.domain().upperBound() - image.domain().lowerBound();
 	return static_cast<double>(p[0]*p[1]);
@@ -90,17 +90,16 @@ double size(MyImage& image)
 void scaling(string input, string output)
 {
 	MyImage image = GenericReader<MyImage>::import( input );
-	double scale = sqrt((300.0 * 300.0) / size(image));
+	double size = sizeOfImage(image);
+	double scale = 1.0;
+	if (size >= 300.0*300.0)
+		scale = sqrt((300.0 * 300.0) / size);
 
 	vector<double> scales(2,1.0/scale);
-  
-    typedef functors::BasicDomainSubSampler< MyImage::Domain ,Z2i::Integer, double > ReSampler;
-    ReSampler reSampler(image.domain(), scales, Z2i::Point(0,0));
-  
+   	typedef functors::BasicDomainSubSampler< MyImage::Domain ,Z2i::Integer, double > ReSampler;
+   	ReSampler reSampler(image.domain(), scales, Z2i::Point(0,0));
 	typedef DGtal::ConstImageAdapter<MyImage , MyImage::Domain, ReSampler, MyImage::Value,DGtal::functors::Identity >  SamplerImageAdapter;
-
-	SamplerImageAdapter sampledImage (image,reSampler.getSubSampledDomain(), reSampler, functors::Identity());
-  
+	SamplerImageAdapter sampledImage (image,reSampler.getSubSampledDomain(), reSampler, functors::Identity()); 
 	sampledImage >> output;
 }
 
