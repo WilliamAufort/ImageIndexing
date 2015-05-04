@@ -24,6 +24,7 @@ SET(SRCs
   imgRotate
   imgScale
   imgAddNoise
+  getRank
 
   # our executables
   helloworld
@@ -31,6 +32,7 @@ SET(SRCs
   testEfficiency
   indexing
   retrieval
+  fastRetrieval
   graph)
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
@@ -44,6 +46,11 @@ target_link_libraries(indexing ${DGTAL_LIBRARIES})
 
 add_executable(retrieval src/retrieval src/distance src/toolbox src/granulometry src/transforms)
 target_link_libraries(retrieval ${DGTAL_LIBRARIES})
+
+# Fadt Retrieval
+
+add_executable(fastRetrieval src/fastRetrieval src/distance src/toolbox src/granulometry src/transforms)
+target_link_libraries(fastRetrieval ${DGTAL_LIBRARIES})
 
 # genHistogram
 
@@ -73,4 +80,5 @@ add_executable(imgScale imgScale.cpp)
 target_link_libraries (imgScale ${DGTAL_LIBRARIES}  ${Boost_LIBRAIRIES}  ${Boost_PROGRAM_OPTIONS_LIBRARY})
 add_executable(imgAddNoise imgAddNoise.cpp)
 target_link_libraries (imgAddNoise ${DGTAL_LIBRARIES}  ${Boost_LIBRAIRIES}  ${Boost_PROGRAM_OPTIONS_LIBRARY})
+add_executable(getRank getRank.cpp)
 

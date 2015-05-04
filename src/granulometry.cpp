@@ -41,6 +41,7 @@ unsigned int buildNaiveGranulo(myLittleImage& image, myLittleImage& granuloImage
 				}
 			}
 		}
+	trace.info() << "Granulometric function computed with " << nbPoints << " balls" << endl;
 	return nbPoints;
 }
 
@@ -212,7 +213,6 @@ void testSpeed(function<unsigned int(myLittleImage&, myLittleImage&)> &granulo, 
 
 	myLittleImage granuloImage (image.domain());
 	unsigned int nbBalls = granulo(image,granuloImage);
-	trace.info() << "Granulometric function computed with " << nbBalls << " balls" << endl;
 	trace.endBlock();
 	return;
 }
