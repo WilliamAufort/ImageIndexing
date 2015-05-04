@@ -210,10 +210,9 @@ $$ DT(p) = \underset{q \in \widetilde{\mathcal{X}}}{min} \quad d(p,q) $$
 
 Equivalently, $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. The principal interest of the Distance Transformation is the follwing result:
 
-\begin{theoreme}
+\begin{theoreme}\label{theoremDT}
 	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have:
 		$$ B(p,r) \subseteq B(p,DT(p))$$
-\label{theoremDT}
 \end{theoreme}
 
 With this result, we have to scan $\cplx{\left| \mathcal{X} \right|}$ balls. Indeed, we can consider only the balls $\set{B(p,DT(p)), p \in \mathcal{X}}$, because all the other balls are included in some of those ones.
