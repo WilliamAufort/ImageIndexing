@@ -27,7 +27,7 @@ SET(SRCs
   getRank
 
   # our executables
-  helloworld
+  addNoise
   genHistogram
   testEfficiency
   indexing
@@ -62,10 +62,10 @@ target_link_libraries(genHistogram ${DGTAL_LIBRARIES})
 add_executable(testEfficiency src/testEfficiency src/granulometry)
 target_link_libraries(testEfficiency ${DGTAL_LIBRARIES})
 
-# Helloworld (basic tests)
+# addNoise
 
-add_executable(helloworld src/helloworld src/toolbox)
-target_link_libraries(helloworld ${DGTAL_LIBRARIES})
+add_executable(addNoise src/addNoise src/toolbox)
+target_link_libraries(addNoise ${DGTAL_LIBRARIES})
 
 # graph
 

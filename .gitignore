@@ -26,9 +26,8 @@
 *.exe
 *.out
 *.app
-deleteNoise
 granulometry
-helloworld
+addNoise
 genHistogram
 retrieval
 indexing
@@ -37,6 +36,7 @@ graph
 imgAddNoise
 imgRotate
 imgScale
+getRank
 
 # Temp
 tmp.*
