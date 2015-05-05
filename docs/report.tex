@@ -16,7 +16,7 @@
 
 The objective of this project is to design a binary shape indexing system. Given a database of binary shapes associated to different classes, and a binary image, the goal is to find the class which best corresponds to the image.
 
-A crutial issue of image classification is the definition of a suitable metric to measure similarity between two images. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
+A crucial issue of image classification is the definition of a suitable metric to measure similarity between two images. In this document, we present and explain our main ideas to solve the problem and our implementation choices.
 
 \subsection*{The database used}
 
@@ -114,7 +114,7 @@ We can use the granulometric function to compare two images. To do this, we can 
 \]
 \end{definition}
 
-One can notice that we fix $b$ in this definition. In practize, we choose it not too small to observe something about the repartition of the data, but not too big also. Indeed, it will induce more computations to have a very precise distribution that we don't need. In our experiments, we have fixed $w = 20$, which seems to be a correct value with regard to our results.
+One can notice that we fix $b$ in this definition. In practise, we choose it not too small to observe something about the repartition of the data, but not too big also. Indeed, it will induce more computations to have a very precise distribution that we don't need. In our experiments, we have fixed $w = 20$, which seems to be a correct value with regard to our results.
 
 Thus, compare two images remains to compare two histograms, so we have to define a distance between histograms. This work will be explained with more details in the next section.
 
@@ -132,7 +132,7 @@ The invariance with respect to translation, rotation and symmetry is an importan
 
 In other words, there is a trivial isomorphism between the two images $\mathcal{X}$ and  $\mathcal{X}_t$ seen as unions of balls. With this remark, the proof of the theorem is completely trivial.
 
-But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center, a translation of a vector $v \in \RR^2$, or a scaling with any scaling factor. Such behaviour can perturbate the granulometric function, so we can't ensure an equality like in the previous theorem.
+But the same result for rotations is not completely trivial. If we take a rotation of any angle, one can imagine that the pixels of the image, after the rotation, don't match exactly with points in $\Ztwo$, because of the trigonometric functions implied during the process. The same behaviour occurs if we consider symmetries with respect to any line or center, a translation of a vector $v \in \RR^2$, or a scaling with any scaling factor. Such behaviour can perturb the granulometric function, so we can't ensure an equality like in the previous theorem.
 
 
 However, all these properties holds for the continuous version of the granulometric function (i.e. where $\mathcal{X}$ is a shape in $\RR^2$). Indeed, we clearly have:
@@ -155,7 +155,7 @@ Hence, intuitively if there exists some modifications in the granulometric funct
 
 \label{geo-perturb}
 
-Some of the classes are defined by the simplest geometrical object they are closed to. For example, the object presented in the figure \ref{device9-6}, as all the elements in the class \texttt{device9}, are very close to a ball, excepted that they are crossed by some perturbing element (in the figure it's a line). In such images the granulometric function is very perturbated, as we can see in the figure \ref{device9-6}.
+Some of the classes are defined by the simplest geometrical object they are closed to. For example, the object presented in the figure \ref{device9-6}, as all the elements in the class \texttt{device9}, are very close to a ball, excepted that they are crossed by some perturbing element (in the figure it's a line). In such images the granulometric function is very perturbed, as we can see in the figure \ref{device9-6}.
 
 \begin{figure}[!ht]
     \centering
@@ -174,7 +174,7 @@ Some of the classes are defined by the simplest geometrical object they are clos
 
 \subsubsection{Robustness in presence of (specular) noise}
 
-As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, especially on the border of the image, which clearly perturbate the granulometric function. Moreover, this also decreases the radius of some "centered" balls. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
+As we can guess, the balls of the initial image won't be available for the noisy image. There must be more balls with small radius, especially on the border of the image, which clearly perturb the granulometric function. Moreover, this also decreases the radius of some "centred" balls. That's why we need a noise filter as the one we exposed in the section \ref{filter}.
 
 \subsubsection{Computation time}
 
@@ -201,7 +201,7 @@ Let $\mathcal{X}$ be a binary shape in $\Ztwo$. If $p$ is a point of $\mathcal{X
 $$ DT(p) = \underset{q \in \widetilde{\mathcal{X}}}{min} \quad d(p,q) $$
 \end{definition}
 
-Equivalently, $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. The principal interest of the Distance Transformation is the follwing result:
+Equivalently, $DT(p)$ represents the maximum radius of a ball containing $p$, included in $\mathcal{X}$. The principal interest of the Distance Transformation is the following result:
 
 \begin{theoreme}\label{theoremDT}
 	For all $p \in \mathcal{X}$, for all $r$ such that $B(p,r) \subset \mathcal{X}$, we have:
@@ -225,7 +225,7 @@ We use the implementation of the Distance Transformation provided in \textsc{DGt
 \IncMargin{1em}
 \begin{algorithm}
 \ForEach{point $p \in \mathcal{X}$}{
-    Create a ball centered at $p$ with radius $DT(p)$\;
+    Create a ball centred at $p$ with radius $DT(p)$\;
     \ForEach{point $q$ in this ball}{
         \If{$g(y) \leq DT(p)$}{
 			$g(y) \leftarrow DT(p)$\;
@@ -344,7 +344,7 @@ The Earth Mover Distance have several advantages. First of all, it defines a tru
                        	 	0 & \text{otherwise}
                    	 	 \end{cases}$
 	
-	One can easliy check that $f$ is a solution of the linear program such that the value of the objective function is zero (because $d_{i,i} = 0$), which is optimal.
+	One can easily check that $f$ is a solution of the linear program such that the value of the objective function is zero (because $d_{i,i} = 0$), which is optimal.
 
 	\item The linear programs associated to $EMD(P,Q)$ and $EMD(Q,P)$ are exactly the same (just invert conditions $2$ ans $3$), so they are equal.
 
@@ -434,7 +434,7 @@ What's more, contrary to the granulometric function which is really costly to co
 
 \subsubsection{Implementation details: histograms computations}
 
-The method we propose need some histograms precalculations, more precisely one per image of the database. But we saw that it was too much long. In order to precompute all the histograms faster, we design a simple parallel process to compute them based on threads. Each thread takes a file name in a list, do the computations and then chooses another file name, etc. In order to avoid race condition, we use a mutex. With this program (see \texttt{genHistogram.cpp} for more details), we divide the computation time by 8 (the number of threads used). That's why you don't have (and it's not recommanded) to compute all the base histograms again.
+The method we propose need some histograms precalculations, more precisely one per image of the database. But we saw that it was too much long. In order to precompute all the histograms faster, we design a simple parallel process to compute them based on threads. Each thread takes a file name in a list, do the computations and then chooses another file name, etc. In order to avoid race condition, we use a mutex. With this program (see \texttt{genHistogram.cpp} for more details), we divide the computation time by 8 (the number of threads used). That's why you don't have (and it's not recommended) to compute all the base histograms again.
 
 \subsubsection{Experiments}
 
@@ -442,13 +442,13 @@ Let's now test our shape retrieval system.
 
 For the experiments, we follow the principle of the script given to evaluate our shape indexing algorithm. We build a perturbed image (rotation, scaling and adding specular noise) from a random image of the database (we can choose the class), and then run our algorithm to get the rank of the correct class. If the rank belongs to $\set{1,\dots,10}$, the script says that the algorithm succeeds.
 
-The table \ref{results} of the appendix presents some of our results on several inputs. More precisely, we test our algorithm on the different categories exposed in the introduction and we show the five first class of the output with one representative (not necessairly those for which the minimum was reached, but the closest image, intuitively). At each time, the algorithms returns the good class at the first position, even if the scaling factor is small (for the \texttt{octopus} noised image, $\lambda = 0.212535$).
+The table \ref{results} of the appendix presents some of our results on several inputs. More precisely, we test our algorithm on the different categories exposed in the introduction and we show the five first class of the output with one representative (not necessarily those for which the minimum was reached, but the closest image, intuitively). At each time, the algorithms returns the good class at the first position, even if the scaling factor is small (for the \texttt{octopus} noised image, $\lambda = 0.212535$).
 
 We present a short analysis on each example of the table:
 
 \begin{itemize}
 	\item For the \texttt{apple}, the five first results have good marks, because they all have a big circular part. Nonetheless, the apple has been recognized first.
-	\item For \texttt{Bone} and \texttt{device9}, the marks the first image got is much better than the following. Even if some of them are not very closed from the original object (for instance the \texttt{pocket}), the difference of the marks is quite sufficient to distiguish them.
+	\item For \texttt{Bone} and \texttt{device9}, the marks the first image got is much better than the following. Even if some of them are not very closed from the original object (for instance the \texttt{pocket}), the difference of the marks is quite sufficient to distinguish them.
 	\item As we already tell it, even with a noise factor small, the algorithm gives the correct answer for the first class, even if the mark was less good than for the previous test.
 \end{itemize}
 
@@ -458,7 +458,7 @@ But the definition of the experiment was a part of the excellent results of the 
 
 \subsubsection{Experiments: Fast version}
 
-The last result was quite surprising: even with a reduced image with noise, our algorithm seems to answer well to the class query. Hence we can use this fact to decrease drastically the (huge) complexity of our retrieval system: befoire submitting the noised image to the retrieval, we scaled it to fit in a medium-size image (about $300\times300$ pixels).
+The last result was quite surprising: even with a reduced image with noise, our algorithm seems to answer well to the class query. Hence we can use this fact to decrease drastically the (huge) complexity of our retrieval system: before submitting the noised image to the retrieval, we scaled it to fit in a medium-size image (about $300\times300$ pixels).
 
 With this fast version (it takes at most one minute per image, instead of possibly hours in the previous worst case), we also have almost excellent results on the same protocol, except in few cases:
 \begin{itemize}
