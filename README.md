@@ -22,6 +22,7 @@ Get the code of the project and compile it using cmake :
 	cmake .. -DDGtal_DIR=folder
 	make
 	mv ../scriptClassification.sh .
+	mv ../scriptDistance.sh .
 
 where "folder" is your DGtal build folder.
 
@@ -37,11 +38,7 @@ Be careful: don't use chmod or something loke that. For unknown reasons, there i
 
 After compiling the project, in the build folder you will find the different executables.
 
-More details about each of them.
-
-	./indexing image.pgm
-
-returns a vector of scalar quantities which describes the shape. Here, we just compute the distribution of the granulometric values on the shape.
+More details about each of them:
 
 	./retrieval image.pgm
 
@@ -50,6 +47,14 @@ outputs consecutively on the console the marks of each class with the image inpu
 	./fastRetrieval image.pgm
 
 Fast version (recommended) of the previous executable. In fact, we just resize the image before start the algorithm. Experimentally, the performances are not changing a lot, but the executing time is drastically reduced.
+
+	./indexing image.pgm
+
+returns a vector of scalar quantities which describes the shape. Here, we just compute the distribution of the granulometric values on the shape.
+
+	./fastDistance image1.pgm image2.pgm
+
+returns the distance between the two images, computed fastly (by resizing the two images).
 
 	./genHistograms <folder> <nb_thread> [<regex>]
 	

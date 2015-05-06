@@ -186,7 +186,7 @@ string getFileName(const string& str)
 * @param outputFile A string containing the filename when you want to store the transformed image
 */
 
-void modifyImage(string inputFile, string outputFile)
+void modifyImage(string inputFile, string outputFile, double noise)
 {
 	if (!system(NULL))
 		exit(EXIT_FAILURE);
@@ -195,9 +195,9 @@ void modifyImage(string inputFile, string outputFile)
 		random_device rd;
 		mt19937 generator(rd());
 		uniform_real_distribution<> distrib(0,1);
-		double randomNoise = distrib(generator) * 0.5;
+		double randomNoise = distrib(generator) * noise;
 		double randomAngle = distrib(generator) * 3.1415;
-		double randomScale = distrib(generator) * 3;
+		double randomScale = distrib(generator) * 3.0;
 		cout << "noise : " << randomNoise << ", angle : " << randomAngle << ", scale : " << randomScale << endl;
 		int i;
 		i = system(("./imgRotate -i "+inputFile+" -o tmp.pgm -a "+to_string(randomAngle)+" 2> /dev/null").c_str());

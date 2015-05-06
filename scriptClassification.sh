@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+zmodload -i zsh/mathfunc
+
 # Our classification program
 CLASSIFPROG=./fastRetrieval
 

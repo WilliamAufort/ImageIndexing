@@ -8,4 +8,4 @@ std::vector<std::string> readFile(std::string filename);
 std::string extractClass(std::string filename);
 std::string getPath(const std::string& str);
 std::string getFileName(const std::string& str);
-void modifyImage(std::string inputFile, std::string outputFile);
+void modifyImage(std::string inputFile, std::string outputFile, double noise = 0.5);
